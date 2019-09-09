@@ -76,10 +76,13 @@ namespace Aquality.Selenium.Core.Elements
             }
         }
 
-        public string GetText()
+        public string Text
         {
-            LogElementAction("loc.get.text");
-            return DoWithRetry(() => GetElement().Text);
+            get
+            {
+                LogElementAction("loc.get.text");
+                return DoWithRetry(() => GetElement().Text);
+            }
         }
 
         public void SendKeys(string key)

@@ -1,6 +1,6 @@
 ﻿namespace Aquality.Selenium.Core.Elements
 {
-    public class PopularClassNames
+    internal class PopularClassNames
     {
         private PopularClassNames()
         {
@@ -9,7 +9,7 @@
         public const string Disabled = "disabled";
     }
 
-    public class Attributes
+    internal class Attributes
     {
         private Attributes()
         {

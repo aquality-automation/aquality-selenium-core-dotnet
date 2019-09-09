@@ -34,12 +34,11 @@ namespace Aquality.Selenium.Core.Elements.Interfaces
         /// <returns>Instance of <see cref="RemoteWebElement"/> if found.</returns>
         /// <exception cref="NoSuchElementException">Thrown when no elements found.</exception>
         RemoteWebElement GetElement(TimeSpan? timeout = null);
-
+                
         /// <summary>
         /// Gets element text.
         /// </summary>
-        /// <returns>String representation of element text.</returns>
-        string GetText();
+        string Text { get; }
 
         /// <summary>
         /// Gets element attribute value by its name.
