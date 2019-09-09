@@ -1,0 +1,10 @@
+﻿{
+  "loc.clicking": "Клик",
+  "loc.el.getattr": "Получение аттрибута '{0}'",
+  "loc.get.text": "Получение текста элемента",
+  "loc.text.sending.keys": "Нажатие клавиши '{0}'",
+  "loc.no.elements.found.in.state": "Не удалось найти элементов по локатору '{0}' в {1} состоянии",
+  "loc.no.elements.found.by.locator": "Не удалось найти элементов по локатору '{0}'",
+  "loc.elements.were.found.but.not.in.state": "Удалось найти элементы по локатору '{0}', но они не в желаемом состоянии {1}",
+  "loc.elements.found.but.should.not": "Не должно быть найдено элементов по локатору '{0}' в {1} состоянии"
+}
