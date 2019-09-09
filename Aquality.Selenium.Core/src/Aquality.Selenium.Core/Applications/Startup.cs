@@ -15,8 +15,7 @@ namespace Aquality.Selenium.Core.Applications
     {
         public void ConfigureServices(IServiceCollection services, Func<IServiceProvider, IApplication> applicationProvider)
         {
-            var assembly = Assembly.GetCallingAssembly();
-            var settings = GetSettings(assembly);
+            var settings = GetSettings();
             services.AddScoped(applicationProvider);
 
             services.AddSingleton<ITimeoutConfiguration>(new TimeoutConfiguration(settings));
@@ -26,12 +25,13 @@ namespace Aquality.Selenium.Core.Applications
             services.AddSingleton<LocalizationManager>();
             services.AddSingleton<LocalizationLogger>();
             services.AddSingleton<IRetryConfiguration>(new RetryConfiguration(settings));
-            
+            services.AddSingleton<ElementActionRetrier>();
+
             services.AddTransient<IElementFinder, ElementFinder>();
             services.AddTransient<IElementFactory, ElementFactory>();
         }
 
-        private JsonFile GetSettings(Assembly callingAssembly)
+        private JsonFile GetSettings()
         {
             var profileNameFromEnvironment = EnvironmentConfiguration.GetVariable("profile");
             var settingsProfile = profileNameFromEnvironment == null ? "settings.json" : $"settings.{profileNameFromEnvironment}.json";
@@ -39,7 +39,7 @@ namespace Aquality.Selenium.Core.Applications
 
             var jsonFile = FileReader.IsResourceFileExist(settingsProfile)
                 ? new JsonFile(settingsProfile)
-                : new JsonFile($"Resources.{settingsProfile}", callingAssembly);
+                : new JsonFile($"Resources.{settingsProfile}", Assembly.GetCallingAssembly());
             return jsonFile;
         }
     }

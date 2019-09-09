@@ -17,7 +17,7 @@ namespace Aquality.Selenium.Core.Localization
         public LocalizationManager(ILoggerConfiguration loggerConfiguration, Logger logger)
         {
             var language = loggerConfiguration.Language;
-            localizationFile = new JsonFile(string.Format(LangResource, language.ToLower()), Assembly.GetCallingAssembly());
+            localizationFile = new JsonFile(string.Format(LangResource, language.ToLower()), Assembly.GetExecutingAssembly());
             this.logger = logger;
         }
 
