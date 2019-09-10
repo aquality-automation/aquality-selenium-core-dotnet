@@ -23,5 +23,5 @@ steps:
   inputs:
     command: 'test'
     projects: '**/*Tests*/*.csproj'
-    arguments: -c $(buildConfiguration) $(driverSettings.chrome.webDriverVersion) --no-build
+    arguments: -c $(buildConfiguration) --no-build
     publishTestResults: true
