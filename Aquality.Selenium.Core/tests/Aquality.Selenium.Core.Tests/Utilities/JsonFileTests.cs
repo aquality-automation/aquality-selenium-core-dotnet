@@ -5,7 +5,7 @@ using System;
 namespace Aquality.Selenium.Core.Tests.Utilities
 {
     [NonParallelizableAttribute]
-    internal class JsonFileTests
+    public class JsonFileTests
     {
         [Test]
         public void GetValue_ShouldBe_PossibleTo_OverrideValueFromEnvVar()
