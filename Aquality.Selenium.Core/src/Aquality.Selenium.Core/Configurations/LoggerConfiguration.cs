@@ -2,6 +2,9 @@
 
 namespace Aquality.Selenium.Core.Configurations
 {
+    /// <summary>
+    /// Provides logger configuration
+    /// </summary>
     public class LoggerConfiguration : ILoggerConfiguration
     {
         private const string defaultLanguage = "en";

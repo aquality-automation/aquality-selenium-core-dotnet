@@ -1,21 +1,12 @@
 ﻿namespace Aquality.Selenium.Core.Elements
 {
-    internal class PopularClassNames
+    internal static class PopularClassNames
     {
-        private PopularClassNames()
-        {
-        }
-
-        public const string Disabled = "disabled";
+        public static string Disabled => "disabled";
     }
 
-    internal class Attributes
+    internal static class Attributes
     {
-        private Attributes()
-        {
-        }
-
-        public const string Class = "class";
-        public const string Value = "value";
+        public static string Class => "class";
     }
 }

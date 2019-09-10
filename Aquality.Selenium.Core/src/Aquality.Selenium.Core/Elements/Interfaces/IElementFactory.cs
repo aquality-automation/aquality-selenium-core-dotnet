@@ -8,6 +8,15 @@ namespace Aquality.Selenium.Core.Elements.Interfaces
     /// </summary>
     public interface IElementFactory
     {
+        /// <summary>
+        /// Create custom element according to passed parameters
+        /// </summary>
+        /// <typeparam name="T">Type of the target element</typeparam>
+        /// <param name="elementSupplier">Delegate that defines constructor of element</param>
+        /// <param name="locator">Locator of the target element</param>
+        /// <param name="name">Name of the target element</param>
+        /// <param name="state">State of the target element</param>
+        /// <returns></returns>
         T GetCustomElement<T>(ElementSupplier<T> elementSupplier, By locator, string name, ElementState state = ElementState.Displayed) where T : IElement;
 
         /// <summary>

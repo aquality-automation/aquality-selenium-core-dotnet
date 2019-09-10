@@ -2,16 +2,13 @@
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Remote;
 using System;
-using System.Threading;
-using WebDriverManager;
-using WebDriverManager.DriverConfigs.Impl;
 
-namespace Aquality.Selenium.Core.Tests.Application
+namespace Aquality.Selenium.Core.Tests.Applications.Browser
 {
     public class ChromeApplication : IApplication
     {
         private TimeSpan implicitWait;
-        
+
         public ChromeApplication()
         {
             Driver = new ChromeDriver();

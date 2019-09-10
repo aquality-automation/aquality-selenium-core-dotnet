@@ -58,7 +58,6 @@ namespace Aquality.Selenium.Core.Waitings
                 var result = wait.Until(condition);
                 application.SetImplicitWaitTimeout(timeoutConfiguration.Implicit);
                 return result;
-
             }
         }
 
