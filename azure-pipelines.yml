@@ -7,13 +7,17 @@ trigger:
 - master
 
 pool:
-  vmImage: 'ubuntu-latest'
+  vmImage: 'windows-latest'
 
 steps:
-- script: echo Hello, world!
-  displayName: 'Run a one-line script'
 
-- script: |
-    echo Add other tasks to build, test, and deploy your project.
-    echo See https://aka.ms/yaml
-  displayName: 'Run a multi-line script'
+- script: dotnet build Aquality.Selenium.Core/Aquality.Selenium.Core.sln -c $(buildConfiguration)
+  displayName: 'Build solution - $(buildConfiguration)'
+
+- task: DotNetCoreCLI@2
+  displayName: 'Run tests'
+  inputs:
+    command: 'test'
+    projects: '**/*Tests*/*.csproj'
+    arguments: -c $(buildConfiguration) --no-build
+    publishTestResults: true
