@@ -1,5 +1,6 @@
 ﻿using Aquality.Selenium.Core.Applications;
 using Aquality.Selenium.Core.Configurations;
+using Microsoft.Extensions.DependencyInjection;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Support.UI;
 using System;
@@ -16,16 +17,16 @@ namespace Aquality.Selenium.Core.Waitings
     public class ConditionalWait
     {
         private readonly ITimeoutConfiguration timeoutConfiguration;
-        private readonly IApplication application;
+        private readonly IServiceProvider serviceProvider;
 
         /// <summary>
         /// Instantiates the class using retry configuration.
         /// </summary>
         /// <param name="retryConfiguration"></param>
-        public ConditionalWait(ITimeoutConfiguration timeoutConfiguration, IApplication application)
+        public ConditionalWait(ITimeoutConfiguration timeoutConfiguration, IServiceProvider serviceProvider)
         {
             this.timeoutConfiguration = timeoutConfiguration;
-            this.application = application;
+            this.serviceProvider = serviceProvider;
         }
 
         /// <summary>
@@ -41,19 +42,24 @@ namespace Aquality.Selenium.Core.Waitings
         /// <exception cref="WebDriverTimeoutException">Throws when timeout exceeded and condition not satisfied.</exception>
         public T WaitFor<T>(Func<IWebDriver, T> condition, TimeSpan? timeout = null, TimeSpan? pollingInterval = null, string message = null, IList<Type> exceptionsToIgnore = null)
         {
-            application.SetImplicitWaitTimeout(TimeSpan.Zero);
-            var waitTimeout = ResolveConditionTimeout(timeout);
-            var checkInterval = ResolvePollingInterval(pollingInterval);
-            var wait = new WebDriverWait(application.Driver, waitTimeout)
+            using (var scope = serviceProvider.CreateScope())
             {
-                Message = message,
-                PollingInterval = checkInterval
-            };
-            var ignoreExceptions = exceptionsToIgnore ?? new List<Type> { typeof(StaleElementReferenceException) };
-            wait.IgnoreExceptionTypes(ignoreExceptions.ToArray());
-            var result = wait.Until(condition);
-            application.SetImplicitWaitTimeout(timeoutConfiguration.Implicit);
-            return result;
+                var application = scope.ServiceProvider.GetRequiredService<IApplication>();
+                application.SetImplicitWaitTimeout(TimeSpan.Zero);
+                var waitTimeout = ResolveConditionTimeout(timeout);
+                var checkInterval = ResolvePollingInterval(pollingInterval);
+                var wait = new WebDriverWait(application.Driver, waitTimeout)
+                {
+                    Message = message,
+                    PollingInterval = checkInterval
+                };
+                var ignoreExceptions = exceptionsToIgnore ?? new List<Type> { typeof(StaleElementReferenceException) };
+                wait.IgnoreExceptionTypes(ignoreExceptions.ToArray());
+                var result = wait.Until(condition);
+                application.SetImplicitWaitTimeout(timeoutConfiguration.Implicit);
+                return result;
+
+            }
         }
 
         /// <summary>
