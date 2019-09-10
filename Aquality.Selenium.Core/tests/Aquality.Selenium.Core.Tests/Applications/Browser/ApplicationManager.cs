@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using Aquality.Selenium.Core.Utilities;
+using System.Threading;
 using WebDriverManager;
 using WebDriverManager.DriverConfigs.Impl;
 
@@ -32,6 +33,7 @@ namespace Aquality.Selenium.Core.Tests.Applications.Browser
         {
             lock (downloadDriverLock)
             {
+                var version = EnvironmentConfiguration.GetVariable("driverSettings.chrome.webDriverVersion") ?? "Latest";
                 new DriverManager().SetUpDriver(new ChromeConfig());
             }
 
