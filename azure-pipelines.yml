@@ -5,7 +5,7 @@
 
 variables:
   buildConfiguration: 'Release'
-  driverSettings.chrome.webDriverVersion: '75.0.3770.140'
+  webDriverVersion: '75.0.3770.140'
 
 trigger:
 - master

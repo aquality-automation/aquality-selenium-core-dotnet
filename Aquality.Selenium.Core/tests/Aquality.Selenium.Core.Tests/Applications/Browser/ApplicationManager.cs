@@ -33,7 +33,7 @@ namespace Aquality.Selenium.Core.Tests.Applications.Browser
         {
             lock (downloadDriverLock)
             {
-                var version = EnvironmentConfiguration.GetVariable("driverSettings.chrome.webDriverVersion") ?? "Latest";
+                var version = EnvironmentConfiguration.GetVariable("webdriverversion") ?? "Latest";
                 new DriverManager().SetUpDriver(new ChromeConfig(), version: version);
             }
 
