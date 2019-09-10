@@ -19,12 +19,6 @@ namespace Aquality.Selenium.Core.Configurations
             this.settingsFile = settingsFile;
         }
 
-        public string Language
-        {
-            get
-            {
-                return settingsFile.GetValueOrDefault(".logger.language", defaultLanguage);
-            }
-        }
+        public string Language => settingsFile.GetValueOrDefault(".logger.language", defaultLanguage);
     }
 }

@@ -54,7 +54,7 @@ namespace Aquality.Selenium.Core.Elements
 
         public T FindChildElement<T>(By childLocator, ElementSupplier<T> supplier = null, ElementState state = ElementState.Displayed) where T : IElement
         {
-            throw new NotImplementedException();
+            return Factory.FindChildElement(this, childLocator, supplier, state);
         }
 
         public string GetAttribute(string attr)
