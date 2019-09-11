@@ -1,5 +1,5 @@
-﻿using NUnit.Framework;
-using OpenQA.Selenium.Appium;
+﻿using Aquality.Selenium.Core.Tests.Applications.WindowsApp.Locators;
+using NUnit.Framework;
 
 namespace Aquality.Selenium.Core.Tests.Applications.WindowsApp
 {
@@ -8,11 +8,11 @@ namespace Aquality.Selenium.Core.Tests.Applications.WindowsApp
         [Test]
         public void Should_WorkWithCalculator()
         {
-            ApplicationManager.Application.Driver.FindElement(MobileBy.AccessibilityId("num1Button")).Click();
-            ApplicationManager.Application.Driver.FindElement(MobileBy.AccessibilityId("plusButton")).Click();
-            ApplicationManager.Application.Driver.FindElement(MobileBy.AccessibilityId("num2Button")).Click();
-            ApplicationManager.Application.Driver.FindElement(MobileBy.AccessibilityId("equalButton")).Click();
-            var result = ApplicationManager.Application.Driver.FindElement(MobileBy.AccessibilityId("CalculatorResults")).Text;
+            ApplicationManager.Application.Driver.FindElement(CalculatorWindow.OneButton).Click();
+            ApplicationManager.Application.Driver.FindElement(CalculatorWindow.PlusButton).Click();
+            ApplicationManager.Application.Driver.FindElement(CalculatorWindow.TwoButton).Click();
+            ApplicationManager.Application.Driver.FindElement(CalculatorWindow.EqualsButton).Click();
+            var result = ApplicationManager.Application.Driver.FindElement(CalculatorWindow.ResultsLabel).Text;
             StringAssert.Contains("3", result);
         }
     }
