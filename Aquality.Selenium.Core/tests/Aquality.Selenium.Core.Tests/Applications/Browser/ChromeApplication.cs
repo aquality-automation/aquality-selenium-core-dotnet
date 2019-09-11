@@ -1,4 +1,5 @@
 ﻿using Aquality.Selenium.Core.Applications;
+using Aquality.Selenium.Core.Configurations;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Remote;
 using System;
@@ -9,10 +10,10 @@ namespace Aquality.Selenium.Core.Tests.Applications.Browser
     {
         private TimeSpan implicitWait;
 
-        public ChromeApplication()
+        public ChromeApplication(ITimeoutConfiguration timeoutConfiguration)
         {
             Driver = new ChromeDriver();
-            implicitWait = TimeSpan.Zero;
+            implicitWait = timeoutConfiguration.Implicit;
             Driver.Manage().Timeouts().ImplicitWait = implicitWait;
         }
 
