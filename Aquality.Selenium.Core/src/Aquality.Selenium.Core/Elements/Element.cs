@@ -38,9 +38,9 @@ namespace Aquality.Selenium.Core.Elements
 
         protected abstract string ElementType { get; }
 
-        protected abstract ElementFactory Factory { get; }
+        protected abstract IElementFactory Factory { get; }
 
-        protected abstract ElementFinder Finder { get; }
+        protected abstract IElementFinder Finder { get; }
 
         protected abstract LocalizationLogger LocalizationLogger { get; }
 

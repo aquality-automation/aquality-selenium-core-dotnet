@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Reflection;
 using Aquality.Selenium.Core.Elements.Interfaces;
@@ -112,6 +113,12 @@ namespace Aquality.Selenium.Core.Elements
                         null,
                         new[] { typeof(By), typeof(string), typeof(ElementState) },
                         null);
+                if(elementCntr == null)
+                {
+                    throw new InvalidOperationException($"cannot resolve constructor with required arguments for type {type.FullName}." +
+                        Environment.NewLine +
+                        $"Either provide a non-null {nameof(ElementSupplier<T>)}, or extend {nameof(ElementFactory)} with {nameof(ElementTypesMap)} for required type");
+                }
                 return (locator, name, state) => (T)elementCntr.Invoke(new object[] { locator, name, state });
             }
         }
