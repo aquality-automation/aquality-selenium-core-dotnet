@@ -5,6 +5,8 @@ namespace Aquality.Selenium.Core.Tests.Applications.WindowsApp.Locators
 {
     public static class CalculatorWindow
     {
+        public static By WindowLocator => By.TagName("Window");
+
         public static By OneButton => By.Name("1");
 
         public static By TwoButton => By.Name("2");

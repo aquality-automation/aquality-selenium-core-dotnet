@@ -88,7 +88,7 @@ namespace Aquality.Selenium.Core.Elements
             var strBaseLocator = baseLocator.ToString();
             var elementLocator = strBaseLocator.Contains(ByXpathIdentifier)
                     ? $"({strBaseLocator.Split(':')[1].Trim()})[{elementIndex}]"
-                    : throw new NotSupportedException($"Parent element's locator {baseLocator} is not {ByXpathIdentifier}, and is not supported yet");
+                    : throw new NotSupportedException($"Multiple elements' locator {baseLocator} is not {ByXpathIdentifier}, and is not supported yet");
             return By.XPath(elementLocator);
         }
 

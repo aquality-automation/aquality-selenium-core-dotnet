@@ -1,57 +1,52 @@
 ﻿using Aquality.Selenium.Core.Elements.Interfaces;
 using Aquality.Selenium.Core.Tests.Applications.WindowsApp.Elements;
+using Aquality.Selenium.Core.Tests.Applications.WindowsApp.Locators;
 using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
 using OpenQA.Selenium;
-using OpenQA.Selenium.Appium;
-using OpenQA.Selenium.Support.PageObjects;
 using System;
 
 namespace Aquality.Selenium.Core.Tests.Applications.WindowsApp
 {
     public class ElementFactoryTests : TestWithApplication
     {
+        private IElementFactory Factory => ApplicationManager.ServiceProvider.GetRequiredService<IElementFactory>();
+
+        private IElement NumberPad => Factory.GetButton(CalculatorWindow.WindowLocator, "Number pad");
+
         [Test]
         public void Should_WorkWithCalculator_ViaElementFactory()
         {
-            var factory = ApplicationManager.ServiceProvider.GetRequiredService<IElementFactory>();
-            factory.GetButton(MobileBy.AccessibilityId("num1Button"), "1").Click();
-            factory.GetButton(MobileBy.AccessibilityId("plusButton"), "+").Click();
-            factory.GetButton(MobileBy.AccessibilityId("num2Button"), "2").Click();
-            factory.GetButton(MobileBy.AccessibilityId("equalButton"), "=").Click();
-            var result = factory.GetButton(MobileBy.AccessibilityId("CalculatorResults"), "Results bar").Text;
+            Factory.GetButton(CalculatorWindow.OneButton, "1").Click();
+            Factory.GetButton(CalculatorWindow.PlusButton, "+").Click();
+            Factory.GetButton(CalculatorWindow.TwoButton, "2").Click();
+            Factory.GetButton(CalculatorWindow.EqualsButton, "=").Click();
+            var result = Factory.GetButton(CalculatorWindow.ResultsLabel, "Results bar").Text;
             StringAssert.Contains("3", result);
         }
 
         [Test]
         public void Should_FindChildElements_ViaElementFactory()
         {
-            var factory = ApplicationManager.ServiceProvider.GetRequiredService<IElementFactory>();
-            var numberPad = factory.GetButton(MobileBy.AccessibilityId("NumberPad"), "Number pad");
-            Assert.IsNotNull(factory.FindChildButton(numberPad, MobileBy.AccessibilityId("num1Button")).GetElement(TimeSpan.Zero));
+            Assert.IsNotNull(Factory.FindChildButton(NumberPad, CalculatorWindow.OneButton).GetElement(TimeSpan.Zero));
         }
 
         [Test]
         public void Should_FindElements_ViaElementFactory()
         {
-            var factory = ApplicationManager.ServiceProvider.GetRequiredService<IElementFactory>();
-            var numberPad = factory.GetButton(MobileBy.AccessibilityId("NumberPad"), "Number pad");
-            Assert.AreEqual(10, factory.FindButtons(new ByChained(numberPad.Locator, By.XPath("//*[contains(@AutomationId,'num')]"))).Count);
+            Assert.IsTrue(Factory.FindButtons(By.XPath("//*")).Count > 1);
         }
 
         [Test]
         public void Should_ThrowInvalidOperationException_WhenConstructorIsNotDefined_ForFindChildElement()
         {
-            var factory = ApplicationManager.ServiceProvider.GetRequiredService<IElementFactory>();
-            var numberPad = factory.GetButton(MobileBy.AccessibilityId("NumberPad"), "Number pad");
-            Assert.Throws<InvalidOperationException>(() => factory.FindChildElement<Button>(numberPad, MobileBy.AccessibilityId("num1Button")).GetElement());
+            Assert.Throws<InvalidOperationException>(() => Factory.FindChildElement<Button>(NumberPad, CalculatorWindow.OneButton).GetElement());
         }
 
         [Test]
         public void Should_ThrowInvalidOperationException_WhenConstructorIsNotDefined_ForFindElements()
         {
-            var factory = ApplicationManager.ServiceProvider.GetRequiredService<IElementFactory>();
-            Assert.Throws<InvalidOperationException>(() => factory.FindElements<Button>(MobileBy.AccessibilityId("num1Button")));
+            Assert.Throws<InvalidOperationException>(() => Factory.FindElements<Button>(CalculatorWindow.OneButton));
         }
     }
 }
