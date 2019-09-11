@@ -1,4 +1,5 @@
 # Starter pipeline
+
 # Start with a minimal pipeline that you can customize to build and deploy your code.
 # Add steps that build, run tests, deploy, and more:
 # https://aka.ms/yaml
@@ -6,6 +7,7 @@
 variables:
   buildConfiguration: 'Release'
   webDriverVersion: '75.0.3770.140'
+  isRemote: true
 
 trigger:
 - master
@@ -17,7 +19,9 @@ steps:
 
 - script: dotnet build Aquality.Selenium.Core/Aquality.Selenium.Core.sln -c $(buildConfiguration)
   displayName: 'Build solution - $(buildConfiguration)'
-
+- task: Windows Application Driver@0
+  inputs:
+    OperationType: 'Start'
 - task: DotNetCoreCLI@2
   displayName: 'Run tests'
   inputs:
@@ -25,3 +29,6 @@ steps:
     projects: '**/*Tests*/*.csproj'
     arguments: -c $(buildConfiguration) --no-build
     publishTestResults: true
+- task: Windows Application Driver@0
+  inputs:
+    OperationType: 'Stop'
