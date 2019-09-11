@@ -16,10 +16,16 @@ pool:
   vmImage: 'windows-latest'
 
 steps:
+- task: PowerShell@2
+  displayName: install calculator
+  inputs:
+    targetType: 'inline'
+    script: 'Get-AppxPackage -allusers *windowscalculator* | Foreach {Add-AppxPackage -DisableDevelopmentMode -Register “$($_.InstallLocation)\AppXManifest.xml”}'
 
 - script: dotnet build Aquality.Selenium.Core/Aquality.Selenium.Core.sln -c $(buildConfiguration)
   displayName: 'Build solution - $(buildConfiguration)'
 - task: Windows Application Driver@0
+  displayName: start WinAppDriver
   inputs:
     OperationType: 'Start'
 - task: DotNetCoreCLI@2
@@ -30,5 +36,6 @@ steps:
     arguments: -c $(buildConfiguration) --no-build
     publishTestResults: true
 - task: Windows Application Driver@0
+  displayName: stop WinAppDriver
   inputs:
     OperationType: 'Stop'
