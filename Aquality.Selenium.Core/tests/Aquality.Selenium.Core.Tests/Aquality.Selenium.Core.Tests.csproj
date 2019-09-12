@@ -8,15 +8,20 @@
 
   <ItemGroup>
     <None Remove="Resources\settings.embeddedresource.json" />
+    <None Remove="Resources\settings.special.json" />
   </ItemGroup>
 
   <ItemGroup>
     <EmbeddedResource Include="Resources\settings.embeddedresource.json">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </EmbeddedResource>
+    <EmbeddedResource Include="Resources\settings.special.json">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </EmbeddedResource>
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Appium.WebDriver" Version="4.0.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="2.2.0" />
     <PackageReference Include="nunit" Version="3.10.1" />
     <PackageReference Include="NUnit3TestAdapter" Version="3.10.0" />
@@ -30,6 +35,9 @@
 
   <ItemGroup>
     <None Update="Resources\settings.custom.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Resources\WindowsApp\Day Maxi Calc.exe">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>

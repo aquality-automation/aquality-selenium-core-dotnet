@@ -10,7 +10,7 @@ namespace Aquality.Selenium.Core.Elements
     {
         private readonly By elementLocator;
 
-        public ElementStateProvider(By elementLocator, ConditionalWait conditionalWait, ElementFinder elementFinder)
+        public ElementStateProvider(By elementLocator, ConditionalWait conditionalWait, IElementFinder elementFinder)
         {
             this.elementLocator = elementLocator;
             ConditionalWait = conditionalWait;
@@ -19,7 +19,7 @@ namespace Aquality.Selenium.Core.Elements
 
         private ConditionalWait ConditionalWait { get; }
 
-        private ElementFinder ElementFinder { get; }
+        private IElementFinder ElementFinder { get; }
 
         public bool IsDisplayed => WaitForDisplayed(TimeSpan.Zero);
 
