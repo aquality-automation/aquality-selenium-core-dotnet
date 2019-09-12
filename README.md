@@ -41,9 +41,9 @@ Or, if you need to register your own services / rewrite the implementation, you 
 
         public class ApplicationManager : ApplicationManager<ApplicationManager, YourApplication>
         {
-            public static YourApplication Application => GetApplication(StartApplicationFunction, , () => RegisterServices(services => Application));
+            public static YourApplication Application => GetApplication(StartApplicationFunction, () => RegisterServices(services => Application));
 
-            public static IServiceProvider ServiceProvider => GetServiceProvider(services => Application, , () => RegisterServices(services => Application));
+            public static IServiceProvider ServiceProvider => GetServiceProvider(services => Application, () => RegisterServices(services => Application));
 
             private static IServiceCollection RegisterServices(Func<IServiceProvider, YourApplication> applicationSupplier)
             {
