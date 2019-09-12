@@ -1,35 +1,20 @@
-﻿using Aquality.Selenium.Core.Utilities;
-using System.Threading;
+﻿using Aquality.Selenium.Core.Applications;
+using Aquality.Selenium.Core.Configurations;
+using Aquality.Selenium.Core.Utilities;
+using Microsoft.Extensions.DependencyInjection;
+using System;
 using WebDriverManager;
 using WebDriverManager.DriverConfigs.Impl;
 
 namespace Aquality.Selenium.Core.Tests.Applications.Browser
 {
-    public static class ApplicationManager
+    public class ApplicationManager : ApplicationManager<ApplicationManager, ChromeApplication>
     {
         private static readonly object downloadDriverLock = new object();
-        private static readonly ThreadLocal<ChromeApplication> BrowserContainer = new ThreadLocal<ChromeApplication>();
 
-        public static bool IsStarted => BrowserContainer.IsValueCreated && BrowserContainer.Value.Driver.SessionId != null;
-
-        public static ChromeApplication Application
-        {
-            get
-            {
-                if (!IsStarted)
-                {
-                    BrowserContainer.Value = Start();
-                }
-                return BrowserContainer.Value;
-            }
-            set
-            {
-                BrowserContainer.Value = value;
-            }
-        }
-
-
-        private static ChromeApplication Start()
+        public static ChromeApplication Application => GetApplication(services => StartChrome(services));
+        
+        private static ChromeApplication StartChrome(IServiceProvider services)
         {
             lock (downloadDriverLock)
             {
@@ -37,7 +22,7 @@ namespace Aquality.Selenium.Core.Tests.Applications.Browser
                 new DriverManager().SetUpDriver(new ChromeConfig(), version: version);
             }
 
-            return new ChromeApplication();
+            return new ChromeApplication(services.GetRequiredService<ITimeoutConfiguration>());
         }
     }
 }

@@ -6,44 +6,17 @@ using OpenQA.Selenium.Appium;
 using OpenQA.Selenium.Appium.Service;
 using System;
 using System.IO;
-using System.Threading;
 
 namespace Aquality.Selenium.Core.Tests.Applications.WindowsApp
 {
-    public static class ApplicationManager
+    public class ApplicationManager : ApplicationManager<ApplicationManager, WindowsApplication>
     {
         private const string SupportedApplication = "./Resources/WindowsApp/Day Maxi Calc.exe";
         private const string DefaultDriverServer = "http://127.0.0.1:4723/";
-        private static readonly ThreadLocal<WindowsApplication> AppContainer = new ThreadLocal<WindowsApplication>();
-        private static readonly ThreadLocal<IServiceProvider> ServiceProviderContainer = new ThreadLocal<IServiceProvider>();
+        
+        public static WindowsApplication Application => GetApplication(service => StartApplication(service));
 
-        public static bool IsStarted => AppContainer.IsValueCreated && AppContainer.Value.Driver.SessionId != null;
-
-        public static WindowsApplication Application
-        {
-            get
-            {
-                if (!IsStarted)
-                {
-                    AppContainer.Value = StartApplication(ServiceProvider);
-                }
-                return AppContainer.Value;
-            }
-        }
-
-        public static IServiceProvider ServiceProvider
-        {
-            get
-            {
-                if (!ServiceProviderContainer.IsValueCreated)
-                {
-                    var services = new ServiceCollection();
-                    new Startup().ConfigureServices(services, serviceCollection => Application);
-                    ServiceProviderContainer.Value = services.BuildServiceProvider();
-                }
-                return ServiceProviderContainer.Value;
-            }
-        }
+        public static IServiceProvider ServiceProvider => GetServiceProvider(services => Application);
 
         private static WindowsApplication StartApplication(IServiceProvider services)
         {

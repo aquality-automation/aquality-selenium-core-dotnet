@@ -8,10 +8,14 @@
 
   <ItemGroup>
     <None Remove="Resources\settings.embeddedresource.json" />
+    <None Remove="Resources\settings.special.json" />
   </ItemGroup>
 
   <ItemGroup>
     <EmbeddedResource Include="Resources\settings.embeddedresource.json">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\settings.special.json">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </EmbeddedResource>
   </ItemGroup>
