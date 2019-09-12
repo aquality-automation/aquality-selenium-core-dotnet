@@ -10,6 +10,10 @@ pool:
   vmImage: 'windows-latest'
 
 steps:
+- task: GitVersion@5
+  displayName: 'Run GitVersion'
+  inputs:
+    runtime: 'core'
 
 - task: SonarCloudPrepare@1
   displayName: 'Prepare SonarCloud analysis'
@@ -47,4 +51,27 @@ steps:
   displayName: stop WinAppDriver
   inputs:
     OperationType: 'Stop'
+
+- script: dotnet pack Aquality.Selenium.Core\src\Aquality.Selenium.Core\Aquality.Selenium.Core.csproj -c $(buildConfiguration) --no-build -p:Version=$(GitVersion.NuGetVersion) -o $(Build.ArtifactStagingDirectory)
+  displayName: 'Create NuGet package'
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
   
+- task: NuGetCommand@2
+  displayName: 'Push NuGet package'
+  inputs:
+    command: 'push'
+    packagesToPush: '$(Build.ArtifactStagingDirectory)/**/Aquality.Selenium.Core*.nupkg;!$(Build.ArtifactStagingDirectory)/**/Aquality.Selenium.Core*.symbols.nupkg'
+    nuGetFeedType: 'external'
+    publishFeedCredentials: 'NuGet'
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+
+- task: GitHubRelease@0
+  displayName: 'Create tag on GitHub'
+  inputs:
+    gitHubConnection: 'GitHub'
+    repositoryName: 'aquality-automation/aquality-selenium-core-dotnet'
+    action: 'create'
+    tag: 'v$(GitVersion.NuGetVersion)'
+    tagSource: 'manual'
+    isPreRelease: contains(variables['GitVersion.NuGetVersion'], '-')
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))

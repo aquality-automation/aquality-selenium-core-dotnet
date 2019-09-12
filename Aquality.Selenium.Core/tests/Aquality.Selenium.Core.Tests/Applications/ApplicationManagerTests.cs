@@ -45,7 +45,7 @@ namespace Aquality.Selenium.Core.Tests.Applications
                 var services = new ServiceCollection();
                 var startup = new Startup();
                 var settingsFile = new JsonFile($"Resources.settings.{SpecialSettingsFile}.json", Assembly.GetCallingAssembly());
-                new Startup().ConfigureServices(services, applicationSupplier, settingsFile);
+                startup.ConfigureServices(services, applicationSupplier, settingsFile);
                 services.AddSingleton<ITimeoutConfiguration>(new CustomTimeoutConfiguration(settingsFile));
                 return services;
             }
