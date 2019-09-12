@@ -1,9 +1,3 @@
-# Starter pipeline
-
-# Start with a minimal pipeline that you can customize to build and deploy your code.
-# Add steps that build, run tests, deploy, and more:
-# https://aka.ms/yaml
-
 variables:
   buildConfiguration: 'Release'
   webDriverVersion: '75.0.3770.140'
@@ -16,6 +10,10 @@ pool:
   vmImage: 'windows-latest'
 
 steps:
+- task: GitVersion@5
+  displayName: 'Run GitVersion'
+  inputs:
+    runtime: 'core'
 
 - task: SonarCloudPrepare@1
   displayName: 'Prepare SonarCloud analysis'
@@ -25,9 +23,18 @@ steps:
     projectKey: 'aquality-automation_aquality-selenium-core-dotnet'
     projectName: 'aquality-selenium-core-dotnet'
     projectVersion: '$(Build.BuildNumber)'
+    extraProperties: |
+      sonar.coverage.exclusions=**/**
 
 - script: dotnet build Aquality.Selenium.Core/Aquality.Selenium.Core.sln -c $(buildConfiguration)
   displayName: 'Build solution - $(buildConfiguration)'
+- task: SonarCloudAnalyze@1
+  displayName: 'Run SonarCloud code analysis'
+  continueOnError: true
+
+- task: SonarCloudPublish@1
+  displayName: 'Publish SonarCloud quality gate results'
+  continueOnError: true
 
 - task: Windows Application Driver@0
   displayName: 'Start WinAppDriver'
@@ -44,11 +51,27 @@ steps:
   displayName: stop WinAppDriver
   inputs:
     OperationType: 'Stop'
-  
-- task: SonarCloudAnalyze@1
-  displayName: 'Run SonarCloud code analysis'
-  continueOnError: true
 
-- task: SonarCloudPublish@1
-  displayName: 'Publish SonarCloud quality gate results'
-  continueOnError: true
+- script: dotnet pack Aquality.Selenium.Core\src\Aquality.Selenium.Core\Aquality.Selenium.Core.csproj -c $(buildConfiguration) --no-build -p:Version=$(GitVersion.NuGetVersion) -o $(Build.ArtifactStagingDirectory)
+  displayName: 'Create NuGet package'
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+  
+- task: NuGetCommand@2
+  displayName: 'Push NuGet package'
+  inputs:
+    command: 'push'
+    packagesToPush: '$(Build.ArtifactStagingDirectory)/**/Aquality.Selenium.Core*.nupkg;!$(Build.ArtifactStagingDirectory)/**/Aquality.Selenium.Core*.symbols.nupkg'
+    nuGetFeedType: 'external'
+    publishFeedCredentials: 'NuGet'
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+
+- task: GitHubRelease@0
+  displayName: 'Create tag on GitHub'
+  inputs:
+    gitHubConnection: 'GitHub'
+    repositoryName: 'aquality-automation/aquality-selenium-core-dotnet'
+    action: 'create'
+    tag: 'v$(GitVersion.NuGetVersion)'
+    tagSource: 'manual'
+    isPreRelease: contains(variables['GitVersion.NuGetVersion'], '-')
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
