@@ -16,16 +16,31 @@ pool:
   vmImage: 'windows-latest'
 
 steps:
-- task: PowerShell@2
-  displayName: install calculator
+
+- task: SonarCloudPrepare@1
+  displayName: 'Prepare SonarCloud analysis'
   inputs:
-    targetType: 'inline'
-    script: 'Get-AppxPackage -allusers *windowscalculator* | Foreach {Add-AppxPackage -DisableDevelopmentMode -Register “$($_.InstallLocation)\AppXManifest.xml”}'
+    SonarCloud: 'SonarCloud'
+    organization: 'aqualityautomation'
+    projectKey: 'aquality-automation_aquality-selenium-core-dotnet'
+    projectName: 'aquality-selenium-core-dotnet'
+    projectVersion: '$(Build.BuildNumber)'
+    extraProperties: |
+      sonar.coverage.exclusions=**/**
 
 - script: dotnet build Aquality.Selenium.Core/Aquality.Selenium.Core.sln -c $(buildConfiguration)
   displayName: 'Build solution - $(buildConfiguration)'
+  
+- task: SonarCloudAnalyze@1
+  displayName: 'Run SonarCloud code analysis'
+  continueOnError: true
+
+- task: SonarCloudPublish@1
+  displayName: 'Publish SonarCloud quality gate results'
+  continueOnError: true
+
 - task: Windows Application Driver@0
-  displayName: start WinAppDriver
+  displayName: 'Start WinAppDriver'
   inputs:
     OperationType: 'Start'
 - task: DotNetCoreCLI@2
