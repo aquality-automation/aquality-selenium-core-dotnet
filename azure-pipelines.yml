@@ -25,19 +25,9 @@ steps:
     projectKey: 'aquality-automation_aquality-selenium-core-dotnet'
     projectName: 'aquality-selenium-core-dotnet'
     projectVersion: '$(Build.BuildNumber)'
-    extraProperties: |
-      sonar.coverage.exclusions=**/**
 
 - script: dotnet build Aquality.Selenium.Core/Aquality.Selenium.Core.sln -c $(buildConfiguration)
   displayName: 'Build solution - $(buildConfiguration)'
-  
-- task: SonarCloudAnalyze@1
-  displayName: 'Run SonarCloud code analysis'
-  continueOnError: true
-
-- task: SonarCloudPublish@1
-  displayName: 'Publish SonarCloud quality gate results'
-  continueOnError: true
 
 - task: Windows Application Driver@0
   displayName: 'Start WinAppDriver'
@@ -54,3 +44,11 @@ steps:
   displayName: stop WinAppDriver
   inputs:
     OperationType: 'Stop'
+  
+- task: SonarCloudAnalyze@1
+  displayName: 'Run SonarCloud code analysis'
+  continueOnError: true
+
+- task: SonarCloudPublish@1
+  displayName: 'Publish SonarCloud quality gate results'
+  continueOnError: true
