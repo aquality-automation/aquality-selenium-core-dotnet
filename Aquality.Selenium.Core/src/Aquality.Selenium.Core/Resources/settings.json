@@ -1,0 +1,15 @@
+{
+  "timeouts": {
+    "timeoutImplicit": 0,
+    "timeoutCondition": 30,   
+    "timeoutPollingInterval": 300,
+    "timeoutCommand": 60
+  },
+  "retry": {
+    "number": 2,
+    "pollingInterval": 300
+  },
+  "logger": {
+    "language": "en"
+  }
+}

@@ -1,0 +1,47 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  
+  <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+  <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+  <Authors>aquality automation committers</Authors>
+  <Company>aquality automation</Company>
+  <Description>Core functions for Selenium-based libraries for .NET</Description>
+  <PackageDescription>Core functions for Selenium-based libraries for .NET</PackageDescription>
+  <PackageLicenseExpression></PackageLicenseExpression>
+  <RepositoryUrl>https://github.com/aquality-automation/aquality-selenium-dotnet</RepositoryUrl>
+  <RepositoryType>git</RepositoryType>
+  <PackageTags>selenium webdriver automation</PackageTags>
+  <PackageLicenseFile>LICENSE</PackageLicenseFile>
+  <Copyright>Copyright 2019 Aquality Automation</Copyright>
+  <IsPackable>true</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Resources\Localization\be.json" />
+    <None Remove="Resources\Localization\en.json" />
+    <None Remove="Resources\Localization\ru.json" />
+    <None Remove="Resources\settings.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\Localization\be.json" />
+    <EmbeddedResource Include="Resources\Localization\en.json" />
+    <EmbeddedResource Include="Resources\Localization\ru.json" />
+    <EmbeddedResource Include="Resources\settings.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\..\LICENSE">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="2.2.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="2.2.0" />
+    <PackageReference Include="NLog" Version="4.6.6" />
+    <PackageReference Include="Selenium.Support" Version="3.141.0" />
+    <PackageReference Include="Selenium.WebDriver" Version="3.141.0" />    
+  </ItemGroup>
+</Project>
