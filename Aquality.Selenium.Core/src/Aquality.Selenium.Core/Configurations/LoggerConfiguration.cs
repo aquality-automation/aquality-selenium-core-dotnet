@@ -7,8 +7,7 @@ namespace Aquality.Selenium.Core.Configurations
     /// </summary>
     public class LoggerConfiguration : ILoggerConfiguration
     {
-        private const string defaultLanguage = "en";
-        private readonly JsonFile settingsFile;
+        private const string DefaultLanguage = "en";
 
         /// <summary>
         /// Instantiates class using JSON file with general settings.
@@ -16,9 +15,9 @@ namespace Aquality.Selenium.Core.Configurations
         /// <param name="settingsFile">JSON settings file.</param>
         public LoggerConfiguration(JsonFile settingsFile)
         {
-            this.settingsFile = settingsFile;
+            Language = settingsFile.GetValueOrDefault(".logger.language", DefaultLanguage);
         }
 
-        public string Language => settingsFile.GetValueOrDefault(".logger.language", defaultLanguage);
+        public string Language { get; }
     }
 }

@@ -15,7 +15,6 @@ namespace Aquality.Selenium.Core.Tests.Configurations
         public new void SetUp()
         {
             Environment.SetEnvironmentVariable(ProfileVariableName, ProfileName);
-            base.SetUp();
         }
 
         [TearDown]
@@ -35,6 +34,7 @@ namespace Aquality.Selenium.Core.Tests.Configurations
             Environment.SetEnvironmentVariable("timeouts.timeoutCondition", testValue);
             Environment.SetEnvironmentVariable("timeouts.timeoutPollingInterval", testValue);
             Environment.SetEnvironmentVariable("timeouts.timeoutCommand", testValue);
+            base.SetUp();
 
             var config = ServiceProvider.GetService<ITimeoutConfiguration>();
             Assert.Multiple(() =>
@@ -55,6 +55,7 @@ namespace Aquality.Selenium.Core.Tests.Configurations
             const string messageTmp = "Retry value '{0}' should be overridden with env variable";
             Environment.SetEnvironmentVariable("retry.number", testValue);
             Environment.SetEnvironmentVariable("retry.pollingInterval", testValue);
+            base.SetUp();
 
             var config = ServiceProvider.GetService<IRetryConfiguration>();
             Assert.Multiple(() =>
@@ -69,6 +70,8 @@ namespace Aquality.Selenium.Core.Tests.Configurations
         {
             const string testValue = "testLang";
             Environment.SetEnvironmentVariable("logger.language", testValue);
+            base.SetUp();
+
             var config = ServiceProvider.GetService<ILoggerConfiguration>();
             Assert.AreEqual(testValue, config.Language, "Logger language value should be overridden with env variable");
         }
