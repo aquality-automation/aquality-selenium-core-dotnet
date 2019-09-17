@@ -13,25 +13,29 @@ namespace Aquality.Selenium.Core.Applications
 
         public static bool IsStarted => AppContainer.IsValueCreated && AppContainer.Value.Driver.SessionId != null;
         
-        protected static TApplication GetApplication(Func<IServiceProvider, TApplication> startApplicationFunction, IServiceCollection serviceCollection = null)
+        protected static TApplication GetApplication(Func<IServiceProvider, TApplication> startApplicationFunction, Func<IServiceCollection> serviceCollectionProvider = null)
         {
             if (!IsStarted)
             {
                 AppContainer.Value = startApplicationFunction(
-                    GetServiceProvider(service => GetApplication(startApplicationFunction), serviceCollection));
+                    GetServiceProvider(service => GetApplication(startApplicationFunction, serviceCollectionProvider), serviceCollectionProvider));
             }
             return AppContainer.Value;
         }
 
-        protected static IServiceProvider GetServiceProvider(Func<IServiceProvider, TApplication> applicationSupplier, IServiceCollection serviceCollection = null)
+        protected static IServiceProvider GetServiceProvider(Func<IServiceProvider, TApplication> applicationSupplier, Func<IServiceCollection> serviceCollectionProvider = null)
         {
             if (!ServiceProviderContainer.IsValueCreated)
             {
-                var services = serviceCollection;
-                if (services == null)
+                IServiceCollection services;
+                if (serviceCollectionProvider == null)
                 {
                     services = new ServiceCollection();
                     new Startup().ConfigureServices(services, applicationSupplier);
+                }
+                else
+                {
+                    services = serviceCollectionProvider();
                 }
                 ServiceProviderContainer.Value = services.BuildServiceProvider();
             }

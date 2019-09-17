@@ -36,16 +36,16 @@ namespace Aquality.Selenium.Core.Tests.Applications
 
         private class ApplicationManager : ApplicationManager<ApplicationManager, IApplication>
         {
-            public static IApplication Application => GetApplication(StartApplicationFunction, RegisterServices(StartApplicationFunction));
+            public static IApplication Application => GetApplication(StartApplicationFunction, () => RegisterServices(services => Application));
 
-            public static IServiceProvider ServiceProvider => GetServiceProvider(services => Application, RegisterServices(StartApplicationFunction));
+            public static IServiceProvider ServiceProvider => GetServiceProvider(services => Application, () => RegisterServices(services => Application));
 
             private static IServiceCollection RegisterServices(Func<IServiceProvider, IApplication> applicationSupplier)
             {
                 var services = new ServiceCollection();
                 var startup = new Startup();
-                var settingsFile = new JsonFile($"Resources.settings.{SpecialSettingsFile}.json", Assembly.GetCallingAssembly());
-                new Startup().ConfigureServices(services, applicationSupplier, settingsFile);
+                var settingsFile = new JsonFile($"Resources.settings.{SpecialSettingsFile}.json", Assembly.GetExecutingAssembly());
+                startup.ConfigureServices(services, applicationSupplier, settingsFile);
                 services.AddSingleton<ITimeoutConfiguration>(new CustomTimeoutConfiguration(settingsFile));
                 return services;
             }

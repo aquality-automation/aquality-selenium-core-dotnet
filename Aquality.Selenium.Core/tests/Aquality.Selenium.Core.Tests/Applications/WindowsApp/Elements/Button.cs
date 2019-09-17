@@ -1,5 +1,4 @@
-﻿using Aquality.Selenium.Core.Elements;
-using OpenQA.Selenium;
+﻿using OpenQA.Selenium;
 
 namespace Aquality.Selenium.Core.Tests.Applications.WindowsApp.Elements
 {

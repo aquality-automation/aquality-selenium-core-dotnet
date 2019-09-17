@@ -14,10 +14,10 @@ namespace Aquality.Selenium.Core.Localization
         private readonly JsonFile localizationFile;
         private readonly Logger logger;
 
-        public LocalizationManager(ILoggerConfiguration loggerConfiguration, Logger logger)
+        public LocalizationManager(ILoggerConfiguration loggerConfiguration, Logger logger, Assembly assembly = null)
         {
             var language = loggerConfiguration.Language;
-            localizationFile = new JsonFile(string.Format(LangResource, language.ToLower()), Assembly.GetExecutingAssembly());
+            localizationFile = new JsonFile(string.Format(LangResource, language.ToLower()), assembly ?? Assembly.GetExecutingAssembly());
             this.logger = logger;
         }
 

@@ -10,7 +10,7 @@
   <Description>Core functions for Selenium-based libraries for .NET</Description>
   <PackageDescription>Core functions for Selenium-based libraries for .NET</PackageDescription>
   <PackageLicenseExpression></PackageLicenseExpression>
-  <RepositoryUrl>https://github.com/aquality-automation/aquality-selenium-dotnet</RepositoryUrl>
+  <RepositoryUrl>https://github.com/aquality-automation/aquality-selenium-core-dotnet</RepositoryUrl>
   <RepositoryType>git</RepositoryType>
   <PackageTags>selenium webdriver automation</PackageTags>
   <PackageLicenseFile>LICENSE</PackageLicenseFile>
