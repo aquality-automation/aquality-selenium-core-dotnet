@@ -23,7 +23,7 @@ namespace Aquality.Selenium.Core.Applications
         /// <param name="applicationProvider">function that provides an instance of <see cref="IApplication"/></param>
         /// <param name="settingsFile"><see cref="JsonFile"/> with settings for configuration of dependencies.
         /// Pass the result of <see cref="GetSettings"/> if you need to get settings from the embedded resource of your project.</param>
-        public void ConfigureServices(IServiceCollection services, Func<IServiceProvider, IApplication> applicationProvider, JsonFile settingsFile = null)
+        public void ConfigureServices(IServiceCollection services, Func<IServiceProvider, IApplication> applicationProvider, ISettingsFile settingsFile = null)
         {
             var settings = settingsFile ?? GetSettings();
             services.AddScoped(applicationProvider);
@@ -49,15 +49,15 @@ namespace Aquality.Selenium.Core.Applications
         /// If not found, will look for embedded resource in the calling assembly of this method
         /// </summary>
         /// <returns>An instance of settings JsonFile</returns>
-        public JsonFile GetSettings()
+        public ISettingsFile GetSettings()
         {
             var profileNameFromEnvironment = EnvironmentConfiguration.GetVariable("profile");
             var settingsProfile = profileNameFromEnvironment == null ? "settings.json" : $"settings.{profileNameFromEnvironment}.json";
             Logger.Instance.Debug($"Get settings from: {settingsProfile}");
 
             var jsonFile = FileReader.IsResourceFileExist(settingsProfile)
-                ? new JsonFile(settingsProfile)
-                : new JsonFile($"Resources.{settingsProfile}", Assembly.GetCallingAssembly());
+                ? new JsonSettingsFile(settingsProfile)
+                : new JsonSettingsFile($"Resources.{settingsProfile}", Assembly.GetCallingAssembly());
             return jsonFile;
         }
     }

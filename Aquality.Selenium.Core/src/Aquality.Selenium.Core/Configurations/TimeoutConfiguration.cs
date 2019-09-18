@@ -8,13 +8,13 @@ namespace Aquality.Selenium.Core.Configurations
     /// </summary>
     public class TimeoutConfiguration : ITimeoutConfiguration
     {
-        private readonly JsonFile settingsFile;
+        private readonly ISettingsFile settingsFile;
 
         /// <summary>
         /// Instantiates class using JSON file with general settings.
         /// </summary>
         /// <param name="settingsFile">JSON settings file.</param>
-        public TimeoutConfiguration(JsonFile settingsFile)
+        public TimeoutConfiguration(ISettingsFile settingsFile)
         {
             this.settingsFile = settingsFile;
             Implicit = GetTimeoutFromSeconds(nameof(Implicit));

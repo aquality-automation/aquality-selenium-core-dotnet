@@ -1,5 +1,4 @@
-﻿using Aquality.Selenium.Core.Utilities;
-using System;
+﻿using System;
 
 namespace Aquality.Selenium.Core.Configurations
 {
@@ -8,13 +7,13 @@ namespace Aquality.Selenium.Core.Configurations
     /// </summary>
     public class RetryConfiguration : IRetryConfiguration
     {
-        private readonly JsonFile settingsFile;
+        private readonly ISettingsFile settingsFile;
 
         /// <summary>
         /// Instantiates class using JSON file with general settings.
         /// </summary>
         /// <param name="settingsFile">JSON settings file.</param>
-        public RetryConfiguration(JsonFile settingsFile)
+        public RetryConfiguration(ISettingsFile settingsFile)
         {
             this.settingsFile = settingsFile;
 
