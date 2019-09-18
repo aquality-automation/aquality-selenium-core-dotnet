@@ -67,7 +67,7 @@ namespace Aquality.Selenium.Core.Utilities
             var envValue = GetEnvironmentValue(jsonPath);
             if (envValue != null)
             {
-                return ReadEnvVariableAs(() => (T) TypeDescriptor.GetConverter(typeof(T)).ConvertFrom(envValue),
+                return ConverEnvVar(() => (T) TypeDescriptor.GetConverter(typeof(T)).ConvertFrom(envValue),
                     envValue, jsonPath);
             }
 
@@ -89,7 +89,7 @@ namespace Aquality.Selenium.Core.Utilities
             var envValue = GetEnvironmentValue(jsonPath);
             if (envValue != null)
             {
-                return ReadEnvVariableAs(() =>
+                return ConverEnvVar(() =>
                 {
                     return envValue.Split(',').Select(value => (T)TypeDescriptor.GetConverter(typeof(T)).ConvertFrom(value.Trim())).ToList();
                 }, envValue, jsonPath);
@@ -146,12 +146,12 @@ namespace Aquality.Selenium.Core.Utilities
             return node;
         }
 
-        private static T ReadEnvVariableAs<T>(Func<T> processEnvValue, string envValue, string jsonPath)
+        private static T ConverEnvVar<T>(Func<T> converMethod, string envValue, string jsonPath)
         {
             Logger.Instance.Debug($"***** Using variable passed from environment {jsonPath.Substring(1)}={envValue}");
             try
             {
-                return processEnvValue();
+                return converMethod();
             }
             catch (ArgumentException ex)
             {
