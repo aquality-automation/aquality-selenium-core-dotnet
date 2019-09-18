@@ -132,7 +132,7 @@ namespace Aquality.Selenium.Core.Utilities
 
         private static string GetEnvironmentValue(string jsonPath)
         {
-            var key = jsonPath.Replace("['", ".").Replace("']", "").Substring(1);
+            var key = jsonPath.Replace("['", ".").Replace("']", string.Empty).Substring(1);
             return EnvironmentConfiguration.GetVariable(key);
         }
 
