@@ -1,12 +1,12 @@
-﻿using Aquality.Selenium.Core.Logging;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using Aquality.Selenium.Core.Logging;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace Aquality.Selenium.Core.Utilities
 {
@@ -67,23 +67,11 @@ namespace Aquality.Selenium.Core.Utilities
             var envValue = GetEnvironmentValue(jsonPath);
             if (envValue != null)
             {
-                Logger.Instance.Debug($"***** Using variable passed from environment {jsonPath.Substring(1)}={envValue}");
-                try
-                {
-                    return (T)TypeDescriptor.GetConverter(typeof(T)).ConvertFrom(envValue);
-                }
-                catch (ArgumentException ex)
-                {
-                    var message = $"Value of '{jsonPath}' environment variable has incorrect format: {ex.Message}";
-                    throw new ArgumentException(message);
-                }
+                return ConvertEnvVar(() => (T) TypeDescriptor.GetConverter(typeof(T)).ConvertFrom(envValue),
+                    envValue, jsonPath);
             }
 
             var node = GetJsonNode(jsonPath);
-            if (node == null)
-            {
-                throw new ArgumentException($"There is no value found by path '{jsonPath}' in JSON file '{resourceName}'");
-            }
             return node.ToObject<T>();
         }
 
@@ -101,24 +89,35 @@ namespace Aquality.Selenium.Core.Utilities
             var envValue = GetEnvironmentValue(jsonPath);
             if (envValue != null)
             {
-                Logger.Instance.Debug($"***** Using variable passed from environment {jsonPath.Substring(1)}={envValue}");
-                try
+                return ConvertEnvVar(() =>
                 {
                     return envValue.Split(',').Select(value => (T)TypeDescriptor.GetConverter(typeof(T)).ConvertFrom(value.Trim())).ToList();
-                }
-                catch (ArgumentException ex)
-                {
-                    var message = $"Value of '{jsonPath}' environment variable has incorrect format: {ex.Message}";
-                    throw new ArgumentException(message);
-                }
+                }, envValue, jsonPath);
             }
 
             var node = GetJsonNode(jsonPath);
-            if (node == null)
-            {
-                throw new ArgumentException($"There are no values found by path '{jsonPath}' in JSON file '{resourceName}'");
-            }
             return node.ToObject<IList<T>>();
+        }
+
+        /// <summary>
+        /// Gets dictionary of values from JSON.
+        /// Note that the value can be overriden via Environment variable with the same name;
+        /// (e.g. for json path ".timeouts.timeoutImplicit" you can set environment variable ".timeouts.timeoutImplicit")
+        /// </summary>
+        /// <param name="jsonPath">Relative JsonPath to the values.</param>
+        /// <typeparam name="T">Type of the value.</typeparam>
+        /// <returns>Value from JSON/Environment by JsonPath.</returns>
+        /// <exception cref="ArgumentException">Throws when there are no values found by jsonPath in desired JSON file.</exception>
+        public IReadOnlyDictionary<string, T> GetValueDictionary<T>(string jsonPath)
+        {
+            var dict = new Dictionary<string, T>();
+            var node = GetJsonNode(jsonPath);;
+            foreach (var child in node.Children<JProperty>())
+            {
+                dict.Add(child.Name, GetValue<T>($".{child.Path}"));
+            }
+
+            return dict;
         }
 
         /// <summary>
@@ -128,18 +127,37 @@ namespace Aquality.Selenium.Core.Utilities
         /// <returns>True if present and false otherwise.</returns>
         public bool IsValuePresent(string jsonPath)
         {
-            return GetEnvironmentValue(jsonPath) != null || GetJsonNode(jsonPath) != null;
+            return GetEnvironmentValue(jsonPath) != null || JsonObject.SelectToken(jsonPath) != null;
         }
 
-        private string GetEnvironmentValue(string jsonPath)
+        private static string GetEnvironmentValue(string jsonPath)
         {
-            var key = jsonPath.Substring(1);
+            var key = jsonPath.Replace("['", ".").Replace("']", string.Empty).Substring(1);
             return EnvironmentConfiguration.GetVariable(key);
         }
 
         private JToken GetJsonNode(string jsonPath)
         {
-            return JsonObject.SelectToken(jsonPath);
+            var node = JsonObject.SelectToken(jsonPath);
+            if (node == null)
+            {
+                throw new ArgumentException($"There are no values found by path '{jsonPath}' in JSON file '{resourceName}'");
+            }
+            return node;
+        }
+
+        private static T ConvertEnvVar<T>(Func<T> convertMethod, string envValue, string jsonPath)
+        {
+            Logger.Instance.Debug($"***** Using variable passed from environment {jsonPath.Substring(1)}={envValue}");
+            try
+            {
+                return convertMethod();
+            }
+            catch (ArgumentException ex)
+            {
+                var message = $"Value of '{jsonPath}' environment variable has incorrect format: {ex.Message}";
+                throw new ArgumentException(message);
+            }
         }
     }
 }

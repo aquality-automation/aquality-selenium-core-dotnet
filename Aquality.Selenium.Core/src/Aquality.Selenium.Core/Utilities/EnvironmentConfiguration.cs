@@ -20,7 +20,9 @@ namespace Aquality.Selenium.Core.Utilities
             {
                 Environment.GetEnvironmentVariable(key),
                 Environment.GetEnvironmentVariable(key.ToLower()),
-                Environment.GetEnvironmentVariable(key.ToUpper())
+                Environment.GetEnvironmentVariable(key.ToUpper()),
+                //necessary for Azure
+                Environment.GetEnvironmentVariable(key.ToUpper().Replace('.', '_'))
             };
             return variables.FirstOrDefault(variable => variable != null);
         }
