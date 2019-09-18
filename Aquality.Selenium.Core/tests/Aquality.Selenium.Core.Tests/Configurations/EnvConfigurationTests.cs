@@ -26,10 +26,6 @@ namespace Aquality.Selenium.Core.Tests.Configurations
         [Test]
         public void Should_BePossible_ToOverrideTimeouts_WithEnvVariables()
         {
-            base.SetUp();
-            var startedConfig = ServiceProvider.GetService<ITimeoutConfiguration>();
-            Assert.AreEqual(TimeSpan.FromMilliseconds(1001), startedConfig.PollingInterval, "timeouts.timeoutPollingInterval should be overriden from Azure");
-
             const string testValue = "1000";
             var expectedValueSec = TimeSpan.FromSeconds(1000);
             var expectedValueMillis = TimeSpan.FromMilliseconds(1000);
