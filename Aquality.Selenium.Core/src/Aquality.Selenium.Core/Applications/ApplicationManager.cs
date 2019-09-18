@@ -23,6 +23,11 @@ namespace Aquality.Selenium.Core.Applications
             return AppContainer.Value;
         }
 
+        protected static void SetApplication(TApplication application)
+        {
+            AppContainer.Value = application;
+        }
+
         protected static IServiceProvider GetServiceProvider(Func<IServiceProvider, TApplication> applicationSupplier, Func<IServiceCollection> serviceCollectionProvider = null)
         {
             if (!ServiceProviderContainer.IsValueCreated)
@@ -40,6 +45,11 @@ namespace Aquality.Selenium.Core.Applications
                 ServiceProviderContainer.Value = services.BuildServiceProvider();
             }
             return ServiceProviderContainer.Value;
+        }
+
+        protected static void SetServiceProvider(IServiceProvider serviceProvider)
+        {
+            ServiceProviderContainer.Value = serviceProvider;
         }
     }
 }
