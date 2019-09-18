@@ -5,7 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Aquality.Selenium.Core.Tests.Configurations
 {
-    [Parallelizable(ParallelScope.All)]
+    [Parallelizable(ParallelScope.None)]
     public class EnvConfigurationTests : TestWithoutApplication
     {
         private const string ProfileVariableName = "profile";

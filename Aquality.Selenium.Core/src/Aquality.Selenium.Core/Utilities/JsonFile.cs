@@ -67,7 +67,7 @@ namespace Aquality.Selenium.Core.Utilities
             var envValue = GetEnvironmentValue(jsonPath);
             if (envValue != null)
             {
-                return ConverEnvVar(() => (T) TypeDescriptor.GetConverter(typeof(T)).ConvertFrom(envValue),
+                return ConvertEnvVar(() => (T) TypeDescriptor.GetConverter(typeof(T)).ConvertFrom(envValue),
                     envValue, jsonPath);
             }
 
@@ -89,7 +89,7 @@ namespace Aquality.Selenium.Core.Utilities
             var envValue = GetEnvironmentValue(jsonPath);
             if (envValue != null)
             {
-                return ConverEnvVar(() =>
+                return ConvertEnvVar(() =>
                 {
                     return envValue.Split(',').Select(value => (T)TypeDescriptor.GetConverter(typeof(T)).ConvertFrom(value.Trim())).ToList();
                 }, envValue, jsonPath);
@@ -127,7 +127,7 @@ namespace Aquality.Selenium.Core.Utilities
         /// <returns>True if present and false otherwise.</returns>
         public bool IsValuePresent(string jsonPath)
         {
-            return GetEnvironmentValue(jsonPath) != null || GetJsonNode(jsonPath) != null;
+            return GetEnvironmentValue(jsonPath) != null || JsonObject.SelectToken(jsonPath) != null;
         }
 
         private static string GetEnvironmentValue(string jsonPath)
@@ -146,12 +146,12 @@ namespace Aquality.Selenium.Core.Utilities
             return node;
         }
 
-        private static T ConverEnvVar<T>(Func<T> converMethod, string envValue, string jsonPath)
+        private static T ConvertEnvVar<T>(Func<T> convertMethod, string envValue, string jsonPath)
         {
             Logger.Instance.Debug($"***** Using variable passed from environment {jsonPath.Substring(1)}={envValue}");
             try
             {
-                return converMethod();
+                return convertMethod();
             }
             catch (ArgumentException ex)
             {
