@@ -679,8 +679,8 @@
         <member name="M:Aquality.Selenium.Core.Waitings.ConditionalWait.#ctor(Aquality.Selenium.Core.Configurations.ITimeoutConfiguration,System.IServiceProvider)">
             <summary>
             Instantiates the class using retry configuration.
-            <paramref name="serviceProvider"/>
             <paramref name="timeoutConfiguration"/>
+            <paramref name="serviceProvider"/>
             </summary>        
         </member>
         <member name="M:Aquality.Selenium.Core.Waitings.ConditionalWait.WaitFor``1(System.Func{OpenQA.Selenium.IWebDriver,``0},System.Nullable{System.TimeSpan},System.Nullable{System.TimeSpan},System.String,System.Collections.Generic.IList{System.Type})">
