@@ -1,0 +1,719 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Aquality.Selenium.Core</name>
+    </assembly>
+    <members>
+        <member name="T:Aquality.Selenium.Core.Applications.IApplication">
+            <summary>
+            Interface of any application controlled by Selenium WebDriver API
+            </summary>
+        </member>
+        <member name="P:Aquality.Selenium.Core.Applications.IApplication.Driver">
+            <summary>
+            Current instance of driver
+            </summary>
+        </member>
+        <member name="M:Aquality.Selenium.Core.Applications.IApplication.SetImplicitWaitTimeout(System.TimeSpan)">
+            <summary>
+            Sets implicit wait timeout to browser.
+            Method was extracted with purpose not to pass it to Driver if it is similar to previous value.
+            Simpliest implementation is: Driver.Manage().Timeouts().ImplicitlyWait = timeout
+            </summary>
+            <param name="timeout">timeout to set</param>
+        </member>
+        <member name="T:Aquality.Selenium.Core.Applications.Startup">
+            <summary>
+            Allows to resolve dependencies for all services in the Aquality.Selenium.Core library
+            </summary>
+        </member>
+        <member name="M:Aquality.Selenium.Core.Applications.Startup.ConfigureServices(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.Func{System.IServiceProvider,Aquality.Selenium.Core.Applications.IApplication},Aquality.Selenium.Core.Utilities.JsonFile)">
+            <summary>
+            Used to configure dependencies for services of the current library
+            </summary>
+            <param name="services">Collection of service descriptors</param>
+            <param name="applicationProvider">function that provides an instance of <see cref="T:Aquality.Selenium.Core.Applications.IApplication"/></param>
+            <param name="settingsFile"><see cref="T:Aquality.Selenium.Core.Utilities.JsonFile"/> with settings for configuration of dependencies.
+            Pass the result of <see cref="M:Aquality.Selenium.Core.Applications.Startup.GetSettings"/> if you need to get settings from the embedded resource of your project.</param>
+        </member>
+        <member name="M:Aquality.Selenium.Core.Applications.Startup.GetSettings">
+            <summary>
+            Provides a <see cref="T:Aquality.Selenium.Core.Utilities.JsonFile"/> with settings.
+            If "profile" environment variable is defined, it will be used in the name : $"settings.{profile}.json";
+            Otherwise, will use default name of settings file: "settings.json".
+            Will look for the resource file (copied to binaries/Resources/ folder);
+            If not found, will look for embedded resource in the calling assembly of this method
+            </summary>
+            <returns>An instance of settings JsonFile</returns>
+        </member>
+        <member name="T:Aquality.Selenium.Core.Configurations.ILoggerConfiguration">
+            <summary>
+            Describes logger configuration.
+            </summary>
+        </member>
+        <member name="P:Aquality.Selenium.Core.Configurations.ILoggerConfiguration.Language">
+            <summary>
+            Gets language of framework.
+            </summary>
+            <value>Supported language.</value>
+        </member>
+        <member name="T:Aquality.Selenium.Core.Configurations.IRetryConfiguration">
+            <summary>
+            Describes retry configuration.
+            </summary>
+        </member>
+        <member name="P:Aquality.Selenium.Core.Configurations.IRetryConfiguration.Number">
+            <summary>
+            Gets the number of attempts during retry.
+            </summary>
+            <value>Number of retry attempts.</value>
+        </member>
+        <member name="P:Aquality.Selenium.Core.Configurations.IRetryConfiguration.PollingInterval">
+            <summary>
+            Gets the polling interval used in retry.
+            </summary>
+            <value>Polling interval for retry.</value>
+        </member>
+        <member name="T:Aquality.Selenium.Core.Configurations.ITimeoutConfiguration">
+            <summary>
+            Describes timeouts configuration.
+            </summary>
+        </member>
+        <member name="P:Aquality.Selenium.Core.Configurations.ITimeoutConfiguration.Implicit">
+            <summary>
+            Gets WedDriver ImplicitWait timeout.
+            </summary>
+        </member>
+        <member name="P:Aquality.Selenium.Core.Configurations.ITimeoutConfiguration.Condition">
+            <summary>
+            Gets default ConditionalWait timeout.
+            </summary>
+        </member>
+        <member name="P:Aquality.Selenium.Core.Configurations.ITimeoutConfiguration.PollingInterval">
+            <summary>
+            Gets ConditionalWait polling interfal.
+            </summary>
+        </member>
+        <member name="P:Aquality.Selenium.Core.Configurations.ITimeoutConfiguration.Command">
+            <summary>
+            Gets Command timeout.
+            </summary>
+        </member>
+        <member name="T:Aquality.Selenium.Core.Configurations.LoggerConfiguration">
+            <summary>
+            Provides logger configuration
+            </summary>
+        </member>
+        <member name="M:Aquality.Selenium.Core.Configurations.LoggerConfiguration.#ctor(Aquality.Selenium.Core.Utilities.JsonFile)">
+            <summary>
+            Instantiates class using JSON file with general settings.
+            </summary>
+            <param name="settingsFile">JSON settings file.</param>
+        </member>
+        <member name="T:Aquality.Selenium.Core.Configurations.RetryConfiguration">
+            <summary>
+            Provides retry configuration.
+            </summary>
+        </member>
+        <member name="M:Aquality.Selenium.Core.Configurations.RetryConfiguration.#ctor(Aquality.Selenium.Core.Utilities.JsonFile)">
+            <summary>
+            Instantiates class using JSON file with general settings.
+            </summary>
+            <param name="settingsFile">JSON settings file.</param>
+        </member>
+        <member name="T:Aquality.Selenium.Core.Configurations.TimeoutConfiguration">
+            <summary>
+            Provides timeouts configuration.
+            </summary>
+        </member>
+        <member name="M:Aquality.Selenium.Core.Configurations.TimeoutConfiguration.#ctor(Aquality.Selenium.Core.Utilities.JsonFile)">
+            <summary>
+            Instantiates class using JSON file with general settings.
+            </summary>
+            <param name="settingsFile">JSON settings file.</param>
+        </member>
+        <member name="T:Aquality.Selenium.Core.Elements.DesiredState">
+            <summary>
+            Defines desired state for element with ability to handle exceptions
+            </summary>
+        </member>
+        <member name="T:Aquality.Selenium.Core.Elements.Element">
+            <summary>
+            Defines base class for any UI element.
+            </summary>
+        </member>
+        <member name="T:Aquality.Selenium.Core.Elements.ElementFactory">
+            <summary>
+            Factory that creates elements.
+            </summary>
+        </member>
+        <member name="P:Aquality.Selenium.Core.Elements.ElementFactory.ElementTypesMap">
+            <summary>
+            Gets map between elements interfaces and their implementations.
+            Can be extended for custom elements with custom interfaces.
+            </summary>
+            <returns>Dictionary where key is interface and value is its implementation.</returns>
+        </member>
+        <member name="M:Aquality.Selenium.Core.Elements.ElementFactory.GenerateXpathLocator(OpenQA.Selenium.By,OpenQA.Selenium.IWebElement,System.Int32)">
+            <summary>
+            Generates xpath locator for target element
+            </summary>
+            <param name="baseLocator">locator of parent element</param>
+            <param name="webElement">target element</param>
+            <param name="elementIndex">index of target element</param>
+            <returns>target element's locator</returns>
+        </member>
+        <member name="M:Aquality.Selenium.Core.Elements.ElementFactory.ResolveSupplier``1(Aquality.Selenium.Core.Elements.ElementSupplier{``0})">
+            <summary>
+            Resolves element supplier or return itself if it is not null
+            </summary>
+            <typeparam name="T">type of target element</typeparam>
+            <param name="supplier">target element supplier</param>
+            <returns>non-null element supplier</returns>
+        </member>
+        <member name="T:Aquality.Selenium.Core.Elements.ElementFinder">
+            <summary>
+            Implementation of <see cref="T:Aquality.Selenium.Core.Elements.Interfaces.IElementFinder"/>
+            </summary>
+        </member>
+        <member name="T:Aquality.Selenium.Core.Elements.ElementsCount">
+            <summary>
+            Possible count of elements.
+            </summary>
+        </member>
+        <member name="T:Aquality.Selenium.Core.Elements.ElementState">
+            <summary>
+            Possible states of element.
+            </summary>
+        </member>
+        <member name="T:Aquality.Selenium.Core.Elements.ElementSupplier`1">
+            <summary>
+            Delegate that defines constructor of element.
+            </summary>
+            <typeparam name="T">Type of element that has to implement IElement interface</typeparam>
+            <param name="locator">Element locator</param>
+            <param name="name">Element name</param>
+            <param name="state">Element state</param>
+            <returns>Element instance of type T</returns>
+        </member>
+        <member name="T:Aquality.Selenium.Core.Elements.Interfaces.IElement">
+            <summary>
+            Describes behavior of any UI element.
+            </summary>
+        </member>
+        <member name="P:Aquality.Selenium.Core.Elements.Interfaces.IElement.Locator">
+            <summary>
+            Unique locator of element.
+            </summary>
+            <value>Instance of <see cref="T:OpenQA.Selenium.By"/></value>
+        </member>
+        <member name="P:Aquality.Selenium.Core.Elements.Interfaces.IElement.Name">
+            <summary>
+            Unique name of element.
+            </summary>
+            <value>String representation of element name.</value>
+        </member>
+        <member name="P:Aquality.Selenium.Core.Elements.Interfaces.IElement.State">
+            <summary>
+            Gets element state.
+            </summary>
+            <value>Instance of <see cref="T:Aquality.Selenium.Core.Elements.Interfaces.IElementStateProvider"/></value>
+        </member>
+        <member name="M:Aquality.Selenium.Core.Elements.Interfaces.IElement.GetElement(System.Nullable{System.TimeSpan})">
+            <summary>
+            Finds current element by specified <see cref="P:Aquality.Selenium.Core.Elements.Interfaces.IElement.Locator"/>
+            </summary>
+            <param name="timeout">Timeout to find element. Default: <see cref="P:Aquality.Selenium.Core.Configurations.ITimeoutConfiguration.Condition"/></param>
+            <returns>Instance of <see cref="T:OpenQA.Selenium.Remote.RemoteWebElement"/> if found.</returns>
+            <exception cref="T:OpenQA.Selenium.NoSuchElementException">Thrown when no elements found.</exception>
+        </member>
+        <member name="P:Aquality.Selenium.Core.Elements.Interfaces.IElement.Text">
+            <summary>
+            Gets element text.
+            </summary>
+        </member>
+        <member name="M:Aquality.Selenium.Core.Elements.Interfaces.IElement.GetAttribute(System.String)">
+            <summary>
+            Gets element attribute value by its name.
+            </summary>
+            <param name="attr">Name of attrbiute</param>
+            <returns>Value of element attribute.</returns>
+        </member>
+        <member name="M:Aquality.Selenium.Core.Elements.Interfaces.IElement.SendKeys(System.String)">
+            <summary>
+            Sends keys to element.
+            </summary>
+            <param name="key">Key to send.</param>
+        </member>
+        <member name="M:Aquality.Selenium.Core.Elements.Interfaces.IElement.Click">
+            <summary>
+            Clicks the element.
+            </summary>
+        </member>
+        <member name="T:Aquality.Selenium.Core.Elements.Interfaces.IElementFactory">
+            <summary>
+            Defines the interface used to create the elements.
+            </summary>
+        </member>
+        <member name="M:Aquality.Selenium.Core.Elements.Interfaces.IElementFactory.GetCustomElement``1(Aquality.Selenium.Core.Elements.ElementSupplier{``0},OpenQA.Selenium.By,System.String,Aquality.Selenium.Core.Elements.ElementState)">
+            <summary>
+            Create custom element according to passed parameters
+            </summary>
+            <typeparam name="T">Type of the target element</typeparam>
+            <param name="elementSupplier">Delegate that defines constructor of element</param>
+            <param name="locator">Locator of the target element</param>
+            <param name="name">Name of the target element</param>
+            <param name="state">State of the target element</param>
+            <returns>Instance of custom element</returns>
+        </member>
+        <member name="M:Aquality.Selenium.Core.Elements.Interfaces.IElementFactory.FindChildElement``1(Aquality.Selenium.Core.Elements.Interfaces.IElement,OpenQA.Selenium.By,Aquality.Selenium.Core.Elements.ElementSupplier{``0},Aquality.Selenium.Core.Elements.ElementState)">
+            <summary>
+            Finds child element by its locator relative to parent element.
+            </summary>
+            <typeparam name="T">Type of child element that has to implement IElement</typeparam>
+            <param name="parentElement">Parent element</param>
+            <param name="childLocator">Locator of child element relative to its parent</param>
+            <param name="supplier">Delegate that defines constructor of element in case of custom element</param>
+            <param name="state">Child element state</param>
+            <exception cref="T:System.InvalidOperationException">Thrown when the supplier is null, and no constructor with required arguments was found.</exception>
+            <returns>Instance of child element</returns>
+        </member>
+        <member name="M:Aquality.Selenium.Core.Elements.Interfaces.IElementFactory.FindElements``1(OpenQA.Selenium.By,Aquality.Selenium.Core.Elements.ElementSupplier{``0},Aquality.Selenium.Core.Elements.ElementsCount,Aquality.Selenium.Core.Elements.ElementState)">
+            <summary>
+            Finds list of elements by base locator.
+            </summary>
+            <typeparam name="T">Type of elements that have to implement IElement</typeparam>
+            <param name="locator">Base elements locator</param>
+            <param name="supplier">Delegate that defines constructor of element in case of custom elements</param>
+            <param name="expectedCount">Expected number of elements that have to be found (zero ot more then zero)</param>
+            <param name="state">Elements state</param>
+            <exception cref="T:System.InvalidOperationException">Thrown when the supplier is null, and no constructor with required arguments was found.</exception>
+            <returns>List of elements that found by locator</returns>
+        </member>
+        <member name="T:Aquality.Selenium.Core.Elements.Interfaces.IElementFinder">
+            <summary>
+            Provides ability to find elements in desired ElementState.
+            </summary>
+        </member>
+        <member name="M:Aquality.Selenium.Core.Elements.Interfaces.IElementFinder.FindElement(OpenQA.Selenium.By,Aquality.Selenium.Core.Elements.ElementState,System.Nullable{System.TimeSpan})">
+            <summary>
+            Finds element in desired ElementState.
+            </summary>
+            <param name="locator">element locator</param>
+            <param name="state">desired ElementState</param>
+            <param name="timeout">timeout for search</param>
+            <exception cref="T:OpenQA.Selenium.NoSuchElementException">Thrown if element was not found in time in desired state</exception> 
+            <returns>Found element</returns>
+        </member>
+        <member name="M:Aquality.Selenium.Core.Elements.Interfaces.IElementFinder.FindElement(OpenQA.Selenium.By,System.Func{OpenQA.Selenium.IWebElement,System.Boolean},System.Nullable{System.TimeSpan})">
+            <summary>
+            Finds element in state defined by predicate.
+            </summary>
+            <param name="locator">elements locator</param>
+            <param name="elementStateCondition">predicate to define element state</param>
+            <param name="timeout">timeout for search</param>
+            <exception cref="T:OpenQA.Selenium.NoSuchElementException">Thrown if element was not found in time in desired state</exception> 
+            <returns>Found element</returns>
+        </member>
+        <member name="M:Aquality.Selenium.Core.Elements.Interfaces.IElementFinder.FindElements(OpenQA.Selenium.By,Aquality.Selenium.Core.Elements.ElementState,System.Nullable{System.TimeSpan})">
+            <summary>
+            Finds elements in desired ElementState.
+            </summary>
+            <param name="locator">elements locator</param>
+            <param name="state">desired ElementState</param>
+            <param name="timeout">timeout for search</param>
+            <returns>List of found elements</returns>
+        </member>
+        <member name="M:Aquality.Selenium.Core.Elements.Interfaces.IElementFinder.FindElements(OpenQA.Selenium.By,System.Func{OpenQA.Selenium.IWebElement,System.Boolean},System.Nullable{System.TimeSpan})">
+            <summary>
+            Finds elements in state defined by predicate.
+            </summary>
+            <param name="locator">elements locator</param>
+            <param name="elementStateCondition">predicate to define elements state</param>
+            <param name="timeout">timeout for search</param>
+            <returns>List of found elements</returns>
+        </member>
+        <member name="M:Aquality.Selenium.Core.Elements.Interfaces.IElementFinder.FindElements(OpenQA.Selenium.By,Aquality.Selenium.Core.Elements.DesiredState,System.Nullable{System.TimeSpan})">
+            <summary>
+            Finds elements in state defined by desired state.
+            </summary>
+            <param name="locator">elements locator</param>
+            <param name="desiredState">desired elements state</param>
+            <param name="timeout">timeout for search</param>
+            <returns>List of found elements</returns>
+        </member>
+        <member name="T:Aquality.Selenium.Core.Elements.Interfaces.IElementStateProvider">
+            <summary>
+            Provides ability to define element's state (whether it is displayed, exist or not).
+            Also provides respective positive and negative waiting methods.
+            </summary>
+        </member>
+        <member name="P:Aquality.Selenium.Core.Elements.Interfaces.IElementStateProvider.IsDisplayed">
+            <summary>
+            Gets element's displayed state: true if displayed and false otherwise.
+            </summary>
+        </member>
+        <member name="P:Aquality.Selenium.Core.Elements.Interfaces.IElementStateProvider.IsExist">
+            <summary>
+            Gets element's exist state: true if element exists in DOM (without visibility check) and false otherwise.
+            </summary>
+        </member>
+        <member name="P:Aquality.Selenium.Core.Elements.Interfaces.IElementStateProvider.IsClickable">
+            <summary>
+            Gets element's clickable state, which means element is displayed and enabled: true if element is clickable, false otherwise.
+            </summary>
+        </member>
+        <member name="P:Aquality.Selenium.Core.Elements.Interfaces.IElementStateProvider.IsEnabled">
+            <summary>
+            Gets element's Enabled state, which means element is Enabled and does not have "disabled" class: true if enabled, false otherwise.
+            </summary>
+            <exception cref="T:OpenQA.Selenium.NoSuchElementException">Throws when element not found.</exception>
+        </member>
+        <member name="M:Aquality.Selenium.Core.Elements.Interfaces.IElementStateProvider.WaitForDisplayed(System.Nullable{System.TimeSpan})">
+            <summary>
+            Waits for element is displayed on the page.
+            </summary>
+            <param name="timeout">Timeout for waiting. Default: <see cref="P:Aquality.Selenium.Core.Configurations.ITimeoutConfiguration.Condition"/></param>
+            <returns>true if element displayed after waiting, false otherwise</returns>
+        </member>
+        <member name="M:Aquality.Selenium.Core.Elements.Interfaces.IElementStateProvider.WaitForNotDisplayed(System.Nullable{System.TimeSpan})">
+            <summary>
+            Waits for element is not displayed on the page.
+            </summary>
+            <param name="timeout">Timeout for waiting. Default: <see cref="P:Aquality.Selenium.Core.Configurations.ITimeoutConfiguration.Condition"/></param>
+            <returns>true if element does not display after waiting, false otherwise</returns>
+        </member>
+        <member name="M:Aquality.Selenium.Core.Elements.Interfaces.IElementStateProvider.WaitForExist(System.Nullable{System.TimeSpan})">
+            <summary>
+            Waits for element exists in DOM (without visibility check).
+            </summary>
+            <param name="timeout">Timeout for waiting. Default: <see cref="P:Aquality.Selenium.Core.Configurations.ITimeoutConfiguration.Condition"/></param>
+            <returns>true if element exist after waiting, false otherwise</returns>
+        </member>
+        <member name="M:Aquality.Selenium.Core.Elements.Interfaces.IElementStateProvider.WaitForNotExist(System.Nullable{System.TimeSpan})">
+            <summary>
+            Waits for element does not exist in DOM (without visibility check).
+            </summary>
+            <param name="timeout">Timeout for waiting. Default: <see cref="P:Aquality.Selenium.Core.Configurations.ITimeoutConfiguration.Condition"/></param>
+            <returns>true if element does not exist after waiting, false otherwise</returns>
+        </member>
+        <member name="M:Aquality.Selenium.Core.Elements.Interfaces.IElementStateProvider.WaitForEnabled(System.Nullable{System.TimeSpan})">
+            <summary>
+            Waits for element is enabled state which means element is Enabled and does not have "disabled" class.
+            </summary>
+            <param name="timeout">Timeout to get state. Default: <see cref="P:Aquality.Selenium.Core.Configurations.ITimeoutConfiguration.Condition"/></param>
+            <returns>True if enabled, false otherwise.</returns>
+            <exception cref="T:OpenQA.Selenium.NoSuchElementException">Throws when timeout exceeded and element not found.</exception>
+        </member>
+        <member name="M:Aquality.Selenium.Core.Elements.Interfaces.IElementStateProvider.WaitForNotEnabled(System.Nullable{System.TimeSpan})">
+            <summary>
+            Waits for element is not enabled state which means element is not Enabled or does have "disabled" class.
+            </summary>
+            <param name="timeout">Timeout to get state. Default: <see cref="P:Aquality.Selenium.Core.Configurations.ITimeoutConfiguration.Condition"/></param>
+            <returns>True if not enabled, false otherwise.</returns>
+            <exception cref="T:OpenQA.Selenium.NoSuchElementException">Throws when timeout exceeded and element not found.</exception>
+        </member>
+        <member name="M:Aquality.Selenium.Core.Elements.Interfaces.IElementStateProvider.WaitForClickable(System.Nullable{System.TimeSpan})">
+            <summary>
+            Waits for element to become clickable which means element is displayed and enabled.
+            </summary>
+            <param name="timeout">Timeout for wait. Default: <see cref="P:Aquality.Selenium.Core.Configurations.ITimeoutConfiguration.Condition"/></param>
+            <exception cref="T:OpenQA.Selenium.WebDriverTimeoutException">Throws when timeout exceeded and element is not clickable.</exception>
+        </member>
+        <member name="T:Aquality.Selenium.Core.Elements.Interfaces.IParent">
+            <summary>
+            Defines behavior of element with child elements.
+            </summary>
+        </member>
+        <member name="M:Aquality.Selenium.Core.Elements.Interfaces.IParent.FindChildElement``1(OpenQA.Selenium.By,Aquality.Selenium.Core.Elements.ElementSupplier{``0},Aquality.Selenium.Core.Elements.ElementState)">
+            <summary>
+            Finds child element of current element by its locator.
+            </summary>
+            <typeparam name="T">Type of child element that has to implement IElement</typeparam>
+            <param name="childLocator">Locator of child element.</param>
+            <param name="supplier">Delegate that defines constructor of child element in case of custom element</param>
+            <param name="state">Child element state</param>
+            <returns>Instance of child element</returns>
+        </member>
+        <member name="T:Aquality.Selenium.Core.Localization.LocalizationLogger">
+            <summary>
+            Log messages to different languages
+            </summary>
+        </member>
+        <member name="T:Aquality.Selenium.Core.Localization.LocalizationManager">
+            <summary>
+            This class is using for translation messages to different languages
+            </summary>
+        </member>
+        <member name="M:Aquality.Selenium.Core.Localization.LocalizationManager.GetLocalizedMessage(System.String,System.Object[])">
+            <summary>
+            Get localized message from resources by its key.
+            </summary>
+            <param name="messageKey">Key in resource file.</param>
+            <param name="args">Arguments, which will be provided to template of localized message.</param>
+            <returns>Localized message.</returns>
+        </member>
+        <member name="T:Aquality.Selenium.Core.Logging.Logger">
+            <summary>
+            This class is using for a creating extended log. It implements a Singleton pattern.
+            </summary>
+        </member>
+        <member name="P:Aquality.Selenium.Core.Logging.Logger.Instance">
+            <summary>
+            Gets Logger instance.
+            </summary>
+        </member>
+        <member name="M:Aquality.Selenium.Core.Logging.Logger.AddTarget(NLog.Targets.Target)">
+            <summary>
+            Adds configuration (target).
+            </summary>
+            <param name="target">Target configuration to add.</param>
+            <returns>Logger instance.</returns>
+        </member>
+        <member name="M:Aquality.Selenium.Core.Logging.Logger.RemoveTarget(NLog.Targets.Target)">
+            <summary>
+            Removes configuration (target).
+            </summary>
+            <param name="target">Target configuratio to remove.</param>
+            <returns>Logger instance.</returns>
+        </member>
+        <member name="M:Aquality.Selenium.Core.Logging.Logger.Debug(System.String,System.Exception)">
+            <summary>
+            Log debug message and optional exception.
+            </summary>
+            <param name="message">Message</param>
+            <param name="exception">Exception</param>
+        </member>
+        <member name="M:Aquality.Selenium.Core.Logging.Logger.Info(System.String)">
+            <summary>
+            Log info message.
+            </summary>
+            <param name="message">Message</param>
+        </member>
+        <member name="M:Aquality.Selenium.Core.Logging.Logger.Warn(System.String)">
+            <summary>
+            Log warning message.
+            </summary>
+            <param name="message">Message</param>
+        </member>
+        <member name="M:Aquality.Selenium.Core.Logging.Logger.Error(System.String)">
+            <summary>
+            Log error message.
+            </summary>
+            <param name="message">Message</param>
+        </member>
+        <member name="M:Aquality.Selenium.Core.Logging.Logger.Fatal(System.String,System.Exception)">
+            <summary>
+            Log fatal message and exception.
+            </summary>
+            <param name="message">Message</param>
+            <param name="exception">Exception</param>
+        </member>
+        <member name="T:Aquality.Selenium.Core.Utilities.ElementActionRetrier">
+            <summary>
+            Retries an action or function when <see cref="T:OpenQA.Selenium.StaleElementReferenceException"/> or <see cref="T:OpenQA.Selenium.InvalidElementStateException"/> occures.
+            </summary>
+        </member>
+        <member name="M:Aquality.Selenium.Core.Utilities.ElementActionRetrier.#ctor(Aquality.Selenium.Core.Configurations.IRetryConfiguration)">
+            <summary>
+            Instantiates the class using retry configuration.
+            </summary>
+            <param name="retryConfiguration"></param>
+        </member>
+        <member name="M:Aquality.Selenium.Core.Utilities.ElementActionRetrier.DoWithRetry(System.Action)">
+            <summary>
+            Retries the action when <see cref="T:OpenQA.Selenium.StaleElementReferenceException"/> or <see cref="T:OpenQA.Selenium.InvalidElementStateException"/> occures.
+            </summary>
+            <param name="action">Action to be applied.</param>
+        </member>
+        <member name="M:Aquality.Selenium.Core.Utilities.ElementActionRetrier.DoWithRetry``1(System.Func{``0})">
+            <summary>
+            Retries the function when <see cref="T:OpenQA.Selenium.StaleElementReferenceException"/> or <see cref="T:OpenQA.Selenium.InvalidElementStateException"/> occures.
+            </summary>
+            <typeparam name="T">Return type of function.</typeparam>
+            <param name="function">Function to be applied.</param>
+            <returns>Result of the function</returns>
+        </member>
+        <member name="T:Aquality.Selenium.Core.Utilities.EnumExtensions">
+            <summary>
+            Simplifies converting values to enum
+            </summary>
+        </member>
+        <member name="M:Aquality.Selenium.Core.Utilities.EnumExtensions.ToEnum``1(System.Object)">
+            <summary>
+            Converts object to enum.
+            If the object is int - casts it to enum directly;
+            Otherwise, calls <see cref="M:System.Object.ToString"/> and then <see cref="M:Aquality.Selenium.Core.Utilities.EnumExtensions.ToEnum``1(System.String)"/>
+            </summary>
+            <typeparam name="T">Target enum type</typeparam>
+            <param name="value">Value to convert</param>
+            <returns>Converted enum value</returns>
+        </member>
+        <member name="M:Aquality.Selenium.Core.Utilities.EnumExtensions.ToEnum``1(System.String)">
+            <summary>
+            Converts object to enum.
+            Asserts via <see cref="M:System.Diagnostics.Contracts.Contract.Assert(System.Boolean)"/> that <see cref="P:System.Type.IsEnum"/>.
+            Then calls <see cref="M:System.Enum.Parse(System.Type,System.String)"/> against passed values
+            </summary>
+            <typeparam name="T">Target enum type</typeparam>
+            <param name="value">Value to convert</param>
+            <returns>Converted enum value</returns>
+        </member>
+        <member name="T:Aquality.Selenium.Core.Utilities.EnvironmentConfiguration">
+            <summary>
+            Environment variables reader.
+            </summary>
+        </member>
+        <member name="M:Aquality.Selenium.Core.Utilities.EnvironmentConfiguration.GetVariable(System.String)">
+            <summary>
+            Gets value of environment variable by key.
+            </summary>
+            <param name="key">Environment variable key.</param>
+            <returns>Value of environment variable.</returns>
+        </member>
+        <member name="T:Aquality.Selenium.Core.Utilities.FileReader">
+            <summary>
+            Utility methods to read files.
+            </summary>
+        </member>
+        <member name="M:Aquality.Selenium.Core.Utilities.FileReader.GetTextFromEmbeddedResource(System.String,System.Reflection.Assembly)">
+            <summary>
+            Gets text from embedded resource file.
+            </summary>
+            <param name="embeddedResourcePath">Embedded resource path.</param>
+            <param name="resourceAssembly">Assembly which resource belongs to.</param>
+            <returns>Text of the file.</returns>
+        </member>
+        <member name="M:Aquality.Selenium.Core.Utilities.FileReader.GetTextFromResource(System.String)">
+            <summary>
+            Gets text from the file in the Resources folder (should be copied to output directory).
+            </summary>
+            <param name="fileName">Name of the resource file.</param>
+            <returns>Text of the file.</returns>
+        </member>
+        <member name="M:Aquality.Selenium.Core.Utilities.FileReader.IsResourceFileExist(System.String)">
+            <summary>
+            Checks whether file exists in Resources folder or not.
+            </summary>
+            <param name="fileName">Name of resource file.</param>
+            <returns>True if exists and false otherwise</returns>
+        </member>
+        <member name="M:Aquality.Selenium.Core.Utilities.FileReader.GetTextFromFile(System.IO.FileInfo)">
+            <summary>
+            Gets text from the file.
+            </summary>
+            <param name="fileInfo">Required file info.</param>
+            <returns>Text of the file.</returns>
+        </member>
+        <member name="T:Aquality.Selenium.Core.Utilities.JsonFile">
+            <summary>
+            Provides methods to get info from JSON files.
+            Note that the value can be overriden via Environment variable with the same name
+            (e.g. for json path ".timeouts.timeoutScript" you can set environment variable "timeouts.timeoutScript"
+            </summary>
+        </member>
+        <member name="M:Aquality.Selenium.Core.Utilities.JsonFile.#ctor(System.IO.FileInfo)">
+            <summary>
+            Inistantiates class using desired JSON fileinfo.
+            </summary>
+            <param name="fileInfo">JSON fileinfo.</param>
+        </member>
+        <member name="M:Aquality.Selenium.Core.Utilities.JsonFile.#ctor(System.String)">
+            <summary>
+            Inistantiates class using desired resource file info.
+            </summary>
+            <param name="resourceFileName"></param>
+        </member>
+        <member name="M:Aquality.Selenium.Core.Utilities.JsonFile.#ctor(System.String,System.Reflection.Assembly)">
+            <summary>
+            Inistantiates class using desired embeded resource.
+            </summary>
+            <param name="embededResourceName">Embeded resource name</param>
+            <param name="assembly">Assembly which resource belongs to</param>
+        </member>
+        <member name="M:Aquality.Selenium.Core.Utilities.JsonFile.GetValue``1(System.String)">
+            <summary>
+            Gets value from JSON.
+            Note that the value can be overriden via Environment variable with the same name
+            (e.g. for json path ".timeouts.timeoutScript" you can set environment variable "timeouts.timeoutScript")
+            </summary>
+            <param name="jsonPath">Relative JsonPath to the value.</param>
+            <typeparam name="T">Type of the value.</typeparam>
+            <returns>Value from JSON/Environment by JsonPath.</returns>
+            <exception cref="T:System.ArgumentException">Throws when there is no value found by jsonPath in desired JSON file.</exception>
+        </member>
+        <member name="M:Aquality.Selenium.Core.Utilities.JsonFile.GetValueList``1(System.String)">
+            <summary>
+            Gets list of values from JSON.
+            Note that the value can be overriden via Environment variable with the same name; values must be separated by ','
+            (e.g. for json path ".driverSettings.chrome.startArguments" you can set environment variable "driverSettings.chrome.startArguments")
+            </summary>
+            <param name="jsonPath">Relative JsonPath to the values.</param>
+            <typeparam name="T">Type of the value.</typeparam>
+            <returns>Value from JSON/Environment by JsonPath.</returns>
+            <exception cref="T:System.ArgumentException">Throws when there are no values found by jsonPath in desired JSON file.</exception>
+        </member>
+        <member name="M:Aquality.Selenium.Core.Utilities.JsonFile.GetValueDictionary``1(System.String)">
+            <summary>
+            Gets dictionary of values from JSON.
+            Note that the value can be overriden via Environment variable with the same name;
+            (e.g. for json path ".timeouts.timeoutImplicit" you can set environment variable ".timeouts.timeoutImplicit")
+            </summary>
+            <param name="jsonPath">Relative JsonPath to the values.</param>
+            <typeparam name="T">Type of the value.</typeparam>
+            <returns>Value from JSON/Environment by JsonPath.</returns>
+            <exception cref="T:System.ArgumentException">Throws when there are no values found by jsonPath in desired JSON file.</exception>
+        </member>
+        <member name="M:Aquality.Selenium.Core.Utilities.JsonFile.IsValuePresent(System.String)">
+            <summary>
+            Checks whether value present on JSON/Environment by JsonPath or not.
+            </summary>
+            <param name="jsonPath">Relative JsonPath to the object.</param>
+            <returns>True if present and false otherwise.</returns>
+        </member>
+        <member name="T:Aquality.Selenium.Core.Waitings.ConditionalWait">
+            <summary>
+            This class is using for waiting any conditions.
+            </summary>
+        </member>
+        <member name="M:Aquality.Selenium.Core.Waitings.ConditionalWait.#ctor(Aquality.Selenium.Core.Configurations.ITimeoutConfiguration,System.IServiceProvider)">
+            <summary>
+            Instantiates the class using retry configuration.
+            <paramref name="serviceProvider"/>
+            <paramref name="timeoutConfiguration"/>
+            </summary>        
+        </member>
+        <member name="M:Aquality.Selenium.Core.Waitings.ConditionalWait.WaitFor``1(System.Func{OpenQA.Selenium.IWebDriver,``0},System.Nullable{System.TimeSpan},System.Nullable{System.TimeSpan},System.String,System.Collections.Generic.IList{System.Type})">
+            <summary>
+            Wait for some object from condition with timeout using Selenium WebDriver.
+            </summary>
+            <typeparam name="T">Type of object which is waiting for</typeparam>
+            <param name="condition">Function for waiting</param>
+            <param name="timeout">Condition timeout. Default value is <see cref="P:Aquality.Selenium.Core.Configurations.ITimeoutConfiguration.Condition"/></param>
+            <param name="pollingInterval">Condition check interval. Default value is <see cref="P:Aquality.Selenium.Core.Configurations.ITimeoutConfiguration.PollingInterval"/></param>
+            <param name="message">Part of error message in case of Timeout exception</param>
+            <param name="exceptionsToIgnore">Possible exceptions that have to be ignored. Handles <see cref="T:OpenQA.Selenium.StaleElementReferenceException"/> by default.</param>
+            <returns>Condition result which is waiting for.</returns>
+            <exception cref="T:OpenQA.Selenium.WebDriverTimeoutException">Throws when timeout exceeded and condition not satisfied.</exception>
+        </member>
+        <member name="M:Aquality.Selenium.Core.Waitings.ConditionalWait.WaitFor(System.Func{System.Boolean},System.Nullable{System.TimeSpan},System.Nullable{System.TimeSpan})">
+            <summary>
+            Wait for some condition within timeout.
+            </summary>
+            <param name="condition">Predicate for waiting</param>
+            <param name="timeout">Condition timeout. Default value is <see cref="P:Aquality.Selenium.Core.Configurations.ITimeoutConfiguration.Condition"/></param>
+            <param name="pollingInterval">Condition check interval. Default value is <see cref="P:Aquality.Selenium.Core.Configurations.ITimeoutConfiguration.PollingInterval"/></param>
+            <returns>True if condition satisfied and false otherwise.</returns>
+        </member>
+        <member name="M:Aquality.Selenium.Core.Waitings.ConditionalWait.WaitForTrue(System.Func{System.Boolean},System.Nullable{System.TimeSpan},System.Nullable{System.TimeSpan},System.String)">
+            <summary>
+            Wait for some condition within timeout.
+            </summary>
+            <param name="condition">Predicate for waiting</param>
+            <param name="timeout">Condition timeout. Default value is <see cref="P:Aquality.Selenium.Core.Configurations.ITimeoutConfiguration.Condition"/></param>
+            <param name="pollingInterval">Condition check interval. Default value is <see cref="P:Aquality.Selenium.Core.Configurations.ITimeoutConfiguration.PollingInterval"/></param>
+            <param name="message">Part of error message in case of Timeout exception</param>
+            <exception cref="T:System.TimeoutException">Throws when timeout exceeded and condition not satisfied.</exception>
+        </member>
+    </members>
+</doc>
