@@ -8,10 +8,10 @@ using Microsoft.Extensions.DependencyInjection;
 namespace Aquality.Selenium.Core.Tests.Configurations
 {
     [Parallelizable(ParallelScope.All)]
-    public class XmlConfigurationTests
+    public class CustomConfigurationTests
     {
         private ServiceProvider ServiceProvider { get; set; }
-        private static XmlSettingFile SettingFile => new XmlSettingFile();
+        private static FakeSettingFile SettingFile => new FakeSettingFile();
 
         [SetUp]
         public void SetUp()
@@ -37,7 +37,7 @@ namespace Aquality.Selenium.Core.Tests.Configurations
             });
         }
 
-        private class XmlSettingFile : ISettingsFile
+        private class FakeSettingFile : ISettingsFile
         {
             public T GetValue<T>(string path)
             {

@@ -57,6 +57,7 @@ namespace Aquality.Selenium.Core.Tests.Utilities
         }
 
         [Test]
+        [NonParallelizable]
         public void Should_BePossibleTo_OverrideListOfValues_FromEnvVar()
         {
             const string jsonPath = ".driverSettings.chrome.startArguments";
@@ -82,6 +83,7 @@ namespace Aquality.Selenium.Core.Tests.Utilities
         }
 
         [Test]
+        [NonParallelizable]
         public void Should_BePossibleTo_OverrideDictionaryOfValues_FromEnvVar()
         {
             var expectedDict = new Dictionary<string, object>
