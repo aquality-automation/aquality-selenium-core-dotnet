@@ -21,8 +21,9 @@ namespace Aquality.Selenium.Core.Waitings
 
         /// <summary>
         /// Instantiates the class using retry configuration.
-        /// </summary>
-        /// <param name="retryConfiguration"></param>
+        /// <paramref name="timeoutConfiguration"/>
+        /// <paramref name="serviceProvider"/>
+        /// </summary>        
         public ConditionalWait(ITimeoutConfiguration timeoutConfiguration, IServiceProvider serviceProvider)
         {
             this.timeoutConfiguration = timeoutConfiguration;
