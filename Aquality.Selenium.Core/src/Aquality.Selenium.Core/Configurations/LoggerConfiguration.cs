@@ -10,7 +10,7 @@ namespace Aquality.Selenium.Core.Configurations
         private const string DefaultLanguage = "en";
 
         /// <summary>
-        /// Instantiates class using <see cref="ISettingsFile"/>> with general settings.
+        /// Instantiates class using <see cref="ISettingsFile"/> with general settings.
         /// </summary>
         /// <param name="settingsFile">Settings file</param>
         public LoggerConfiguration(ISettingsFile settingsFile)

@@ -31,7 +31,7 @@ namespace Aquality.Selenium.Core.Tests.Applications
             var startup = new Startup();
             startup.ConfigureServices(services, applicationProvider:
                 serviceCollection => throw new InvalidOperationException("Application should not be required"),
-                settingsFile: startup.SettingsFile);
+                settings: startup.GetSettings());
             Assert.AreEqual("embedded", services.BuildServiceProvider().GetService<ILoggerConfiguration>().Language);
         }
     }

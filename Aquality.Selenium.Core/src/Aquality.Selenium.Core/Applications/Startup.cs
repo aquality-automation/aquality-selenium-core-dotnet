@@ -16,51 +16,56 @@ namespace Aquality.Selenium.Core.Applications
     /// </summary>
     public class Startup
     {
-        /// <summary>
-        /// Provides a <see cref="ISettingsFile"/> with settings.
-        /// Value is set in <see cref="ConfigureServices"/>>
-        /// Otherwise, will use default JSON settings file. Name of settings file: "settings.{profile}.json".
-        /// Default settings will look for the resource file (copied to binaries/Resources/ folder);
-        /// If not found, will look for embedded resource in the calling assembly of this method
-        /// </summary>
-        /// <returns>An instance of settings</returns>
-        public ISettingsFile SettingsFile { get; private set; }
+        private ISettingsFile settingsFile;
 
         /// <summary>
         /// Used to configure dependencies for services of the current library
         /// </summary>
         /// <param name="services">Collection of service descriptors</param>
         /// <param name="applicationProvider">function that provides an instance of <see cref="IApplication"/></param>
-        /// <param name="settingsFile">File with settings for configuration of dependencies.
-        /// Pass the result of <see cref="GetJsonSettings"/> if you need to get settings from the embedded resource of your project.</param>
-        public void ConfigureServices(IServiceCollection services, Func<IServiceProvider, IApplication> applicationProvider, ISettingsFile settingsFile = null)
+        /// <param name="settings">File with settings for configuration of dependencies.
+        /// Pass the result of <see cref="GetSettings"/> if you need to get settings from the embedded resource of your project.</param>
+        public void ConfigureServices(IServiceCollection services, Func<IServiceProvider, IApplication> applicationProvider, ISettingsFile settings = null)
         {
-            SettingsFile = settingsFile ?? GetJsonSettings();
+            settingsFile = settings ?? GetSettings();
             services.AddScoped(applicationProvider);
 
-            services.AddSingleton<ITimeoutConfiguration>(new TimeoutConfiguration(SettingsFile));
+            services.AddSingleton<ITimeoutConfiguration>(new TimeoutConfiguration(settingsFile));
             services.AddTransient<ConditionalWait>();
-            services.AddSingleton<ILoggerConfiguration>(new LoggerConfiguration(SettingsFile));
+            services.AddSingleton<ILoggerConfiguration>(new LoggerConfiguration(settingsFile));
             services.AddSingleton(Logger.Instance);
             services.AddSingleton<LocalizationManager>();
             services.AddSingleton<LocalizationLogger>();
-            services.AddSingleton<IRetryConfiguration>(new RetryConfiguration(SettingsFile));
+            services.AddSingleton<IRetryConfiguration>(new RetryConfiguration(settingsFile));
             services.AddSingleton<ElementActionRetrier>();
 
             services.AddTransient<IElementFinder, ElementFinder>();
             services.AddTransient<IElementFactory, ElementFactory>();
         }
-       
-        private static ISettingsFile GetJsonSettings()
-        {
-            var profileNameFromEnvironment = EnvironmentConfiguration.GetVariable("profile");
-            var settingsProfile = profileNameFromEnvironment == null ? "settings.json" : $"settings.{profileNameFromEnvironment}.json";
-            Logger.Instance.Debug($"Get settings from: {settingsProfile}");
 
-            var jsonFile = FileReader.IsResourceFileExist(settingsProfile)
-                ? new JsonSettingsFile(settingsProfile)
-                : new JsonSettingsFile($"Resources.{settingsProfile}", Assembly.GetCallingAssembly());
-            return jsonFile;
+        /// <summary>
+        /// Provides a <see cref="ISettingsFile"/> with settings.
+        /// Value is set in <see cref="ConfigureServices"/>
+        /// Otherwise, will use default JSON settings file with name: "settings.{profile}.json".
+        /// Default settings will look for the resource file (copied to binaries/Resources/ folder);
+        /// If not found, will look for embedded resource in the calling assembly of this method
+        /// </summary>
+        /// <returns>An instance of settings</returns>
+        public ISettingsFile GetSettings()
+        {
+            if (settingsFile == null)
+            {
+                var profileNameFromEnvironment = EnvironmentConfiguration.GetVariable("profile");
+                var settingsProfile = profileNameFromEnvironment == null ? "settings.json" : $"settings.{profileNameFromEnvironment}.json";
+                Logger.Instance.Debug($"Get settings from: {settingsProfile}");
+
+                var jsonFile = FileReader.IsResourceFileExist(settingsProfile)
+                    ? new JsonSettingsFile(settingsProfile)
+                    : new JsonSettingsFile($"Resources.{settingsProfile}", Assembly.GetCallingAssembly());
+                return jsonFile;
+            }
+
+            return settingsFile;
         }
     }
 }
