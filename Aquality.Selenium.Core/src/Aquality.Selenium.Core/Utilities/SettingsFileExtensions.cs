@@ -3,10 +3,10 @@ using Aquality.Selenium.Core.Configurations;
 
 namespace Aquality.Selenium.Core.Utilities
 {
-    public static class JsonSettingsFileExtensions
+    public static class SettingsFileExtensions
     {
         /// <summary>
-        /// Gets value from environment\json or return default of new T() if path doesn't exist in file and environment variables.
+        /// Gets value from environment\setting file or return default of new T() if path doesn't exist in file and environment variables.
         /// Exception will not be threw.
         /// </summary>
         /// <typeparam name="T">Type of a value.</typeparam>
@@ -19,7 +19,7 @@ namespace Aquality.Selenium.Core.Utilities
         }
 
         /// <summary>
-        /// Gets list of values from environment\json or empty List if path doesn't exist in file and environment variables.
+        /// Gets list of values from environment\setting file or empty List if path doesn't exist in file and environment variables.
         /// Exception will not be threw.
         /// </summary>
         /// <typeparam name="T">Type of a value.</typeparam>
@@ -32,7 +32,7 @@ namespace Aquality.Selenium.Core.Utilities
         }
 
         /// <summary>
-        /// Gets value from environment\json or return default of T if path doesn't exist in file and environment variables.
+        /// Gets value from environment\setting file or return default of T if path doesn't exist in file and environment variables.
         /// Exception will not be threw.
         /// </summary>
         /// <typeparam name="T">Type of a value.</typeparam>

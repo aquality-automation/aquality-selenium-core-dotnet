@@ -6,13 +6,14 @@ using Aquality.Selenium.Core.Configurations;
 
 namespace Aquality.Selenium.Core.Tests.Utilities
 {
-    [NonParallelizable]
+    [Parallelizable]
     public class JsonFileTests
     {
         private static ISettingsFile CustomSettings => new JsonSettingsFile("settings.custom.json");
         private static ISettingsFile AddedParamsSettings => new JsonSettingsFile("settings.addedparams.json");
 
         [Test]
+        [NonParallelizable]
         public void GetValue_ShouldBe_PossibleTo_OverrideValueFromEnvVar()
         {
             Environment.SetEnvironmentVariable("timeouts.timeoutCondition", "500");
@@ -20,6 +21,7 @@ namespace Aquality.Selenium.Core.Tests.Utilities
         }
 
         [Test]
+        [NonParallelizable]
         public void GetValue_ShouldThrow_ArgumentException_InCaseOfEnvVarIncorrectFormat()
         {
             Environment.SetEnvironmentVariable("timeouts.timeoutPollingInterval", "incorrect_env_var");

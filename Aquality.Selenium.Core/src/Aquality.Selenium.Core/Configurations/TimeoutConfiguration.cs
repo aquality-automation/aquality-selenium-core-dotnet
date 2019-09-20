@@ -1,5 +1,4 @@
-﻿using Aquality.Selenium.Core.Utilities;
-using System;
+﻿using System;
 
 namespace Aquality.Selenium.Core.Configurations
 {
@@ -11,9 +10,9 @@ namespace Aquality.Selenium.Core.Configurations
         private readonly ISettingsFile settingsFile;
 
         /// <summary>
-        /// Instantiates class using JSON file with general settings.
+        /// Instantiates class using <see cref="ISettingsFile"/>> with general settings.
         /// </summary>
-        /// <param name="settingsFile">JSON settings file.</param>
+        /// <param name="settingsFile">Settings file.</param>
         public TimeoutConfiguration(ISettingsFile settingsFile)
         {
             this.settingsFile = settingsFile;
