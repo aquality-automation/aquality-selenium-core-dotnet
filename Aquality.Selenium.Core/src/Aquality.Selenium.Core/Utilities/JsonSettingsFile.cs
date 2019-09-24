@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using Aquality.Selenium.Core.Configurations;
 using Aquality.Selenium.Core.Logging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -15,7 +16,7 @@ namespace Aquality.Selenium.Core.Utilities
     /// Note that the value can be overriden via Environment variable with the same name
     /// (e.g. for json path ".timeouts.timeoutScript" you can set environment variable "timeouts.timeoutScript"
     /// </summary>
-    public class JsonFile
+    public class JsonSettingsFile : ISettingsFile
     {
         private readonly string fileContent;
         private readonly string resourceName;
@@ -26,7 +27,7 @@ namespace Aquality.Selenium.Core.Utilities
         /// Inistantiates class using desired JSON fileinfo.
         /// </summary>
         /// <param name="fileInfo">JSON fileinfo.</param>
-        public JsonFile(FileInfo fileInfo)
+        public JsonSettingsFile(FileInfo fileInfo)
         {
             resourceName = fileInfo.Name;
             fileContent = FileReader.GetTextFromFile(fileInfo);
@@ -36,7 +37,7 @@ namespace Aquality.Selenium.Core.Utilities
         /// Inistantiates class using desired resource file info.
         /// </summary>
         /// <param name="resourceFileName"></param>
-        public JsonFile(string resourceFileName)
+        public JsonSettingsFile(string resourceFileName)
         {
             resourceName = resourceFileName;
             fileContent = FileReader.GetTextFromResource(resourceFileName);
@@ -47,7 +48,7 @@ namespace Aquality.Selenium.Core.Utilities
         /// </summary>
         /// <param name="embededResourceName">Embeded resource name</param>
         /// <param name="assembly">Assembly which resource belongs to</param>
-        public JsonFile(string embededResourceName, Assembly assembly)
+        public JsonSettingsFile(string embededResourceName, Assembly assembly)
         {
             resourceName = embededResourceName;
             fileContent = FileReader.GetTextFromEmbeddedResource(embededResourceName, assembly);
@@ -58,20 +59,20 @@ namespace Aquality.Selenium.Core.Utilities
         /// Note that the value can be overriden via Environment variable with the same name
         /// (e.g. for json path ".timeouts.timeoutScript" you can set environment variable "timeouts.timeoutScript")
         /// </summary>
-        /// <param name="jsonPath">Relative JsonPath to the value.</param>
+        /// <param name="path">Relative JsonPath to the value.</param>
         /// <typeparam name="T">Type of the value.</typeparam>
         /// <returns>Value from JSON/Environment by JsonPath.</returns>
         /// <exception cref="ArgumentException">Throws when there is no value found by jsonPath in desired JSON file.</exception>
-        public T GetValue<T>(string jsonPath)
+        public T GetValue<T>(string path)
         {
-            var envValue = GetEnvironmentValue(jsonPath);
+            var envValue = GetEnvironmentValue(path);
             if (envValue != null)
             {
                 return ConvertEnvVar(() => (T) TypeDescriptor.GetConverter(typeof(T)).ConvertFrom(envValue),
-                    envValue, jsonPath);
+                    envValue, path);
             }
 
-            var node = GetJsonNode(jsonPath);
+            var node = GetJsonNode(path);
             return node.ToObject<T>();
         }
 
@@ -80,23 +81,23 @@ namespace Aquality.Selenium.Core.Utilities
         /// Note that the value can be overriden via Environment variable with the same name; values must be separated by ','
         /// (e.g. for json path ".driverSettings.chrome.startArguments" you can set environment variable "driverSettings.chrome.startArguments")
         /// </summary>
-        /// <param name="jsonPath">Relative JsonPath to the values.</param>
+        /// <param name="path">Relative JsonPath to the values.</param>
         /// <typeparam name="T">Type of the value.</typeparam>
         /// <returns>Value from JSON/Environment by JsonPath.</returns>
         /// <exception cref="ArgumentException">Throws when there are no values found by jsonPath in desired JSON file.</exception>
-        public IList<T> GetValueList<T>(string jsonPath)
+        public IReadOnlyList<T> GetValueList<T>(string path)
         {
-            var envValue = GetEnvironmentValue(jsonPath);
+            var envValue = GetEnvironmentValue(path);
             if (envValue != null)
             {
                 return ConvertEnvVar(() =>
                 {
                     return envValue.Split(',').Select(value => (T)TypeDescriptor.GetConverter(typeof(T)).ConvertFrom(value.Trim())).ToList();
-                }, envValue, jsonPath);
+                }, envValue, path);
             }
 
-            var node = GetJsonNode(jsonPath);
-            return node.ToObject<IList<T>>();
+            var node = GetJsonNode(path);
+            return node.ToObject<IReadOnlyList<T>>();
         }
 
         /// <summary>
@@ -104,14 +105,14 @@ namespace Aquality.Selenium.Core.Utilities
         /// Note that the value can be overriden via Environment variable with the same name;
         /// (e.g. for json path ".timeouts.timeoutImplicit" you can set environment variable ".timeouts.timeoutImplicit")
         /// </summary>
-        /// <param name="jsonPath">Relative JsonPath to the values.</param>
+        /// <param name="path">Relative JsonPath to the values.</param>
         /// <typeparam name="T">Type of the value.</typeparam>
         /// <returns>Value from JSON/Environment by JsonPath.</returns>
         /// <exception cref="ArgumentException">Throws when there are no values found by jsonPath in desired JSON file.</exception>
-        public IReadOnlyDictionary<string, T> GetValueDictionary<T>(string jsonPath)
+        public IReadOnlyDictionary<string, T> GetValueDictionary<T>(string path)
         {
             var dict = new Dictionary<string, T>();
-            var node = GetJsonNode(jsonPath);;
+            var node = GetJsonNode(path);
             foreach (var child in node.Children<JProperty>())
             {
                 dict.Add(child.Name, GetValue<T>($".{child.Path}"));
@@ -123,11 +124,11 @@ namespace Aquality.Selenium.Core.Utilities
         /// <summary>
         /// Checks whether value present on JSON/Environment by JsonPath or not.
         /// </summary>
-        /// <param name="jsonPath">Relative JsonPath to the object.</param>
+        /// <param name="path">Relative JsonPath to the object.</param>
         /// <returns>True if present and false otherwise.</returns>
-        public bool IsValuePresent(string jsonPath)
+        public bool IsValuePresent(string path)
         {
-            return GetEnvironmentValue(jsonPath) != null || JsonObject.SelectToken(jsonPath) != null;
+            return GetEnvironmentValue(path) != null || JsonObject.SelectToken(path) != null;
         }
 
         private static string GetEnvironmentValue(string jsonPath)

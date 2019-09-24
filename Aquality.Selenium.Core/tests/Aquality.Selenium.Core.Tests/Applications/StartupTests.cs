@@ -25,14 +25,13 @@ namespace Aquality.Selenium.Core.Tests.Applications
         }
 
         [Test]
-        [Parallelizable(ParallelScope.None)]
         public void Should_GetConfiguration_FromCustomConfigurationProfile()
         {
             var services = new ServiceCollection();
             var startup = new Startup();
             startup.ConfigureServices(services, applicationProvider:
-                serviceCollection => throw new InvalidOperationException($"Application should not be required"),
-                settingsFile: startup.GetSettings());
+                serviceCollection => throw new InvalidOperationException("Application should not be required"),
+                settings: startup.GetSettings());
             Assert.AreEqual("embedded", services.BuildServiceProvider().GetService<ILoggerConfiguration>().Language);
         }
     }

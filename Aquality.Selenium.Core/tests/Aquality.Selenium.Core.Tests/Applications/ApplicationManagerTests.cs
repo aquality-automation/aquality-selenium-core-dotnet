@@ -44,7 +44,7 @@ namespace Aquality.Selenium.Core.Tests.Applications
             {
                 var services = new ServiceCollection();
                 var startup = new Startup();
-                var settingsFile = new JsonFile($"Resources.settings.{SpecialSettingsFile}.json", Assembly.GetExecutingAssembly());
+                var settingsFile = new JsonSettingsFile($"Resources.settings.{SpecialSettingsFile}.json", Assembly.GetExecutingAssembly());
                 startup.ConfigureServices(services, applicationSupplier, settingsFile);
                 services.AddSingleton<ITimeoutConfiguration>(new CustomTimeoutConfiguration(settingsFile));
                 return services;
@@ -55,7 +55,7 @@ namespace Aquality.Selenium.Core.Tests.Applications
 
         private class CustomTimeoutConfiguration : TimeoutConfiguration
         {
-            public CustomTimeoutConfiguration(JsonFile settingsFile) : base(settingsFile)
+            public CustomTimeoutConfiguration(ISettingsFile settingsFile) : base(settingsFile)
             {
                 CustomTimeout = SpecialTimeoutValue;
             }

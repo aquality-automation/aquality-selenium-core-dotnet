@@ -1,0 +1,29 @@
+{
+  "timeouts": {
+    "timeoutImplicit": 0,
+    "timeoutCondition": 30,
+    "timeoutPollingInterval": 300,
+    "timeoutCommand": 60
+  },
+  "retry": {
+    "number": 2,
+    "pollingInterval": 300
+  },
+  "logger": {
+    "language": "be"
+  },
+  "driverSettings": {
+    "chrome": {
+      "webDriverVersion": "Latest",
+      "capabilities": {
+        "enableVNC": true
+      },
+      "options": {
+        "intl.accept_languages": "en",
+        "profile.default_content_settings.popups": "0",
+        "disable-popup-blocking": "true"
+      },
+      "startArguments": ["1", "2", "3"]
+    }
+  }
+}
