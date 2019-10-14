@@ -15,7 +15,7 @@ namespace Aquality.Selenium.Core.Elements
     /// </summary>
     public class ElementFinder : IElementFinder
     {
-        public ElementFinder(Logger logger, LocalizationLogger localizationLogger, LocalizationManager localizationManager, ConditionalWait conditionalWait)
+        public ElementFinder(Logger logger, ILocalizationLogger localizationLogger, ILocalizationManager localizationManager, ConditionalWait conditionalWait)
         {
             Logger = logger;
             LocalizationLogger = localizationLogger;
@@ -25,9 +25,9 @@ namespace Aquality.Selenium.Core.Elements
 
         private Logger Logger { get; }
 
-        private LocalizationLogger LocalizationLogger { get; }
+        private ILocalizationLogger LocalizationLogger { get; }
 
-        private LocalizationManager LocalizationManager { get; }
+        private ILocalizationManager LocalizationManager { get; }
 
         private ConditionalWait ConditionalWait { get; }
 
