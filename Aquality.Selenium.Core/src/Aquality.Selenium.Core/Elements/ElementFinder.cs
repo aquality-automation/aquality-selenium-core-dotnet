@@ -15,17 +15,17 @@ namespace Aquality.Selenium.Core.Elements
     /// </summary>
     public class ElementFinder : IElementFinder
     {
-        public ElementFinder(Logger logger, ILocalizationLogger localizationLogger, ILocalizationManager localizationManager, ConditionalWait conditionalWait)
+        public ElementFinder(Logger logger, ILocalizedLogger localizedLogger, ILocalizationManager localizationManager, ConditionalWait conditionalWait)
         {
             Logger = logger;
-            LocalizationLogger = localizationLogger;
+            LocalizedLogger = localizedLogger;
             LocalizationManager = localizationManager;
             ConditionalWait = conditionalWait;
         }
 
         private Logger Logger { get; }
 
-        private ILocalizationLogger LocalizationLogger { get; }
+        private ILocalizedLogger LocalizedLogger { get; }
 
         private ILocalizationManager LocalizationManager { get; }
 
@@ -103,7 +103,7 @@ namespace Aquality.Selenium.Core.Elements
                 }
                 else
                 {
-                    LocalizationLogger.Debug("loc.elements.were.found.but.not.in.state", null, locator.ToString(), desiredState.StateName);
+                    LocalizedLogger.Debug("loc.elements.were.found.but.not.in.state", null, locator.ToString(), desiredState.StateName);
                 }
             }
             else

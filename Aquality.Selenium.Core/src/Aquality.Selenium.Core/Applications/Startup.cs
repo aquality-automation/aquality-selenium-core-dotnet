@@ -35,7 +35,7 @@ namespace Aquality.Selenium.Core.Applications
             services.AddSingleton<ILoggerConfiguration>(new LoggerConfiguration(settingsFile));
             services.AddSingleton(Logger.Instance);
             services.AddTransient<ILocalizationManager, LocalizationManager>();
-            services.AddTransient<ILocalizationLogger, LocalizationLogger>();
+            services.AddTransient<ILocalizedLogger, LocalizedLogger>();
             services.AddSingleton<IRetryConfiguration>(new RetryConfiguration(settingsFile));
             services.AddSingleton<ElementActionRetrier>();
 

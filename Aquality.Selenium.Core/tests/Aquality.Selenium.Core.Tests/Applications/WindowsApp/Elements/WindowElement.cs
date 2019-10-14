@@ -25,6 +25,6 @@ namespace Aquality.Selenium.Core.Tests.Applications.WindowsApp.Elements
 
         protected override IElementFinder Finder => ApplicationManager.ServiceProvider.GetRequiredService<IElementFinder>();
 
-        protected override ILocalizationLogger LocalizationLogger => ApplicationManager.ServiceProvider.GetRequiredService<ILocalizationLogger>();
+        protected override ILocalizedLogger LocalizedLogger => ApplicationManager.ServiceProvider.GetRequiredService<ILocalizedLogger>();
     }
 }

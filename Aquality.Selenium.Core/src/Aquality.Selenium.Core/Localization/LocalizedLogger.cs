@@ -3,12 +3,12 @@ using System;
 
 namespace Aquality.Selenium.Core.Localization
 {
-    public class LocalizationLogger : ILocalizationLogger
+    public class LocalizedLogger : ILocalizedLogger
     {
         private readonly ILocalizationManager localizationManager;
         private readonly Logger logger;
 
-        public LocalizationLogger(ILocalizationManager localizationManager, Logger logger)
+        public LocalizedLogger(ILocalizationManager localizationManager, Logger logger)
         {
             this.localizationManager = localizationManager;
             this.logger = logger;

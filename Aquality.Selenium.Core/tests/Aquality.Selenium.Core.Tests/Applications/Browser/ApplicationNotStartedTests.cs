@@ -18,7 +18,7 @@ namespace Aquality.Selenium.Core.Tests.Applications.Browser
             typeof(ConditionalWait),
             typeof(Logger),
             typeof(ILocalizationManager),
-            typeof(ILocalizationLogger),
+            typeof(ILocalizedLogger),
             typeof(IElementFinder),
             typeof(IElementFactory),
             typeof(ITimeoutConfiguration),

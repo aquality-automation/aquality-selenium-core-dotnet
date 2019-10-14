@@ -5,7 +5,7 @@ namespace Aquality.Selenium.Core.Localization
     /// <summary>
     /// Log messages to different languages
     /// </summary>
-    public interface ILocalizationLogger
+    public interface ILocalizedLogger
     {
         /// <summary>
         /// Logs localized message for action with INFO level which is applied for element, for example, click, send keys etc.
