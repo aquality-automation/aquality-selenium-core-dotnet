@@ -34,8 +34,8 @@ namespace Aquality.Selenium.Core.Applications
             services.AddTransient<ConditionalWait>();
             services.AddSingleton<ILoggerConfiguration>(new LoggerConfiguration(settingsFile));
             services.AddSingleton(Logger.Instance);
-            services.AddTransient<ILocalizationManager, LocalizationManager>();
-            services.AddTransient<ILocalizedLogger, LocalizedLogger>();
+            services.AddSingleton<ILocalizationManager, LocalizationManager>();
+            services.AddSingleton<ILocalizedLogger, LocalizedLogger>();
             services.AddSingleton<IRetryConfiguration>(new RetryConfiguration(settingsFile));
             services.AddSingleton<ElementActionRetrier>();
 
