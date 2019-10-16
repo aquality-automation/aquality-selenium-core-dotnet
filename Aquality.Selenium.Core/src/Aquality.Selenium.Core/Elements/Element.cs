@@ -42,7 +42,7 @@ namespace Aquality.Selenium.Core.Elements
 
         protected abstract IElementFinder Finder { get; }
 
-        protected abstract LocalizationLogger LocalizationLogger { get; }
+        protected abstract ILocalizedLogger LocalizedLogger { get; }
 
         protected virtual Logger Logger => Logger.Instance;
 
@@ -103,7 +103,7 @@ namespace Aquality.Selenium.Core.Elements
 
         protected virtual void LogElementAction(string messageKey, params object[] args)
         {
-            LocalizationLogger.InfoElementAction(ElementType, Name, messageKey, args);
+            LocalizedLogger.InfoElementAction(ElementType, Name, messageKey, args);
         }
     }
 }

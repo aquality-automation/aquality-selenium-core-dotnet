@@ -26,16 +26,25 @@ namespace Aquality.Selenium.Core.Tests.Localization
         };
 
         [Test]
+        public void Should_BePossibleTo_UseLocalizationManager_ForClicking_CustomConfig()
+        {
+            Environment.SetEnvironmentVariable("profile", "custom");
+            SetUp();
+            Environment.SetEnvironmentVariable("profile", string.Empty);
+            Assert.AreEqual("Націскаем", ServiceProvider.GetService<ILocalizationManager>().GetLocalizedMessage("loc.clicking"));
+        }
+
+        [Test]
         public void Should_BePossibleTo_UseLocalizationManager_ForClicking()
         {
-            Assert.AreEqual("Clicking", ServiceProvider.GetService<LocalizationManager>().GetLocalizedMessage("loc.clicking"));
+            Assert.AreEqual("Clicking", ServiceProvider.GetService<ILocalizationManager>().GetLocalizedMessage("loc.clicking"));
         }
 
         [Test]
         public void Should_BePossibleTo_UseLocalizationManager_ForUnknownKey()
         {
             var unknownKey = "loc.unknown.fake.key";
-            Assert.AreEqual(unknownKey, ServiceProvider.GetService<LocalizationManager>().GetLocalizedMessage(unknownKey));
+            Assert.AreEqual(unknownKey, ServiceProvider.GetService<ILocalizationManager>().GetLocalizedMessage(unknownKey));
         }
 
         [Test]

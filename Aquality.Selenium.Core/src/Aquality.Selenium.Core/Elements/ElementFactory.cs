@@ -17,7 +17,7 @@ namespace Aquality.Selenium.Core.Elements
     {
         private const string ByXpathIdentifier = "By.XPath";
 
-        public ElementFactory(ConditionalWait conditionalWait, IElementFinder elementFinder, LocalizationManager localizationManager)
+        public ElementFactory(ConditionalWait conditionalWait, IElementFinder elementFinder, ILocalizationManager localizationManager)
         {
             ConditionalWait = conditionalWait;
             ElementFinder = elementFinder;
@@ -28,7 +28,7 @@ namespace Aquality.Selenium.Core.Elements
 
         protected IElementFinder ElementFinder { get; }
 
-        protected LocalizationManager LocalizationManager { get; }
+        protected ILocalizationManager LocalizationManager { get; }
 
         /// <summary>
         /// Gets map between elements interfaces and their implementations.

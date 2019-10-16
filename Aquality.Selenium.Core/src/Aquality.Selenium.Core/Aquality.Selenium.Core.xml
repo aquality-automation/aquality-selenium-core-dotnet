@@ -435,7 +435,7 @@
             <param name="state">Child element state</param>
             <returns>Instance of child element</returns>
         </member>
-        <member name="T:Aquality.Selenium.Core.Localization.LocalizationLogger">
+        <member name="T:Aquality.Selenium.Core.Localization.LocalizedLogger">
             <summary>
             Log messages to different languages
             </summary>
