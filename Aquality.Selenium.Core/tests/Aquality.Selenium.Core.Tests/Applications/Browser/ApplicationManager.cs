@@ -8,7 +8,7 @@ using WebDriverManager.DriverConfigs.Impl;
 
 namespace Aquality.Selenium.Core.Tests.Applications.Browser
 {
-    public class ApplicationManager : ApplicationManager<ApplicationManager, ChromeApplication>
+    public class ApplicationManager : ApplicationManager<ChromeApplication>
     {
         private static readonly object downloadDriverLock = new object();
 

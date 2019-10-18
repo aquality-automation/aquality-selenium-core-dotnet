@@ -8,7 +8,7 @@ namespace Aquality.Selenium.Core.Tests.Applications.WindowsApp
         [TearDown]
         public void CleanUp()
         {
-            if (ApplicationManager.IsStarted)
+            if (ApplicationManager.IsApplicationStarted())
             {
                 ApplicationManager.Application.Driver.Quit();
             }
