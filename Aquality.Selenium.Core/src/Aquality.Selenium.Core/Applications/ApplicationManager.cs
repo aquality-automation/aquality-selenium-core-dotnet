@@ -4,11 +4,12 @@ using System.Threading;
 
 namespace Aquality.Selenium.Core.Applications
 {
-    public abstract class ApplicationManager<TApplication> : ServiceProviderContainer
+    public abstract class ApplicationManager<TApplication>
         where TApplication : class, IApplication
     {
         private static readonly ThreadLocal<TApplication> AppContainer = new ThreadLocal<TApplication>();
-        
+        private static readonly ThreadLocal<IServiceProvider> ServiceProviderContainer = new ThreadLocal<IServiceProvider>();
+
         protected ApplicationManager()
         {
         }
@@ -35,7 +36,7 @@ namespace Aquality.Selenium.Core.Applications
 
         protected static IServiceProvider GetServiceProvider(Func<IServiceProvider, TApplication> applicationSupplier, Func<IServiceCollection> serviceCollectionProvider = null)
         {
-            if (!ServiceProviderInstanceHolder.IsValueCreated)
+            if (!ServiceProviderContainer.IsValueCreated)
             {
                 IServiceCollection services;
                 if (serviceCollectionProvider == null)
@@ -47,14 +48,14 @@ namespace Aquality.Selenium.Core.Applications
                 {
                     services = serviceCollectionProvider();
                 }
-                ServiceProviderInstanceHolder.Value = services.BuildServiceProvider();
+                ServiceProviderContainer.Value = services.BuildServiceProvider();
             }
-            return ServiceProviderInstanceHolder.Value;
+            return ServiceProviderContainer.Value;
         }
 
         protected static void SetServiceProvider(IServiceProvider serviceProvider)
         {
-            ServiceProviderInstanceHolder.Value = serviceProvider;
+            ServiceProviderContainer.Value = serviceProvider;
         }
     }
 }

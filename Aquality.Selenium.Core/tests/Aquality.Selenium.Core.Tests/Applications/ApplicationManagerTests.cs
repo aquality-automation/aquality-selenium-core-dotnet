@@ -33,7 +33,6 @@ namespace Aquality.Selenium.Core.Tests.Applications
             Assert.AreEqual(SpecialLanguageValue, ApplicationManager.ServiceProvider.GetService<ILoggerConfiguration>().Language);
         }
 
-
         private class ApplicationManager : ApplicationManager<IApplication>
         {
             public static IApplication Application => GetApplication(StartApplicationFunction, () => RegisterServices(services => Application));

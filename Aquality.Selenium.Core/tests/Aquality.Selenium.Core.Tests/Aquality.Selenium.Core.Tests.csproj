@@ -7,13 +7,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Resources\Localization\special.json" />
     <None Remove="Resources\settings.embeddedresource.json" />
     <None Remove="Resources\settings.special.json" />
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="Resources\Localization\special.json" />
     <EmbeddedResource Include="Resources\settings.embeddedresource.json">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </EmbeddedResource>
