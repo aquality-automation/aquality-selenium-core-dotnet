@@ -4,18 +4,24 @@ using System.Threading;
 
 namespace Aquality.Selenium.Core.Applications
 {
-    public abstract class ApplicationManager<TManager, TApplication> 
-        where TManager : ApplicationManager<TManager, TApplication>
+    public abstract class ApplicationManager<TApplication>
         where TApplication : class, IApplication
     {
         private static readonly ThreadLocal<TApplication> AppContainer = new ThreadLocal<TApplication>();
         private static readonly ThreadLocal<IServiceProvider> ServiceProviderContainer = new ThreadLocal<IServiceProvider>();
 
-        public static bool IsStarted => AppContainer.IsValueCreated && AppContainer.Value.Driver.SessionId != null;
+        protected ApplicationManager()
+        {
+        }
+
+        public static bool IsApplicationStarted()
+        {
+            return AppContainer.IsValueCreated && AppContainer.Value.Driver.SessionId != null;
+        }
         
         protected static TApplication GetApplication(Func<IServiceProvider, TApplication> startApplicationFunction, Func<IServiceCollection> serviceCollectionProvider = null)
         {
-            if (!IsStarted)
+            if (!IsApplicationStarted())
             {
                 AppContainer.Value = startApplicationFunction(
                     GetServiceProvider(service => GetApplication(startApplicationFunction, serviceCollectionProvider), serviceCollectionProvider));

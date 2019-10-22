@@ -9,7 +9,7 @@ using System.IO;
 
 namespace Aquality.Selenium.Core.Tests.Applications.WindowsApp
 {
-    public class ApplicationManager : ApplicationManager<ApplicationManager, WindowsApplication>
+    public class ApplicationManager : ApplicationManager<WindowsApplication>
     {
         private const string SupportedApplication = "./Resources/WindowsApp/Day Maxi Calc.exe";
         private const string DefaultDriverServer = "http://127.0.0.1:4723/";
