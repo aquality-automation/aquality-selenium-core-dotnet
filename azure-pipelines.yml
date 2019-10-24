@@ -1,6 +1,6 @@
 variables:
   buildConfiguration: 'Release'
-  webDriverVersion: '75.0.3770.140'
+  webDriverVersion: '77.0.3865.40'
   isRemote: true
 
 trigger:
