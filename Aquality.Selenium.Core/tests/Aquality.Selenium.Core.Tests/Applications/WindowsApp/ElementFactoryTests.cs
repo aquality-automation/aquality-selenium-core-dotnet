@@ -1,7 +1,7 @@
-﻿using Aquality.Selenium.Core.Elements.Interfaces;
+﻿using Aquality.Selenium.Core.Applications;
+using Aquality.Selenium.Core.Elements.Interfaces;
 using Aquality.Selenium.Core.Tests.Applications.WindowsApp.Elements;
 using Aquality.Selenium.Core.Tests.Applications.WindowsApp.Locators;
-using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
 using OpenQA.Selenium;
 using System;
@@ -10,7 +10,7 @@ namespace Aquality.Selenium.Core.Tests.Applications.WindowsApp
 {
     public class ElementFactoryTests : TestWithApplication
     {
-        private IElementFactory Factory => ApplicationManager.ServiceProvider.GetRequiredService<IElementFactory>();
+        private IElementFactory Factory => Startup.GetRequiredService<IElementFactory>();
 
         private IElement NumberPad => Factory.GetButton(CalculatorWindow.WindowLocator, "Number pad");
 

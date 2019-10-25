@@ -15,8 +15,7 @@ namespace Aquality.Selenium.Core.Tests
         public void SetUp()
         {
             var services = new ServiceCollection();
-
-            new Startup().ConfigureServices(services, applicationProvider:
+            Startup.ConfigureServices(services, applicationSupplier:
                 serviceCollection => throw new InvalidOperationException($"Application should not be required for {TestContext.CurrentContext.Test.FullName}"));
             ServiceProvider = services.BuildServiceProvider();
         }

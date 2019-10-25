@@ -16,8 +16,6 @@ namespace Aquality.Selenium.Core.Tests.Applications.WindowsApp
         
         public static WindowsApplication Application => GetApplication(service => StartApplication(service));
 
-        public static IServiceProvider ServiceProvider => GetServiceProvider(services => Application);
-
         private static WindowsApplication StartApplication(IServiceProvider services)
         {
             var isRemoteFromEnv = EnvironmentConfiguration.GetVariable("isRemote");

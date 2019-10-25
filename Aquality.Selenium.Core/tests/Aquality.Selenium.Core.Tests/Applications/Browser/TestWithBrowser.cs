@@ -14,8 +14,7 @@ namespace Aquality.Selenium.Core.Tests.Applications.Browser
         public void SetUp()
         {
             var services = new ServiceCollection();
-
-            new Startup().ConfigureServices(services, serviceCollection => ApplicationManager.Application);
+            Startup.ConfigureServices(services, serviceCollection => ApplicationManager.Application);
             ServiceProvider = services.BuildServiceProvider();
         }
 

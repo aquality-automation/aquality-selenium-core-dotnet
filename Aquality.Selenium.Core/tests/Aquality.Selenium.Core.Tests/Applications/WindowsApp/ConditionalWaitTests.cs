@@ -1,4 +1,5 @@
-﻿using Aquality.Selenium.Core.Elements.Interfaces;
+﻿using Aquality.Selenium.Core.Applications;
+using Aquality.Selenium.Core.Elements.Interfaces;
 using Aquality.Selenium.Core.Tests.Applications.WindowsApp.Locators;
 using Aquality.Selenium.Core.Waitings;
 using Microsoft.Extensions.DependencyInjection;
@@ -15,7 +16,7 @@ namespace Aquality.Selenium.Core.Tests.Applications.WindowsApp
         [Test]
         public void Should_BePossibleTo_UseConditionalWait_WithDriver()
         {
-            Assert.DoesNotThrow(() => ApplicationManager.ServiceProvider.GetService<ConditionalWait>().WaitFor(driver =>
+            Assert.DoesNotThrow(() => Startup.GetRequiredService<ConditionalWait>().WaitFor(driver =>
             {
                 return driver.FindElements(By.XPath("//*")).Count > 0;
             }));
@@ -24,10 +25,10 @@ namespace Aquality.Selenium.Core.Tests.Applications.WindowsApp
         [Test]
         public void Should_BePossibleTo_UseConditionalWait_WithElementFinder()
         {
-            bool elementFinderCondition() => ApplicationManager.ServiceProvider.GetRequiredService<IElementFinder>()
+            bool elementFinderCondition() => Startup.GetRequiredService<IElementFinder>()
                 .FindElement(CalculatorWindow.ResultsLabel, timeout: LittleTimeout).Text.Contains("3");
             Assert.IsFalse(elementFinderCondition());
-            Assert.DoesNotThrow(() => ApplicationManager.ServiceProvider.GetService<ConditionalWait>().WaitFor(driver =>
+            Assert.DoesNotThrow(() => Startup.GetRequiredService<ConditionalWait>().WaitFor(driver =>
             {
                 driver.FindElement(CalculatorWindow.TwoButton).Click();
                 driver.FindElement(CalculatorWindow.PlusButton).Click();

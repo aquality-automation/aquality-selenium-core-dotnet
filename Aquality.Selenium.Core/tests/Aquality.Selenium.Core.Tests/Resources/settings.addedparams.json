@@ -14,7 +14,7 @@
   },
   "driverSettings": {
     "chrome": {
-      "webDriverVersion": "Latest",
+      "webDriverVersion": "77.0.3865.40",
       "capabilities": {
         "enableVNC": true
       },
@@ -23,7 +23,7 @@
         "profile.default_content_settings.popups": "0",
         "disable-popup-blocking": "true"
       },
-      "startArguments": ["1", "2", "3"]
+      "startArguments": [ "1", "2", "3" ]
     }
   }
 }

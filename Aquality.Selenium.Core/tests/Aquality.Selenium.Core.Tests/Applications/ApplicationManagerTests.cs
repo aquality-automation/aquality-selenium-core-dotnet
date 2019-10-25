@@ -5,6 +5,7 @@ using Aquality.Selenium.Core.Configurations;
 using Aquality.Selenium.Core.Utilities;
 using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
+using OpenQA.Selenium.Remote;
 
 namespace Aquality.Selenium.Core.Tests.Applications
 {
@@ -17,39 +18,37 @@ namespace Aquality.Selenium.Core.Tests.Applications
         [Test]
         public void Should_BePossibleTo_RegisterCustomServices()
         {
-            Assert.IsInstanceOf<CustomTimeoutConfiguration>(ApplicationManager.ServiceProvider.GetService<ITimeoutConfiguration>());
+            var application = ApplicationManager.Application;
+            Assert.IsInstanceOf<CustomTimeoutConfiguration>(Startup.GetRequiredService<ITimeoutConfiguration>());
         }
 
         [Test]
         public void Should_BePossibleTo_GetCustomValues()
         {
-            var timeoutConfiguration = ApplicationManager.ServiceProvider.GetService<ITimeoutConfiguration>() as CustomTimeoutConfiguration;
+            var application = ApplicationManager.Application;
+            var timeoutConfiguration = Startup.GetRequiredService<ITimeoutConfiguration>() as CustomTimeoutConfiguration;
             Assert.AreEqual(SpecialTimeoutValue,  timeoutConfiguration.CustomTimeout);
         }
 
         [Test]
         public void Should_BePossibleTo_RegisterCustomServices_WithCustomSettingsFile()
         {
-            Assert.AreEqual(SpecialLanguageValue, ApplicationManager.ServiceProvider.GetService<ILoggerConfiguration>().Language);
+            var application = ApplicationManager.Application;
+            Assert.AreEqual(SpecialLanguageValue, Startup.GetRequiredService<ILoggerConfiguration>().Language);
         }
 
         private class ApplicationManager : ApplicationManager<IApplication>
         {
-            public static IApplication Application => GetApplication(StartApplicationFunction, () => RegisterServices(services => Application));
-
-            public static IServiceProvider ServiceProvider => GetServiceProvider(services => Application, () => RegisterServices(services => Application));
+            public static IApplication Application => GetApplication(services => new Application(), () => RegisterServices(services => Application));
 
             private static IServiceCollection RegisterServices(Func<IServiceProvider, IApplication> applicationSupplier)
             {
-                var services = new ServiceCollection();
-                var startup = new Startup();
                 var settingsFile = new JsonSettingsFile($"Resources.settings.{SpecialSettingsFile}.json", Assembly.GetExecutingAssembly());
-                startup.ConfigureServices(services, applicationSupplier, settingsFile);
+                var services = new ServiceCollection();
+                Startup.ConfigureServices(services, applicationSupplier, settingsFile);
                 services.AddSingleton<ITimeoutConfiguration>(new CustomTimeoutConfiguration(settingsFile));
                 return services;
             }
-
-            private static Func<IServiceProvider, IApplication> StartApplicationFunction => (services) => throw new NotImplementedException();
         }
 
         private class CustomTimeoutConfiguration : TimeoutConfiguration
@@ -60,6 +59,16 @@ namespace Aquality.Selenium.Core.Tests.Applications
             }
 
             public TimeSpan CustomTimeout { get; }
+        }
+
+        private class Application : IApplication
+        {
+            public RemoteWebDriver Driver => throw new NotImplementedException();
+
+            public void SetImplicitWaitTimeout(TimeSpan timeout)
+            {
+                throw new NotImplementedException();
+            }
         }
     }
 }

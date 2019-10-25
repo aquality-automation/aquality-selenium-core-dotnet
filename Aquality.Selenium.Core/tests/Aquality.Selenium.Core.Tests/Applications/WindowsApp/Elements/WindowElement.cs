@@ -4,7 +4,6 @@ using Aquality.Selenium.Core.Elements.Interfaces;
 using Aquality.Selenium.Core.Localization;
 using Aquality.Selenium.Core.Utilities;
 using Aquality.Selenium.Core.Waitings;
-using Microsoft.Extensions.DependencyInjection;
 using OpenQA.Selenium;
 
 namespace Aquality.Selenium.Core.Tests.Applications.WindowsApp.Elements
@@ -15,16 +14,16 @@ namespace Aquality.Selenium.Core.Tests.Applications.WindowsApp.Elements
         {
         }
 
-        protected override ElementActionRetrier ActionRetrier => ApplicationManager.ServiceProvider.GetRequiredService<ElementActionRetrier>();
+        protected override ElementActionRetrier ActionRetrier => Startup.GetRequiredService<ElementActionRetrier>();
 
         protected override IApplication Application => ApplicationManager.Application;
 
-        protected override ConditionalWait ConditionalWait => ApplicationManager.ServiceProvider.GetRequiredService<ConditionalWait>();
+        protected override ConditionalWait ConditionalWait => Startup.GetRequiredService<ConditionalWait>();
 
-        protected override IElementFactory Factory => ApplicationManager.ServiceProvider.GetRequiredService<IElementFactory>();
+        protected override IElementFactory Factory => Startup.GetRequiredService<IElementFactory>();
 
-        protected override IElementFinder Finder => ApplicationManager.ServiceProvider.GetRequiredService<IElementFinder>();
+        protected override IElementFinder Finder => Startup.GetRequiredService<IElementFinder>();
 
-        protected override ILocalizedLogger LocalizedLogger => ApplicationManager.ServiceProvider.GetRequiredService<ILocalizedLogger>();
+        protected override ILocalizedLogger LocalizedLogger => Startup.GetRequiredService<ILocalizedLogger>();
     }
 }

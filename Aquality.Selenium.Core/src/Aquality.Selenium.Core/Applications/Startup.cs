@@ -8,6 +8,7 @@ using Aquality.Selenium.Core.Waitings;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Reflection;
+using System.Threading;
 
 namespace Aquality.Selenium.Core.Applications
 {
@@ -16,19 +17,43 @@ namespace Aquality.Selenium.Core.Applications
     /// </summary>
     public class Startup
     {
-        private ISettingsFile settingsFile;
+        private static readonly ThreadLocal<IServiceProvider> ServiceProviderContainer = new ThreadLocal<IServiceProvider>();
+
+        public static void SetServiceProvider(IServiceProvider serviceProvider)
+        {
+            ServiceProviderContainer.Value = serviceProvider;
+        }
+
+        public static IServiceProvider ConfigureServiceProvider(Func<IServiceProvider, IApplication> applicationSupplier, Func<IServiceCollection> serviceCollectionProvider = null)
+        {
+            if (!ServiceProviderContainer.IsValueCreated)
+            {
+                IServiceCollection services;
+                if (serviceCollectionProvider == null)
+                {
+                    services = new ServiceCollection();
+                    ConfigureServices(services, applicationSupplier);
+                }
+                else
+                {
+                    services = serviceCollectionProvider();
+                }
+                ServiceProviderContainer.Value = services.BuildServiceProvider();
+            }
+            return ServiceProviderContainer.Value;
+        }
 
         /// <summary>
         /// Used to configure dependencies for services of the current library
         /// </summary>
         /// <param name="services">Collection of service descriptors</param>
-        /// <param name="applicationProvider">function that provides an instance of <see cref="IApplication"/></param>
+        /// <param name="applicationSupplier">function that provides an instance of <see cref="IApplication"/></param>
         /// <param name="settings">File with settings for configuration of dependencies.
         /// Pass the result of <see cref="GetSettings"/> if you need to get settings from the embedded resource of your project.</param>
-        public void ConfigureServices(IServiceCollection services, Func<IServiceProvider, IApplication> applicationProvider, ISettingsFile settings = null)
+        public static void ConfigureServices(IServiceCollection services, Func<IServiceProvider, IApplication> applicationSupplier, ISettingsFile settings = null)
         {
-            settingsFile = settings ?? GetSettings();
-            services.AddScoped(applicationProvider);
+            var settingsFile = settings ?? GetSettings();
+            services.AddScoped(applicationSupplier);
 
             services.AddSingleton<ITimeoutConfiguration>(new TimeoutConfiguration(settingsFile));
             services.AddTransient<ConditionalWait>();
@@ -51,21 +76,27 @@ namespace Aquality.Selenium.Core.Applications
         /// If not found, will look for embedded resource in the calling assembly of this method
         /// </summary>
         /// <returns>An instance of settings</returns>
-        public ISettingsFile GetSettings()
+        public static ISettingsFile GetSettings()
         {
-            if (settingsFile == null)
-            {
-                var profileNameFromEnvironment = EnvironmentConfiguration.GetVariable("profile");
-                var settingsProfile = profileNameFromEnvironment == null ? "settings.json" : $"settings.{profileNameFromEnvironment}.json";
-                Logger.Instance.Debug($"Get settings from: {settingsProfile}");
+            var profileNameFromEnvironment = EnvironmentConfiguration.GetVariable("profile");
+            var settingsProfile = profileNameFromEnvironment == null ? "settings.json" : $"settings.{profileNameFromEnvironment}.json";
+            Logger.Instance.Debug($"Get settings from: {settingsProfile}");
 
-                var jsonFile = FileReader.IsResourceFileExist(settingsProfile)
-                    ? new JsonSettingsFile(settingsProfile)
-                    : new JsonSettingsFile($"Resources.{settingsProfile}", Assembly.GetCallingAssembly());
-                return jsonFile;
-            }
+            var jsonFile = FileReader.IsResourceFileExist(settingsProfile)
+                ? new JsonSettingsFile(settingsProfile)
+                : new JsonSettingsFile($"Resources.{settingsProfile}", Assembly.GetCallingAssembly());
+            return jsonFile;
+        }
 
-            return settingsFile;
+        /// <summary>
+        /// Resolves required service from <see cref="ServiceProvider"/>
+        /// </summary>
+        /// <typeparam name="T">type of required service</typeparam>
+        /// <exception cref="InvalidOperationException">Thrown if there is no service of the required type.</exception> 
+        /// <returns></returns>
+        public static T GetRequiredService<T>()
+        {
+            return ServiceProviderContainer.Value.GetRequiredService<T>();
         }
     }
 }
