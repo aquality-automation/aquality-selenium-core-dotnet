@@ -37,10 +37,10 @@ namespace Aquality.Selenium.Core.Elements.Interfaces
         /// <typeparam name="T">Type of elements that have to implement IElement</typeparam>
         /// <param name="locator">Base elements locator</param>
         /// <param name="supplier">Delegate that defines constructor of element in case of custom elements</param>
-        /// <param name="expectedCount">Expected number of elements that have to be found (zero ot more then zero)</param>
+        /// <param name="expectedCount">Expected number of elements that have to be found (zero, more then zero, any)</param>
         /// <param name="state">Elements state</param>
         /// <exception cref="System.InvalidOperationException">Thrown when the supplier is null, and no constructor with required arguments was found.</exception>
         /// <returns>List of elements that found by locator</returns>
-        IList<T> FindElements<T>(By locator, ElementSupplier<T> supplier = null, ElementsCount expectedCount = ElementsCount.MoreThenZero, ElementState state = ElementState.Displayed) where T : IElement;
+        IList<T> FindElements<T>(By locator, ElementSupplier<T> supplier = null, ElementsCount expectedCount = ElementsCount.Any, ElementState state = ElementState.Displayed) where T : IElement;
     }
 }
