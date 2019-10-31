@@ -70,6 +70,7 @@ namespace Aquality.Selenium.Core.Tests.Applications.Browser
         {
             var label = new Label(ContentLoc, "Hover form", ElementState.Displayed);
             label.State.WaitForDisplayed();
+            elementFactory.FindElements<Label>(HiddenElementsLoc, expectedCount: count, state: state);
             Assert.Throws<WebDriverTimeoutException>(
                 () => elementFactory.FindElements<Label>(HiddenElementsLoc, expectedCount: count, state: state),
                 $"Tried to find elements with expected count '{count}' and state '{state}'");
