@@ -1,5 +1,6 @@
 ﻿using NUnit.Framework;
 using System;
+using System.Linq;
 using Aquality.Selenium.Core.Elements;
 using Aquality.Selenium.Core.Elements.Interfaces;
 using Aquality.Selenium.Core.Logging;
@@ -14,7 +15,6 @@ namespace Aquality.Selenium.Core.Tests.Applications.Browser
         private static readonly By HiddenElementsLoc = By.XPath("//h5");
         private static readonly By DisplayedElementsLoc = By.XPath("//img[@alt='User Avatar']");
         private static readonly By NotExistElementLoc = By.XPath("//div[@class='testtest']");
-        private static readonly By ContentLoc = By.Id("content");
         private static readonly Uri HoversURL = new Uri("http://the-internet.herokuapp.com/hovers");
         private IElementFactory elementFactory;
 
@@ -68,9 +68,17 @@ namespace Aquality.Selenium.Core.Tests.Applications.Browser
         [TestCase(ElementsCount.Zero, ElementState.ExistsInAnyState)]
         public void Should_BeImpossibleTo_FindHiddenElements_WithWrongArguments(ElementsCount count, ElementState state)
         {
-            var label = new Label(ContentLoc, "Hover form", ElementState.Displayed);
-            label.State.WaitForDisplayed();
-            elementFactory.FindElements<Label>(HiddenElementsLoc, expectedCount: count, state: state);
+            var a = ApplicationManager.Application.Driver.FindElements(HiddenElementsLoc);
+            Logger.Instance.Info($"FindElements1: {a.Count}");
+
+            var asorted = a.Where(web => state == ElementState.ExistsInAnyState || web.Displayed).ToList();
+            Logger.Instance.Info($"FindElements sorted1: {asorted.Count}");
+
+
+            var b = elementFactory.FindElements<Label>(HiddenElementsLoc, expectedCount: count, state: state);
+            Logger.Instance.Info($"FindElements2: {b.Count}");
+            
+
             Assert.Throws<WebDriverTimeoutException>(
                 () => elementFactory.FindElements<Label>(HiddenElementsLoc, expectedCount: count, state: state),
                 $"Tried to find elements with expected count '{count}' and state '{state}'");

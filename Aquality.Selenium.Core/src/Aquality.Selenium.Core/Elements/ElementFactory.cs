@@ -55,7 +55,7 @@ namespace Aquality.Selenium.Core.Elements
                     break;
                 case ElementsCount.MoreThenZero:
                     ConditionalWait.WaitFor(driver => driver.FindElements(locator).Any(
-                            webElement => (state == ElementState.ExistsInAnyState || webElement.Displayed)),
+                            webElement => state == ElementState.ExistsInAnyState || webElement.Displayed),
                         message: LocalizationManager.GetLocalizedMessage("loc.no.elements.found.by.locator", locator.ToString()));
                     break;
                 case ElementsCount.Any:
