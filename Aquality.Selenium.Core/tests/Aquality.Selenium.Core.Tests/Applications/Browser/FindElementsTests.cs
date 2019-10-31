@@ -11,7 +11,7 @@ namespace Aquality.Selenium.Core.Tests.Applications.Browser
 {
     public class FindElementsTests : TestWithBrowser
     {
-        private static readonly By HiddenElementsLoc = By.XPath("//div[@class='figcaption']");
+        private static readonly By HiddenElementsLoc = By.XPath("//h5");
         private static readonly By DisplayedElementsLoc = By.XPath("//img[@alt='User Avatar']");
         private static readonly By NotExistElementLoc = By.XPath("//div[@class='testtest']");
         private static readonly By ContentLoc = By.Id("content");
@@ -70,11 +70,6 @@ namespace Aquality.Selenium.Core.Tests.Applications.Browser
         {
             var label = new Label(ContentLoc, "Hover form", ElementState.Displayed);
             label.State.WaitForDisplayed();
-            var elements = elementFactory.FindElements<Label>(HiddenElementsLoc, expectedCount: count, state: state);
-            foreach (var element in elements)
-            {
-                Logger.Instance.Info(element.Text);
-            }
             Assert.Throws<WebDriverTimeoutException>(
                 () => elementFactory.FindElements<Label>(HiddenElementsLoc, expectedCount: count, state: state),
                 $"Tried to find elements with expected count '{count}' and state '{state}'");
