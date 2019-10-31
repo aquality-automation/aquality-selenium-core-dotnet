@@ -1,9 +1,7 @@
 ﻿using NUnit.Framework;
 using System;
-using System.Linq;
 using Aquality.Selenium.Core.Elements;
 using Aquality.Selenium.Core.Elements.Interfaces;
-using Aquality.Selenium.Core.Logging;
 using Aquality.Selenium.Core.Tests.Applications.WindowsApp.Elements;
 using Microsoft.Extensions.DependencyInjection;
 using OpenQA.Selenium;
@@ -71,16 +69,6 @@ namespace Aquality.Selenium.Core.Tests.Applications.Browser
         [TestCase(ElementsCount.Zero, ElementState.ExistsInAnyState)]
         public void Should_BeImpossibleTo_FindHiddenElements_WithWrongArguments(ElementsCount count, ElementState state)
         {
-            var a = ApplicationManager.Application.Driver.FindElements(HiddenElementsLoc);
-            Logger.Instance.Info($"FindElements1: {a.Count}");
-
-            var asorted = a.Where(web => state == ElementState.ExistsInAnyState || web.Displayed).ToList();
-            Logger.Instance.Info($"FindElements sorted1: {asorted.Count}");
-
-            var aall = a.Any(
-                webElement => state == ElementState.ExistsInAnyState || webElement.Displayed);
-            Logger.Instance.Info($"FindElements aall: {aall}");
-
             Assert.Throws<WebDriverTimeoutException>(
                 () => elementFactory.FindElements<Label>(HiddenElementsLoc, expectedCount: count, state: state),
                 $"Tried to find elements with expected count '{count}' and state '{state}'");
