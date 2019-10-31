@@ -24,6 +24,8 @@ namespace Aquality.Selenium.Core.Tests.Applications.Browser
         {
             elementFactory = ServiceProvider.GetRequiredService<IElementFactory>();
             ApplicationManager.Application.Driver.Navigate().GoToUrl(HoversURL);
+            var example = new Label(ContentLoc, "Example", ElementState.Displayed);
+            example.Click();
         }
 
         [TestCase(ElementsCount.MoreThenZero, ElementState.Displayed, 3)]
@@ -69,9 +71,6 @@ namespace Aquality.Selenium.Core.Tests.Applications.Browser
         [TestCase(ElementsCount.Zero, ElementState.ExistsInAnyState)]
         public void Should_BeImpossibleTo_FindHiddenElements_WithWrongArguments(ElementsCount count, ElementState state)
         {
-            var example = new Label(ContentLoc, "Example", ElementState.Displayed);
-            example.Click();
-
             var a = ApplicationManager.Application.Driver.FindElements(HiddenElementsLoc);
             Logger.Instance.Info($"FindElements1: {a.Count}");
 
