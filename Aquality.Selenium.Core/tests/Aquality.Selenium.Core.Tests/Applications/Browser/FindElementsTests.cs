@@ -2,6 +2,7 @@
 using System;
 using Aquality.Selenium.Core.Elements;
 using Aquality.Selenium.Core.Elements.Interfaces;
+using Aquality.Selenium.Core.Logging;
 using Aquality.Selenium.Core.Tests.Applications.WindowsApp.Elements;
 using Microsoft.Extensions.DependencyInjection;
 using OpenQA.Selenium;
@@ -69,6 +70,11 @@ namespace Aquality.Selenium.Core.Tests.Applications.Browser
         {
             var label = new Label(ContentLoc, "Hover form", ElementState.Displayed);
             label.State.WaitForDisplayed();
+            var elements = elementFactory.FindElements<Label>(HiddenElementsLoc, expectedCount: count, state: state);
+            foreach (var element in elements)
+            {
+                Logger.Instance.Info(element.Text);
+            }
             Assert.Throws<WebDriverTimeoutException>(
                 () => elementFactory.FindElements<Label>(HiddenElementsLoc, expectedCount: count, state: state),
                 $"Tried to find elements with expected count '{count}' and state '{state}'");
