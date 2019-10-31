@@ -74,10 +74,9 @@ namespace Aquality.Selenium.Core.Tests.Applications.Browser
             var asorted = a.Where(web => state == ElementState.ExistsInAnyState || web.Displayed).ToList();
             Logger.Instance.Info($"FindElements sorted1: {asorted.Count}");
 
-
-            var b = elementFactory.FindElements<Label>(HiddenElementsLoc, expectedCount: count, state: state);
-            Logger.Instance.Info($"FindElements2: {b.Count}");
-            
+            var aall = a.Any(
+                webElement => state == ElementState.ExistsInAnyState || webElement.Displayed);
+            Logger.Instance.Info($"FindElements aall: {aall}");
 
             Assert.Throws<WebDriverTimeoutException>(
                 () => elementFactory.FindElements<Label>(HiddenElementsLoc, expectedCount: count, state: state),
