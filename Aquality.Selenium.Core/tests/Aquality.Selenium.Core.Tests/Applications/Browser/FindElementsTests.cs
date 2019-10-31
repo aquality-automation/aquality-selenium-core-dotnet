@@ -15,6 +15,7 @@ namespace Aquality.Selenium.Core.Tests.Applications.Browser
         private static readonly By HiddenElementsLoc = By.XPath("//h5");
         private static readonly By DisplayedElementsLoc = By.XPath("//img[@alt='User Avatar']");
         private static readonly By NotExistElementLoc = By.XPath("//div[@class='testtest']");
+        private static readonly By ContentLoc = By.XPath("//div[contains(@class,'example')]");
         private static readonly Uri HoversURL = new Uri("http://the-internet.herokuapp.com/hovers");
         private IElementFactory elementFactory;
 
@@ -68,6 +69,9 @@ namespace Aquality.Selenium.Core.Tests.Applications.Browser
         [TestCase(ElementsCount.Zero, ElementState.ExistsInAnyState)]
         public void Should_BeImpossibleTo_FindHiddenElements_WithWrongArguments(ElementsCount count, ElementState state)
         {
+            var example = new Label(ContentLoc, "Example", ElementState.Displayed);
+            example.Click();
+
             var a = ApplicationManager.Application.Driver.FindElements(HiddenElementsLoc);
             Logger.Instance.Info($"FindElements1: {a.Count}");
 
