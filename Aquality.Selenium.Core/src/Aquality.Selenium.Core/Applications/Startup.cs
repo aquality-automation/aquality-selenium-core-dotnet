@@ -25,7 +25,7 @@ namespace Aquality.Selenium.Core.Applications
         /// <param name="applicationProvider">function that provides an instance of <see cref="IApplication"/></param>
         /// <param name="settings">File with settings for configuration of dependencies.
         /// Pass the result of <see cref="GetSettings"/> if you need to get settings from the embedded resource of your project.</param>
-        public void ConfigureServices(IServiceCollection services, Func<IServiceProvider, IApplication> applicationProvider, ISettingsFile settings = null)
+        public virtual IServiceCollection ConfigureServices(IServiceCollection services, Func<IServiceProvider, IApplication> applicationProvider, ISettingsFile settings = null)
         {
             settingsFile = settings ?? GetSettings();
             services.AddScoped(applicationProvider);
@@ -41,6 +41,7 @@ namespace Aquality.Selenium.Core.Applications
 
             services.AddTransient<IElementFinder, ElementFinder>();
             services.AddTransient<IElementFactory, ElementFactory>();
+            return services;
         }
 
         /// <summary>
