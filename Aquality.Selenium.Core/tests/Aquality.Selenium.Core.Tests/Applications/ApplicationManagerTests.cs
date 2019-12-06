@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Reflection;
+using System.Threading;
 using Aquality.Selenium.Core.Applications;
 using Aquality.Selenium.Core.Configurations;
 using Aquality.Selenium.Core.Utilities;
@@ -44,18 +45,18 @@ namespace Aquality.Selenium.Core.Tests.Applications
 
         private class TestApplicationManager : ApplicationManager<IApplication>
         {
-            private static Startup startup = new TestStartup();
+            private static ThreadLocal<TestStartup> startup = new ThreadLocal<TestStartup>();
 
-            private static IApplication Application => GetApplication(StartApplicationFunction, () => startup.ConfigureServices(new ServiceCollection(), services => Application));
+            private static IApplication Application => GetApplication(StartApplicationFunction, () => startup.Value.ConfigureServices(new ServiceCollection(), services => Application));
 
             public static IServiceProvider ServiceProvider => GetServiceProvider(services => Application,
-                () => startup.ConfigureServices(new ServiceCollection(), services => Application));
+                () => startup.Value.ConfigureServices(new ServiceCollection(), services => Application));
 
             public static void SetStartup(Startup startup)
             {
                 if (startup != null)
                 {
-                    TestApplicationManager.startup = startup;
+                    TestApplicationManager.startup.Value = (TestStartup)startup;
                 }
             }
 
