@@ -1,6 +1,5 @@
 ﻿using Aquality.Selenium.Core.Elements.Interfaces;
 using Aquality.Selenium.Core.Localization;
-using Aquality.Selenium.Core.Logging;
 using Aquality.Selenium.Core.Waitings;
 using OpenQA.Selenium;
 using System;
@@ -15,19 +14,13 @@ namespace Aquality.Selenium.Core.Elements
     /// </summary>
     public class ElementFinder : IElementFinder
     {
-        public ElementFinder(Logger logger, ILocalizedLogger localizedLogger, ILocalizationManager localizationManager, ConditionalWait conditionalWait)
+        public ElementFinder(ILocalizedLogger logger, ConditionalWait conditionalWait)
         {
             Logger = logger;
-            LocalizedLogger = localizedLogger;
-            LocalizationManager = localizationManager;
             ConditionalWait = conditionalWait;
         }
 
-        private Logger Logger { get; }
-
-        private ILocalizedLogger LocalizedLogger { get; }
-
-        private ILocalizationManager LocalizationManager { get; }
+        private ILocalizedLogger Logger { get; }
 
         private ConditionalWait ConditionalWait { get; }
 
@@ -90,7 +83,7 @@ namespace Aquality.Selenium.Core.Elements
 
         private void HandleTimeoutException(WebDriverTimeoutException ex, DesiredState desiredState, By locator, List<IWebElement> foundElements)
         {
-            var message = LocalizationManager.GetLocalizedMessage("loc.no.elements.found.in.state", locator.ToString(), desiredState.StateName);
+            var message = $"No elements with locator '{locator.ToString()}' were found in {desiredState.StateName} state";
             if (desiredState.IsCatchingTimeoutException)
             {
                 if (!foundElements.Any())
@@ -99,11 +92,11 @@ namespace Aquality.Selenium.Core.Elements
                     {
                         throw new NoSuchElementException(message);
                     }
-                    Logger.Debug(message);
+                    Logger.Debug("loc.no.elements.found.in.state", null, locator.ToString(), desiredState.StateName);
                 }
                 else
                 {
-                    LocalizedLogger.Debug("loc.elements.were.found.but.not.in.state", null, locator.ToString(), desiredState.StateName);
+                    Logger.Debug("loc.elements.were.found.but.not.in.state", null, locator.ToString(), desiredState.StateName);
                 }
             }
             else

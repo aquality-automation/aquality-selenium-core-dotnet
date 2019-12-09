@@ -30,15 +30,16 @@ namespace Aquality.Selenium.Core.Applications
             settingsFile = settings ?? GetSettings();
             services.AddScoped(applicationProvider);
 
-            services.AddSingleton<ITimeoutConfiguration>(new TimeoutConfiguration(settingsFile));
-            services.AddTransient<ConditionalWait>();
-            services.AddSingleton<ILoggerConfiguration>(new LoggerConfiguration(settingsFile));
+            services.AddSingleton(settingsFile);
             services.AddSingleton(Logger.Instance);
+            services.AddSingleton<ILoggerConfiguration, LoggerConfiguration>();
+            services.AddSingleton<ITimeoutConfiguration, TimeoutConfiguration>();
+            services.AddSingleton<IRetryConfiguration, RetryConfiguration>();
             services.AddSingleton<ILocalizationManager, LocalizationManager>();
             services.AddSingleton<ILocalizedLogger, LocalizedLogger>();
-            services.AddSingleton<IRetryConfiguration>(new RetryConfiguration(settingsFile));
             services.AddSingleton<ElementActionRetrier>();
 
+            services.AddTransient<ConditionalWait>();
             services.AddTransient<IElementFinder, ElementFinder>();
             services.AddTransient<IElementFactory, ElementFactory>();
         }
