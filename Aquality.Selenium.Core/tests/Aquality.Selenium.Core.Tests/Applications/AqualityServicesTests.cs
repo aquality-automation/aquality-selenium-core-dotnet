@@ -9,7 +9,7 @@ using NUnit.Framework;
 
 namespace Aquality.Selenium.Core.Tests.Applications
 {
-    public class ApplicationManagerTests
+    public class AqualityServicesTests
     {
         private const string SpecialSettingsFile = "special";
         private const string SpecialLanguageValue = "special";
@@ -19,31 +19,31 @@ namespace Aquality.Selenium.Core.Tests.Applications
         [Test]
         public void Should_BePossibleTo_RegisterCustomServices()
         {
-            Assert.IsInstanceOf<TestTimeoutConfiguration>(TestApplicationManager.ServiceProvider.GetService<ITimeoutConfiguration>());
+            Assert.IsInstanceOf<TestTimeoutConfiguration>(TestAqualityServices.ServiceProvider.GetService<ITimeoutConfiguration>());
         }
 
         [Test]
         public void Should_BePossibleTo_GetCustomValues()
         {
-            var timeoutConfiguration = TestApplicationManager.ServiceProvider.GetService<ITimeoutConfiguration>() as TestTimeoutConfiguration;
+            var timeoutConfiguration = TestAqualityServices.ServiceProvider.GetService<ITimeoutConfiguration>() as TestTimeoutConfiguration;
             Assert.AreEqual(SpecialTimeoutValue,  timeoutConfiguration.CustomTimeout);
         }
 
         [Test]
         public void Should_BePossibleTo_GetCustomLoggerValues()
         {
-            TestApplicationManager.SetStartup(new CustomStartup());
-            var timeoutConfiguration = TestApplicationManager.ServiceProvider.GetService<ILoggerConfiguration>() as CustomLoggerConfiguration;
+            TestAqualityServices.SetStartup(new CustomStartup());
+            var timeoutConfiguration = TestAqualityServices.ServiceProvider.GetService<ILoggerConfiguration>() as CustomLoggerConfiguration;
             Assert.AreEqual(SpecialLogger, timeoutConfiguration.CustomLogger);
         }
 
         [Test]
         public void Should_BePossibleTo_RegisterCustomServices_WithCustomSettingsFile()
         {
-            Assert.AreEqual(SpecialLanguageValue, TestApplicationManager.ServiceProvider.GetService<ILoggerConfiguration>().Language);
+            Assert.AreEqual(SpecialLanguageValue, TestAqualityServices.ServiceProvider.GetService<ILoggerConfiguration>().Language);
         }
 
-        private class TestApplicationManager : ApplicationManager<IApplication>
+        private class TestAqualityServices : AqualityServices<IApplication>
         {
             private static ThreadLocal<TestStartup> startup = new ThreadLocal<TestStartup>();
 
@@ -56,7 +56,7 @@ namespace Aquality.Selenium.Core.Tests.Applications
             {
                 if (startup != null)
                 {
-                    TestApplicationManager.startup.Value = (TestStartup)startup;
+                    TestAqualityServices.startup.Value = (TestStartup)startup;
                 }
             }
 

@@ -15,16 +15,16 @@ namespace Aquality.Selenium.Core.Tests.Applications.Browser
         {
             var services = new ServiceCollection();
 
-            new Startup().ConfigureServices(services, serviceCollection => ApplicationManager.Application);
+            new Startup().ConfigureServices(services, serviceCollection => AqualityServices.Application);
             ServiceProvider = services.BuildServiceProvider();
         }
 
         [TearDown]
         public void CleanUp()
         {
-            if (ApplicationManager.IsApplicationStarted())
+            if (AqualityServices.IsApplicationStarted())
             {
-                ApplicationManager.Application.Quit();
+                AqualityServices.Application.Quit();
             }
         }
     }
