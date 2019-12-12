@@ -21,7 +21,7 @@ namespace Aquality.Selenium.Core.Tests.Applications.Browser
         public new void SetUp()
         {
             elementFactory = ServiceProvider.GetRequiredService<IElementFactory>();
-            ApplicationManager.Application.Driver.Navigate().GoToUrl(HoversURL);
+            AqualityServices.Application.Driver.Navigate().GoToUrl(HoversURL);
             var example = new Label(ContentLoc, "Example", ElementState.Displayed);
             example.Click();
         }
