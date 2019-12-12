@@ -49,18 +49,15 @@ namespace Aquality.Selenium.Core.Elements
             switch (expectedCount)
             {
                 case ElementsCount.Zero:
-                    ConditionalWait.WaitFor(driver => !driver.FindElements(locator).Any(
-                        webElement => state == ElementState.ExistsInAnyState || webElement.Displayed),
+                    ConditionalWait.WaitForTrue(() => !ElementFinder.FindElements(locator, state, TimeSpan.Zero).Any(), 
                         message: LocalizationManager.GetLocalizedMessage("loc.elements.found.but.should.not", locator.ToString(), state.ToString()));
                     break;
                 case ElementsCount.MoreThenZero:
-                    ConditionalWait.WaitFor(driver => driver.FindElements(locator).Any(
-                            webElement => state == ElementState.ExistsInAnyState || webElement.Displayed),
+                    ConditionalWait.WaitForTrue(() => ElementFinder.FindElements(locator, state, TimeSpan.Zero).Any(), 
                         message: LocalizationManager.GetLocalizedMessage("loc.no.elements.found.by.locator", locator.ToString()));
                     break;
                 case ElementsCount.Any:
-                    ConditionalWait.WaitFor(driver => driver.FindElements(locator),
-                        message: LocalizationManager.GetLocalizedMessage("loc.search.of.elements.failed", locator.ToString()));
+                    ConditionalWait.WaitFor(() => ElementFinder.FindElements(locator, state, TimeSpan.Zero) != null);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException($"No such expected value: {expectedCount}");
