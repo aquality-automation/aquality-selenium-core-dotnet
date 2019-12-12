@@ -6,6 +6,7 @@
     public enum ElementsCount
     {
         Zero,
-        MoreThenZero
+        MoreThenZero,
+        Any
     }
 }

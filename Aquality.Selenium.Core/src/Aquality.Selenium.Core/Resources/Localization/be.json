@@ -6,5 +6,6 @@
   "loc.no.elements.found.in.state": "Не знайшлі элементаў па лакатару '{0}' у {1} стане",
   "loc.no.elements.found.by.locator": "Не знайшлі элементаў па лакатару '{0}'",
   "loc.elements.were.found.but.not.in.state": "Знайшлі элементы па лакатару '{0}', але яны не ў жаданым стане {1}",
-  "loc.elements.found.but.should.not": "Не павінна быць знойдзена элементаў па лакатару '{0}' у {1} стане"
+  "loc.elements.found.but.should.not": "Не павінна быць знойдзена элементаў па лакатару '{0}' у {1} стане",
+  "loc.search.of.elements.failed": "Пошук элемента па лакатару '{0}' прайшоў няўдала"
 }
