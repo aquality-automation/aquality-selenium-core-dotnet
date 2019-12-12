@@ -15,7 +15,9 @@ namespace Aquality.Selenium.Core.Tests.Applications.Browser
         public new static bool IsApplicationStarted => IsApplicationStarted();
 
         public static ChromeApplication Application => GetApplication(services => StartChrome(services));
-        
+
+        public static IServiceProvider ServiceProvider => GetServiceProvider(services => Application);
+
         private static ChromeApplication StartChrome(IServiceProvider services)
         {
             lock (downloadDriverLock)

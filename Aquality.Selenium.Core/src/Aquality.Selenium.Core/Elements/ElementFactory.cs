@@ -43,7 +43,7 @@ namespace Aquality.Selenium.Core.Elements
             return elementSupplier(new ByChained(parentElement.Locator, childLocator), $"Child element of {parentElement.Name}", state);
         }
 
-        public IList<T> FindElements<T>(By locator, ElementSupplier<T> supplier = null, ElementsCount expectedCount = ElementsCount.MoreThenZero, ElementState state = ElementState.Displayed) where T : IElement
+        public IList<T> FindElements<T>(By locator, ElementSupplier<T> supplier = null, ElementsCount expectedCount = ElementsCount.Any, ElementState state = ElementState.Displayed) where T : IElement
         {
             var elementSupplier = ResolveSupplier(supplier);
             switch (expectedCount)
@@ -54,8 +54,13 @@ namespace Aquality.Selenium.Core.Elements
                         message: LocalizationManager.GetLocalizedMessage("loc.elements.found.but.should.not", locator.ToString(), state.ToString()));
                     break;
                 case ElementsCount.MoreThenZero:
-                    ConditionalWait.WaitFor(driver => driver.FindElements(locator).Any(),
+                    ConditionalWait.WaitFor(driver => driver.FindElements(locator).Any(
+                            webElement => state == ElementState.ExistsInAnyState || webElement.Displayed),
                         message: LocalizationManager.GetLocalizedMessage("loc.no.elements.found.by.locator", locator.ToString()));
+                    break;
+                case ElementsCount.Any:
+                    ConditionalWait.WaitFor(driver => driver.FindElements(locator),
+                        message: LocalizationManager.GetLocalizedMessage("loc.search.of.elements.failed", locator.ToString()));
                     break;
                 default:
                     throw new ArgumentOutOfRangeException($"No such expected value: {expectedCount}");
