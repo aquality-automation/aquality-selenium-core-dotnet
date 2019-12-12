@@ -109,7 +109,7 @@ namespace Aquality.Selenium.Core.Waitings
 
                 if (stopwatch.Elapsed > waitTimeout)
                 {
-                    var exceptionMessage = $"Timed out after {waitTimeout.Seconds} seconds";
+                    var exceptionMessage = $"Timed out after {waitTimeout.TotalSeconds} seconds";
                     if (!string.IsNullOrEmpty(message))
                     {
                         exceptionMessage += $": {message}";
