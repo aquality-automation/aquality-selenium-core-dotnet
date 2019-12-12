@@ -14,7 +14,7 @@ namespace Aquality.Selenium.Core.Applications
         {
         }
 
-        public static bool IsApplicationStarted()
+        protected static bool IsApplicationStarted()
         {
             return AppContainer.IsValueCreated && AppContainer.Value.Driver.SessionId != null;
         }
