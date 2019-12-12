@@ -30,7 +30,7 @@ namespace Aquality.Selenium.Core.Tests.Applications.Browser
         public void Should_NotStartApplication_ForServiceResolving(Type type)
         {
             Assert.IsNotNull(ServiceProvider.GetRequiredService(type));
-            Assert.IsFalse(AqualityServices.IsApplicationStarted());
+            Assert.IsFalse(AqualityServices.IsApplicationStarted);
         }
     }
 }

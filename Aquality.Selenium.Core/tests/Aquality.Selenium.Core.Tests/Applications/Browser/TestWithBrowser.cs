@@ -22,7 +22,7 @@ namespace Aquality.Selenium.Core.Tests.Applications.Browser
         [TearDown]
         public void CleanUp()
         {
-            if (AqualityServices.IsApplicationStarted())
+            if (AqualityServices.IsApplicationStarted)
             {
                 AqualityServices.Application.Quit();
             }

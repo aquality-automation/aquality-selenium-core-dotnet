@@ -12,6 +12,8 @@ namespace Aquality.Selenium.Core.Tests.Applications.Browser
     {
         private static readonly object downloadDriverLock = new object();
 
+        public new static bool IsApplicationStarted => IsApplicationStarted();
+
         public static ChromeApplication Application => GetApplication(services => StartChrome(services));
         
         private static ChromeApplication StartChrome(IServiceProvider services)

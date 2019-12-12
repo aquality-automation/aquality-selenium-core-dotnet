@@ -13,7 +13,9 @@ namespace Aquality.Selenium.Core.Tests.Applications.WindowsApp
     {
         private const string SupportedApplication = "./Resources/WindowsApp/Day Maxi Calc.exe";
         private const string DefaultDriverServer = "http://127.0.0.1:4723/";
-        
+
+        public new static bool IsApplicationStarted => IsApplicationStarted();
+
         public static WindowsApplication Application => GetApplication(service => StartApplication(service));
 
         public static IServiceProvider ServiceProvider => GetServiceProvider(services => Application);
