@@ -15,16 +15,16 @@ namespace Aquality.Selenium.Core.Tests.Applications.WindowsApp.Elements
         {
         }
 
-        protected override ElementActionRetrier ActionRetrier => ApplicationManager.ServiceProvider.GetRequiredService<ElementActionRetrier>();
+        protected override ElementActionRetrier ActionRetrier => AqualityServices.ServiceProvider.GetRequiredService<ElementActionRetrier>();
 
-        protected override IApplication Application => ApplicationManager.Application;
+        protected override IApplication Application => AqualityServices.Application;
 
-        protected override ConditionalWait ConditionalWait => ApplicationManager.ServiceProvider.GetRequiredService<ConditionalWait>();
+        protected override ConditionalWait ConditionalWait => AqualityServices.ServiceProvider.GetRequiredService<ConditionalWait>();
 
-        protected override IElementFactory Factory => ApplicationManager.ServiceProvider.GetRequiredService<IElementFactory>();
+        protected override IElementFactory Factory => AqualityServices.ServiceProvider.GetRequiredService<IElementFactory>();
 
-        protected override IElementFinder Finder => ApplicationManager.ServiceProvider.GetRequiredService<IElementFinder>();
+        protected override IElementFinder Finder => AqualityServices.ServiceProvider.GetRequiredService<IElementFinder>();
 
-        protected override ILocalizedLogger LocalizedLogger => ApplicationManager.ServiceProvider.GetRequiredService<ILocalizedLogger>();
+        protected override ILocalizedLogger LocalizedLogger => AqualityServices.ServiceProvider.GetRequiredService<ILocalizedLogger>();
     }
 }

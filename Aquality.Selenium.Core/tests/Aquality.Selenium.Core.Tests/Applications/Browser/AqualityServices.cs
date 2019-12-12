@@ -8,9 +8,11 @@ using WebDriverManager.DriverConfigs.Impl;
 
 namespace Aquality.Selenium.Core.Tests.Applications.Browser
 {
-    public class ApplicationManager : ApplicationManager<ChromeApplication>
+    public class AqualityServices : AqualityServices<ChromeApplication>
     {
         private static readonly object downloadDriverLock = new object();
+
+        public new static bool IsApplicationStarted => IsApplicationStarted();
 
         public static ChromeApplication Application => GetApplication(services => StartChrome(services));
 

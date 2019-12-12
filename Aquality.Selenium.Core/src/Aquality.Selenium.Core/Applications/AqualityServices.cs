@@ -4,17 +4,17 @@ using System.Threading;
 
 namespace Aquality.Selenium.Core.Applications
 {
-    public abstract class ApplicationManager<TApplication>
+    public abstract class AqualityServices<TApplication>
         where TApplication : class, IApplication
     {
         private static readonly ThreadLocal<TApplication> AppContainer = new ThreadLocal<TApplication>();
         private static readonly ThreadLocal<IServiceProvider> ServiceProviderContainer = new ThreadLocal<IServiceProvider>();
 
-        protected ApplicationManager()
+        protected AqualityServices()
         {
         }
 
-        public static bool IsApplicationStarted()
+        protected static bool IsApplicationStarted()
         {
             return AppContainer.IsValueCreated && AppContainer.Value.Driver.SessionId != null;
         }

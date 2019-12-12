@@ -10,7 +10,7 @@ namespace Aquality.Selenium.Core.Tests.Applications.WindowsApp
 {
     public class ElementFactoryTests : TestWithApplication
     {
-        private IElementFactory Factory => ApplicationManager.ServiceProvider.GetRequiredService<IElementFactory>();
+        private IElementFactory Factory => AqualityServices.ServiceProvider.GetRequiredService<IElementFactory>();
 
         private IElement NumberPad => Factory.GetButton(CalculatorWindow.WindowLocator, "Number pad");
 
