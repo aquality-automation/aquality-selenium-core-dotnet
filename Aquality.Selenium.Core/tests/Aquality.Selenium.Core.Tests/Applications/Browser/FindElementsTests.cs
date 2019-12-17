@@ -60,7 +60,7 @@ namespace Aquality.Selenium.Core.Tests.Applications.Browser
         [TestCase(ElementsCount.Zero, ElementState.ExistsInAnyState)]
         public void Should_BeImpossibleTo_FindDisplayedElements_WithWrongArguments(ElementsCount count, ElementState state)
         {
-            Assert.Throws<WebDriverTimeoutException>(
+            Assert.Throws<TimeoutException>(
                 () => elementFactory.FindElements<Label>(DisplayedElementsLoc, expectedCount: count, state: state),
                 $"Tried to find elements with expected count '{count}' and state '{state}'");
         }
@@ -69,7 +69,7 @@ namespace Aquality.Selenium.Core.Tests.Applications.Browser
         [TestCase(ElementsCount.Zero, ElementState.ExistsInAnyState)]
         public void Should_BeImpossibleTo_FindHiddenElements_WithWrongArguments(ElementsCount count, ElementState state)
         {
-            Assert.Throws<WebDriverTimeoutException>(
+            Assert.Throws<TimeoutException>(
                 () => elementFactory.FindElements<Label>(HiddenElementsLoc, expectedCount: count, state: state),
                 $"Tried to find elements with expected count '{count}' and state '{state}'");
         }
@@ -78,7 +78,7 @@ namespace Aquality.Selenium.Core.Tests.Applications.Browser
         [TestCase(ElementsCount.MoreThenZero, ElementState.ExistsInAnyState)]
         public void Should_BeImpossibleTo_FindNotExistElements_WithWrongArguments(ElementsCount count, ElementState state)
         {
-            Assert.Throws<WebDriverTimeoutException>(
+            Assert.Throws<TimeoutException>(
                 () => elementFactory.FindElements<Label>(NotExistElementLoc, expectedCount: count, state: state),
                 $"Tried to find elements with expected count '{count}' and state '{state}'");
         }

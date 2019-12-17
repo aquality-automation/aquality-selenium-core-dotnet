@@ -27,24 +27,24 @@
             Allows to resolve dependencies for all services in the Aquality.Selenium.Core library
             </summary>
         </member>
-        <member name="M:Aquality.Selenium.Core.Applications.Startup.ConfigureServices(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.Func{System.IServiceProvider,Aquality.Selenium.Core.Applications.IApplication},Aquality.Selenium.Core.Utilities.JsonFile)">
+        <member name="M:Aquality.Selenium.Core.Applications.Startup.ConfigureServices(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.Func{System.IServiceProvider,Aquality.Selenium.Core.Applications.IApplication},Aquality.Selenium.Core.Configurations.ISettingsFile)">
             <summary>
             Used to configure dependencies for services of the current library
             </summary>
             <param name="services">Collection of service descriptors</param>
             <param name="applicationProvider">function that provides an instance of <see cref="T:Aquality.Selenium.Core.Applications.IApplication"/></param>
-            <param name="settingsFile"><see cref="T:Aquality.Selenium.Core.Utilities.JsonFile"/> with settings for configuration of dependencies.
+            <param name="settings">File with settings for configuration of dependencies.
             Pass the result of <see cref="M:Aquality.Selenium.Core.Applications.Startup.GetSettings"/> if you need to get settings from the embedded resource of your project.</param>
         </member>
         <member name="M:Aquality.Selenium.Core.Applications.Startup.GetSettings">
             <summary>
-            Provides a <see cref="T:Aquality.Selenium.Core.Utilities.JsonFile"/> with settings.
-            If "profile" environment variable is defined, it will be used in the name : $"settings.{profile}.json";
-            Otherwise, will use default name of settings file: "settings.json".
-            Will look for the resource file (copied to binaries/Resources/ folder);
+            Provides a <see cref="T:Aquality.Selenium.Core.Configurations.ISettingsFile"/> with settings.
+            Value is set in <see cref="M:Aquality.Selenium.Core.Applications.Startup.ConfigureServices(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.Func{System.IServiceProvider,Aquality.Selenium.Core.Applications.IApplication},Aquality.Selenium.Core.Configurations.ISettingsFile)"/>
+            Otherwise, will use default JSON settings file with name: "settings.{profile}.json".
+            Default settings will look for the resource file (copied to binaries/Resources/ folder);
             If not found, will look for embedded resource in the calling assembly of this method
             </summary>
-            <returns>An instance of settings JsonFile</returns>
+            <returns>An instance of settings</returns>
         </member>
         <member name="T:Aquality.Selenium.Core.Configurations.ILoggerConfiguration">
             <summary>
@@ -104,33 +104,69 @@
             Provides logger configuration
             </summary>
         </member>
-        <member name="M:Aquality.Selenium.Core.Configurations.LoggerConfiguration.#ctor(Aquality.Selenium.Core.Utilities.JsonFile)">
+        <member name="M:Aquality.Selenium.Core.Configurations.LoggerConfiguration.#ctor(Aquality.Selenium.Core.Configurations.ISettingsFile)">
             <summary>
-            Instantiates class using JSON file with general settings.
+            Instantiates class using <see cref="T:Aquality.Selenium.Core.Configurations.ISettingsFile"/> with general settings.
             </summary>
-            <param name="settingsFile">JSON settings file.</param>
+            <param name="settingsFile">Settings file</param>
         </member>
         <member name="T:Aquality.Selenium.Core.Configurations.RetryConfiguration">
             <summary>
             Provides retry configuration.
             </summary>
         </member>
-        <member name="M:Aquality.Selenium.Core.Configurations.RetryConfiguration.#ctor(Aquality.Selenium.Core.Utilities.JsonFile)">
+        <member name="M:Aquality.Selenium.Core.Configurations.RetryConfiguration.#ctor(Aquality.Selenium.Core.Configurations.ISettingsFile)">
             <summary>
-            Instantiates class using JSON file with general settings.
+            Instantiates class using <see cref="T:Aquality.Selenium.Core.Configurations.ISettingsFile"/> with general settings.
             </summary>
-            <param name="settingsFile">JSON settings file.</param>
+            <param name="settingsFile">Settings file.</param>
         </member>
         <member name="T:Aquality.Selenium.Core.Configurations.TimeoutConfiguration">
             <summary>
             Provides timeouts configuration.
             </summary>
         </member>
-        <member name="M:Aquality.Selenium.Core.Configurations.TimeoutConfiguration.#ctor(Aquality.Selenium.Core.Utilities.JsonFile)">
+        <member name="M:Aquality.Selenium.Core.Configurations.TimeoutConfiguration.#ctor(Aquality.Selenium.Core.Configurations.ISettingsFile)">
             <summary>
-            Instantiates class using JSON file with general settings.
+            Instantiates class using <see cref="T:Aquality.Selenium.Core.Configurations.ISettingsFile"/> with general settings.
             </summary>
-            <param name="settingsFile">JSON settings file.</param>
+            <param name="settingsFile">Settings file.</param>
+        </member>
+        <member name="T:Aquality.Selenium.Core.Configurations.ISettingsFile">
+            <summary>
+            Describes reader of settings file.
+            </summary>
+        </member>
+        <member name="M:Aquality.Selenium.Core.Configurations.ISettingsFile.GetValue``1(System.String)">
+            <summary>
+            Gets value from settings file.
+            </summary>
+            <typeparam name="T">Type of the value.</typeparam>
+            <param name="path">Path to the value. Depending on file format, it can be jsonPath, xpath etc.</param>
+            <returns>Value</returns>
+        </member>
+        <member name="M:Aquality.Selenium.Core.Configurations.ISettingsFile.GetValueList``1(System.String)">
+            <summary>
+            Gets list of values from settings file.
+            </summary>
+            <typeparam name="T">Type of the values.</typeparam>
+            <param name="path">Path to the values. Depending on file format, it can be jsonPath, xpath etc.</param>
+            <returns>List of values</returns>
+        </member>
+        <member name="M:Aquality.Selenium.Core.Configurations.ISettingsFile.GetValueDictionary``1(System.String)">
+            <summary>
+            Gets dictionary of keys and values from settings file.
+            </summary>
+            <typeparam name="T">Type of the values.</typeparam>
+            <param name="path">Path to the values. Depending on file format, it can be jsonPath, xpath etc.</param>
+            <returns>Dictionary of keys and values</returns>
+        </member>
+        <member name="M:Aquality.Selenium.Core.Configurations.ISettingsFile.IsValuePresent(System.String)">
+            <summary>
+            Checks if value exists in settings.
+            </summary>
+            <param name="path">Path to the values. Depending on file format, it can be jsonPath, xpath etc.</param>
+            <returns>True if exists, false otherwise.</returns>
         </member>
         <member name="T:Aquality.Selenium.Core.Elements.DesiredState">
             <summary>
@@ -285,7 +321,7 @@
             <typeparam name="T">Type of elements that have to implement IElement</typeparam>
             <param name="locator">Base elements locator</param>
             <param name="supplier">Delegate that defines constructor of element in case of custom elements</param>
-            <param name="expectedCount">Expected number of elements that have to be found (zero ot more then zero)</param>
+            <param name="expectedCount">Expected number of elements that have to be found (zero, more then zero, any)</param>
             <param name="state">Elements state</param>
             <exception cref="T:System.InvalidOperationException">Thrown when the supplier is null, and no constructor with required arguments was found.</exception>
             <returns>List of elements that found by locator</returns>
@@ -435,23 +471,74 @@
             <param name="state">Child element state</param>
             <returns>Instance of child element</returns>
         </member>
-        <member name="T:Aquality.Selenium.Core.Localization.LocalizedLogger">
+        <member name="T:Aquality.Selenium.Core.Elements.RelativeElementFinder">
             <summary>
-            Log messages to different languages
+            Implementation of <see cref="T:Aquality.Selenium.Core.Elements.Interfaces.IElementFinder"/> for a relative <see cref="T:OpenQA.Selenium.ISearchContext"/> supplier
             </summary>
         </member>
-        <member name="T:Aquality.Selenium.Core.Localization.LocalizationManager">
+        <member name="T:Aquality.Selenium.Core.Localization.ILocalizationManager">
             <summary>
-            This class is using for translation messages to different languages
+            This interface is using for translation messages to different languages
             </summary>
         </member>
-        <member name="M:Aquality.Selenium.Core.Localization.LocalizationManager.GetLocalizedMessage(System.String,System.Object[])">
+        <member name="M:Aquality.Selenium.Core.Localization.ILocalizationManager.GetLocalizedMessage(System.String,System.Object[])">
             <summary>
             Get localized message from resources by its key.
             </summary>
             <param name="messageKey">Key in resource file.</param>
             <param name="args">Arguments, which will be provided to template of localized message.</param>
             <returns>Localized message.</returns>
+        </member>
+        <member name="T:Aquality.Selenium.Core.Localization.ILocalizedLogger">
+            <summary>
+            Log messages to different languages
+            </summary>
+        </member>
+        <member name="M:Aquality.Selenium.Core.Localization.ILocalizedLogger.InfoElementAction(System.String,System.String,System.String,System.Object[])">
+            <summary>
+            Logs localized message for action with INFO level which is applied for element, for example, click, send keys etc.
+            </summary>
+            <param name="elementType">Type of the element.</param>
+            <param name="elementName">Name of the element.</param>
+            <param name="messageKey">Key in resource file.</param>
+            <param name="args">Arguments, which will be provided to template of localized message.</param>
+        </member>
+        <member name="M:Aquality.Selenium.Core.Localization.ILocalizedLogger.Info(System.String,System.Object[])">
+            <summary>
+            Logs localized message with INFO level.
+            </summary>
+            <param name="messageKey">Key in resource file.</param>
+            <param name="args">Arguments, which will be provided to template of localized message.</param>
+        </member>
+        <member name="M:Aquality.Selenium.Core.Localization.ILocalizedLogger.Debug(System.String,System.Exception,System.Object[])">
+            <summary>
+            Logs localized message with DEBUG level.
+            </summary>
+            <param name="messageKey">Key in resource file.</param>
+            <param name="exception">Exception, gets null value by default.</param>
+            <param name="args">Arguments, which will be provided to template of localized message.</param>
+        </member>
+        <member name="M:Aquality.Selenium.Core.Localization.ILocalizedLogger.Warn(System.String,System.Object[])">
+            <summary>
+            Logs localized message with WARN level.
+            </summary>
+            <param name="messageKey">Key in resource file.</param>
+            <param name="args">Arguments, which will be provided to template of localized message.</param>
+        </member>
+        <member name="M:Aquality.Selenium.Core.Localization.ILocalizedLogger.Error(System.String,System.Object[])">
+            <summary>
+            Logs localized message with ERROR level.
+            </summary>
+            <param name="messageKey">Key in resource file.</param>
+            <param name="args">Arguments, which will be provided to template of localized message.</param>
+        </member>
+        <member name="M:Aquality.Selenium.Core.Localization.ILocalizedLogger.Fatal(System.String,System.Exception,System.Object[])">
+            <summary>
+            Logs localized message with FATAL level.
+            </summary>
+            <param name="messageKey">Key in resource file.</param>
+            <param name="exception">Exception, gets null value by default.</param>
+            <param name="args">Arguments, which will be provided to template of localized message.</param>
         </member>
         <member name="T:Aquality.Selenium.Core.Logging.Logger">
             <summary>
@@ -605,71 +692,102 @@
             <param name="fileInfo">Required file info.</param>
             <returns>Text of the file.</returns>
         </member>
-        <member name="T:Aquality.Selenium.Core.Utilities.JsonFile">
+        <member name="T:Aquality.Selenium.Core.Utilities.JsonSettingsFile">
             <summary>
             Provides methods to get info from JSON files.
             Note that the value can be overriden via Environment variable with the same name
             (e.g. for json path ".timeouts.timeoutScript" you can set environment variable "timeouts.timeoutScript"
             </summary>
         </member>
-        <member name="M:Aquality.Selenium.Core.Utilities.JsonFile.#ctor(System.IO.FileInfo)">
+        <member name="M:Aquality.Selenium.Core.Utilities.JsonSettingsFile.#ctor(System.IO.FileInfo)">
             <summary>
             Inistantiates class using desired JSON fileinfo.
             </summary>
             <param name="fileInfo">JSON fileinfo.</param>
         </member>
-        <member name="M:Aquality.Selenium.Core.Utilities.JsonFile.#ctor(System.String)">
+        <member name="M:Aquality.Selenium.Core.Utilities.JsonSettingsFile.#ctor(System.String)">
             <summary>
             Inistantiates class using desired resource file info.
             </summary>
             <param name="resourceFileName"></param>
         </member>
-        <member name="M:Aquality.Selenium.Core.Utilities.JsonFile.#ctor(System.String,System.Reflection.Assembly)">
+        <member name="M:Aquality.Selenium.Core.Utilities.JsonSettingsFile.#ctor(System.String,System.Reflection.Assembly)">
             <summary>
             Inistantiates class using desired embeded resource.
             </summary>
             <param name="embededResourceName">Embeded resource name</param>
             <param name="assembly">Assembly which resource belongs to</param>
         </member>
-        <member name="M:Aquality.Selenium.Core.Utilities.JsonFile.GetValue``1(System.String)">
+        <member name="M:Aquality.Selenium.Core.Utilities.JsonSettingsFile.GetValue``1(System.String)">
             <summary>
             Gets value from JSON.
             Note that the value can be overriden via Environment variable with the same name
             (e.g. for json path ".timeouts.timeoutScript" you can set environment variable "timeouts.timeoutScript")
             </summary>
-            <param name="jsonPath">Relative JsonPath to the value.</param>
+            <param name="path">Relative JsonPath to the value.</param>
             <typeparam name="T">Type of the value.</typeparam>
             <returns>Value from JSON/Environment by JsonPath.</returns>
             <exception cref="T:System.ArgumentException">Throws when there is no value found by jsonPath in desired JSON file.</exception>
         </member>
-        <member name="M:Aquality.Selenium.Core.Utilities.JsonFile.GetValueList``1(System.String)">
+        <member name="M:Aquality.Selenium.Core.Utilities.JsonSettingsFile.GetValueList``1(System.String)">
             <summary>
             Gets list of values from JSON.
             Note that the value can be overriden via Environment variable with the same name; values must be separated by ','
             (e.g. for json path ".driverSettings.chrome.startArguments" you can set environment variable "driverSettings.chrome.startArguments")
             </summary>
-            <param name="jsonPath">Relative JsonPath to the values.</param>
+            <param name="path">Relative JsonPath to the values.</param>
             <typeparam name="T">Type of the value.</typeparam>
             <returns>Value from JSON/Environment by JsonPath.</returns>
             <exception cref="T:System.ArgumentException">Throws when there are no values found by jsonPath in desired JSON file.</exception>
         </member>
-        <member name="M:Aquality.Selenium.Core.Utilities.JsonFile.GetValueDictionary``1(System.String)">
+        <member name="M:Aquality.Selenium.Core.Utilities.JsonSettingsFile.GetValueDictionary``1(System.String)">
             <summary>
             Gets dictionary of values from JSON.
             Note that the value can be overriden via Environment variable with the same name;
             (e.g. for json path ".timeouts.timeoutImplicit" you can set environment variable ".timeouts.timeoutImplicit")
             </summary>
-            <param name="jsonPath">Relative JsonPath to the values.</param>
+            <param name="path">Relative JsonPath to the values.</param>
             <typeparam name="T">Type of the value.</typeparam>
             <returns>Value from JSON/Environment by JsonPath.</returns>
             <exception cref="T:System.ArgumentException">Throws when there are no values found by jsonPath in desired JSON file.</exception>
         </member>
-        <member name="M:Aquality.Selenium.Core.Utilities.JsonFile.IsValuePresent(System.String)">
+        <member name="M:Aquality.Selenium.Core.Utilities.JsonSettingsFile.IsValuePresent(System.String)">
             <summary>
             Checks whether value present on JSON/Environment by JsonPath or not.
             </summary>
-            <param name="jsonPath">Relative JsonPath to the object.</param>
+            <param name="path">Relative JsonPath to the object.</param>
             <returns>True if present and false otherwise.</returns>
+        </member>
+        <member name="M:Aquality.Selenium.Core.Utilities.SettingsFileExtensions.GetValueOrNew``1(Aquality.Selenium.Core.Configurations.ISettingsFile,System.String)">
+            <summary>
+            Gets value from environment\setting file or return default of new T() if path doesn't exist in file and environment variables.
+            Exception will not be threw.
+            </summary>
+            <typeparam name="T">Type of a value.</typeparam>
+            <param name="file">Settings file.</param>
+            <param name="path">Path to a value. Depends on file format, it can be xpath, path etc.</param>
+            <returns>Value or default(T).</returns>
+        </member>
+        <member name="M:Aquality.Selenium.Core.Utilities.SettingsFileExtensions.GetValueListOrEmpty``1(Aquality.Selenium.Core.Configurations.ISettingsFile,System.String)">
+            <summary>
+            Gets list of values from environment\setting file or empty List if path doesn't exist in file and environment variables.
+            Exception will not be threw.
+            </summary>
+            <typeparam name="T">Type of a value.</typeparam>
+            <param name="file">Settings file.</param>
+            <param name="path">Path to a value. Depends on file format, it can be xpath, path etc.</param>
+            <returns>List of values or empty List.</returns>
+        </member>
+        <member name="M:Aquality.Selenium.Core.Utilities.SettingsFileExtensions.GetValueOrDefault``1(Aquality.Selenium.Core.Configurations.ISettingsFile,System.String,``0)">
+            <summary>
+            Gets value from environment\setting file or return default of T if path doesn't exist in file and environment variables.
+            Exception will not be threw.
+            </summary>
+            <typeparam name="T">Type of a value.</typeparam>
+            <param name="file">Settings file.</param>
+            <param name="path">Path to a value. Depends on file format, it can be xpath, path etc.</param>
+            <param name="defaultValue">Default value. default(T) if not specified.</param>
+            <returns>Value or defaultValue or default(T)</returns>
         </member>
         <member name="T:Aquality.Selenium.Core.Waitings.ConditionalWait">
             <summary>

@@ -37,30 +37,27 @@ namespace Aquality.Selenium.Core.Elements
         /// <returns>Dictionary where key is interface and value is its implementation.</returns>
         protected virtual IDictionary<Type, Type> ElementTypesMap => new Dictionary<Type, Type>();
 
-        public T FindChildElement<T>(IElement parentElement, By childLocator, ElementSupplier<T> supplier = null, ElementState state = ElementState.Displayed) where T : IElement
+        public virtual T FindChildElement<T>(IElement parentElement, By childLocator, ElementSupplier<T> supplier = null, ElementState state = ElementState.Displayed) where T : IElement
         {
             var elementSupplier = ResolveSupplier(supplier);
             return elementSupplier(new ByChained(parentElement.Locator, childLocator), $"Child element of {parentElement.Name}", state);
         }
 
-        public IList<T> FindElements<T>(By locator, ElementSupplier<T> supplier = null, ElementsCount expectedCount = ElementsCount.Any, ElementState state = ElementState.Displayed) where T : IElement
+        public virtual IList<T> FindElements<T>(By locator, ElementSupplier<T> supplier = null, ElementsCount expectedCount = ElementsCount.Any, ElementState state = ElementState.Displayed) where T : IElement
         {
             var elementSupplier = ResolveSupplier(supplier);
             switch (expectedCount)
             {
                 case ElementsCount.Zero:
-                    ConditionalWait.WaitFor(driver => !driver.FindElements(locator).Any(
-                        webElement => state == ElementState.ExistsInAnyState || webElement.Displayed),
+                    ConditionalWait.WaitForTrue(() => !ElementFinder.FindElements(locator, state, TimeSpan.Zero).Any(), 
                         message: LocalizationManager.GetLocalizedMessage("loc.elements.found.but.should.not", locator.ToString(), state.ToString()));
                     break;
                 case ElementsCount.MoreThenZero:
-                    ConditionalWait.WaitFor(driver => driver.FindElements(locator).Any(
-                            webElement => state == ElementState.ExistsInAnyState || webElement.Displayed),
+                    ConditionalWait.WaitForTrue(() => ElementFinder.FindElements(locator, state, TimeSpan.Zero).Any(), 
                         message: LocalizationManager.GetLocalizedMessage("loc.no.elements.found.by.locator", locator.ToString()));
                     break;
                 case ElementsCount.Any:
-                    ConditionalWait.WaitFor(driver => driver.FindElements(locator),
-                        message: LocalizationManager.GetLocalizedMessage("loc.search.of.elements.failed", locator.ToString()));
+                    ConditionalWait.WaitFor(() => ElementFinder.FindElements(locator, state, TimeSpan.Zero) != null);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException($"No such expected value: {expectedCount}");
@@ -75,7 +72,7 @@ namespace Aquality.Selenium.Core.Elements
             return elements.ToList();
         }
 
-        public T GetCustomElement<T>(ElementSupplier<T> elementSupplier, By locator, string name, ElementState state = ElementState.Displayed) where T : IElement
+        public virtual T GetCustomElement<T>(ElementSupplier<T> elementSupplier, By locator, string name, ElementState state = ElementState.Displayed) where T : IElement
         {
             return elementSupplier(locator, name, state);
         }

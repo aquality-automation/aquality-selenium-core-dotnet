@@ -24,18 +24,18 @@ namespace Aquality.Selenium.Core.Elements
 
         private ConditionalWait ConditionalWait { get; }
 
-        public IWebElement FindElement(By locator, ElementState state = ElementState.ExistsInAnyState, TimeSpan? timeout = null)
+        public virtual IWebElement FindElement(By locator, ElementState state = ElementState.ExistsInAnyState, TimeSpan? timeout = null)
         {
             var desiredState = ResolveState(state);
             return FindElement(locator, desiredState.ElementStateCondition, desiredState.StateName, timeout);
         }
 
-        public IWebElement FindElement(By locator, Func<IWebElement, bool> elementStateCondition, TimeSpan? timeout = null)
+        public virtual IWebElement FindElement(By locator, Func<IWebElement, bool> elementStateCondition, TimeSpan? timeout = null)
         {
             return FindElement(locator, elementStateCondition, "desired", timeout);
         }
 
-        private IWebElement FindElement(By locator, Func<IWebElement, bool> elementStateCondition, string stateName, TimeSpan? timeout = null)
+        public virtual IWebElement FindElement(By locator, Func<IWebElement, bool> elementStateCondition, string stateName, TimeSpan? timeout = null)
         {
             var desiredState = new DesiredState(elementStateCondition, stateName)
             {
@@ -45,14 +45,14 @@ namespace Aquality.Selenium.Core.Elements
             return FindElements(locator, desiredState, timeout).First();
         }
 
-        public ReadOnlyCollection<IWebElement> FindElements(By locator, ElementState state = ElementState.ExistsInAnyState, TimeSpan? timeout = null)
+        public virtual ReadOnlyCollection<IWebElement> FindElements(By locator, ElementState state = ElementState.ExistsInAnyState, TimeSpan? timeout = null)
         {
             var elementStateCondition = ResolveState(state);
             elementStateCondition.IsCatchingTimeoutException = true;
             return FindElements(locator, elementStateCondition, timeout);
         }
 
-        public ReadOnlyCollection<IWebElement> FindElements(By locator, Func<IWebElement, bool> elementStateCondition, TimeSpan? timeout = null)
+        public virtual ReadOnlyCollection<IWebElement> FindElements(By locator, Func<IWebElement, bool> elementStateCondition, TimeSpan? timeout = null)
         {
             var desiredState = new DesiredState(elementStateCondition, "desired")
             {
@@ -61,7 +61,7 @@ namespace Aquality.Selenium.Core.Elements
             return FindElements(locator, desiredState, timeout);
         }
 
-        public ReadOnlyCollection<IWebElement> FindElements(By locator, DesiredState desiredState, TimeSpan? timeout = null)
+        public virtual ReadOnlyCollection<IWebElement> FindElements(By locator, DesiredState desiredState, TimeSpan? timeout = null)
         {
             var foundElements = new List<IWebElement>();
             var resultElements = new List<IWebElement>();
@@ -81,7 +81,7 @@ namespace Aquality.Selenium.Core.Elements
             return resultElements.AsReadOnly();
         }
 
-        private void HandleTimeoutException(WebDriverTimeoutException ex, DesiredState desiredState, By locator, List<IWebElement> foundElements)
+        protected virtual void HandleTimeoutException(WebDriverTimeoutException ex, DesiredState desiredState, By locator, List<IWebElement> foundElements)
         {
             var message = $"No elements with locator '{locator.ToString()}' were found in {desiredState.StateName} state";
             if (desiredState.IsCatchingTimeoutException)
@@ -110,7 +110,7 @@ namespace Aquality.Selenium.Core.Elements
             }
         }
 
-        private DesiredState ResolveState(ElementState state)
+        protected virtual DesiredState ResolveState(ElementState state)
         {
             Func<IWebElement, bool> elementStateCondition;
             switch (state)
