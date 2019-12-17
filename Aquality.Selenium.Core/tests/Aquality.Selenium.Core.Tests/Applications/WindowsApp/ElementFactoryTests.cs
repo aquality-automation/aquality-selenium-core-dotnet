@@ -38,6 +38,40 @@ namespace Aquality.Selenium.Core.Tests.Applications.WindowsApp
         }
 
         [Test]
+        public void Should_FindElements_WithCustomName_ViaElementFactory()
+        {
+            const string name = "Custom Name";
+            var buttons = Factory.FindButtons(By.XPath("//*"), name);
+            Assert.Multiple(() =>
+            {
+                Assert.IsTrue(buttons.Count > 1);
+                for (var i = 0; i < buttons.Count; i++)
+                {
+                    var button = buttons[i];
+                    StringAssert.StartsWith(name, button.Name);
+                    StringAssert.EndsWith((i + 1).ToString(), button.Name);
+                }
+            });
+        }
+
+        [Test]
+        public void Should_FindElements_WithDefaultName_ViaElementFactory()
+        {
+            var buttons = Factory.FindButtons(By.XPath("//*"));
+            Assert.Multiple(() =>
+            {
+                Assert.IsTrue(buttons.Count > 1);
+                for (var i = 0; i < buttons.Count; i++)
+                {
+                    var button = buttons[i];
+                    var endOfName = (i + 1).ToString();
+                    StringAssert.AreNotEqualIgnoringCase(endOfName, button.Name);
+                    StringAssert.EndsWith(endOfName, button.Name);
+                }
+            });
+        }
+
+        [Test]
         public void Should_ThrowInvalidOperationException_WhenConstructorIsNotDefined_ForFindChildElement()
         {
             Assert.Throws<InvalidOperationException>(() => Factory.FindChildElement<Button>(NumberPad, CalculatorWindow.OneButton).GetElement());

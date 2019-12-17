@@ -37,13 +37,13 @@ namespace Aquality.Selenium.Core.Elements
         /// <returns>Dictionary where key is interface and value is its implementation.</returns>
         protected virtual IDictionary<Type, Type> ElementTypesMap => new Dictionary<Type, Type>();
 
-        public virtual T FindChildElement<T>(IElement parentElement, By childLocator, ElementSupplier<T> supplier = null, ElementState state = ElementState.Displayed) where T : IElement
+        public virtual T FindChildElement<T>(IElement parentElement, By childLocator, string name = null, ElementSupplier<T> supplier = null, ElementState state = ElementState.Displayed) where T : IElement
         {
             var elementSupplier = ResolveSupplier(supplier);
-            return elementSupplier(new ByChained(parentElement.Locator, childLocator), $"Child element of {parentElement.Name}", state);
+            return elementSupplier(new ByChained(parentElement.Locator, childLocator), name ?? $"Child element of {parentElement.Name}", state);
         }
 
-        public virtual IList<T> FindElements<T>(By locator, ElementSupplier<T> supplier = null, ElementsCount expectedCount = ElementsCount.Any, ElementState state = ElementState.Displayed) where T : IElement
+        public virtual IList<T> FindElements<T>(By locator, string name = null, ElementSupplier<T> supplier = null, ElementsCount expectedCount = ElementsCount.Any, ElementState state = ElementState.Displayed) where T : IElement
         {
             var elementSupplier = ResolveSupplier(supplier);
             switch (expectedCount)
@@ -67,7 +67,8 @@ namespace Aquality.Selenium.Core.Elements
             IEnumerable<T> elements = webElements.Select((webElement, index) =>
             {
                 var elementIndex = index + 1;
-                return elementSupplier(GenerateXpathLocator(locator, webElement, elementIndex), $"element {elementIndex}", state);
+                var elementName = $"{name ?? "element"} {elementIndex}";
+                return elementSupplier(GenerateXpathLocator(locator, webElement, elementIndex), elementName, state);
             });
             return elements.ToList();
         }

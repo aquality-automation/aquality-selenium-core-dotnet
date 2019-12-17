@@ -52,9 +52,9 @@ namespace Aquality.Selenium.Core.Elements
             DoWithRetry(() => GetElement().Click());
         }
 
-        public T FindChildElement<T>(By childLocator, ElementSupplier<T> supplier = null, ElementState state = ElementState.Displayed) where T : IElement
+        public T FindChildElement<T>(By childLocator, string name = null, ElementSupplier<T> supplier = null, ElementState state = ElementState.Displayed) where T : IElement
         {
-            return Factory.FindChildElement(this, childLocator, supplier, state);
+            return Factory.FindChildElement(this, childLocator, name, supplier, state);
         }
 
         public string GetAttribute(string attr)
@@ -71,8 +71,21 @@ namespace Aquality.Selenium.Core.Elements
             }
             catch (NoSuchElementException ex)
             {
-                Logger.Debug($"Page source:{Environment.NewLine}{Application.Driver.PageSource}", ex);
+                LogPageSource(ex);
                 throw;
+            }
+        }
+
+        private void LogPageSource(WebDriverException exception)
+        {
+            try
+            {
+                Logger.Debug($"Page source:{Environment.NewLine}{Application.Driver.PageSource}", exception);
+            }
+            catch (WebDriverException e)
+            {
+                Logger.Error(exception.Message);
+                Logger.Fatal("An exception occured while tried to save the page source", e);
             }
         }
 
