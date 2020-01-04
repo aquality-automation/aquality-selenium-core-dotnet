@@ -19,6 +19,8 @@ namespace Aquality.Selenium.Core.Tests.Applications.Browser
 
         public RemoteWebDriver Driver { get; }
 
+        public bool IsStarted => Driver.SessionId != null;
+
         public void SetImplicitWaitTimeout(TimeSpan timeout)
         {
             if (timeout != implicitWait)
