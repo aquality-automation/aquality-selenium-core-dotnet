@@ -12,14 +12,14 @@ namespace Aquality.Selenium.Core.Tests.Applications.WindowsApp.Elements
             return elementFactory.GetCustomElement(GetButtonSupplier(), elementLocator, elementName);
         }
 
-        public static Button FindChildButton(this IElementFactory elementFactory, IElement parentElement, By elementLocator)
+        public static Button FindChildButton(this IElementFactory elementFactory, IElement parentElement, By elementLocator, string name = null)
         {
-            return elementFactory.FindChildElement(parentElement, elementLocator, GetButtonSupplier());
+            return elementFactory.FindChildElement(parentElement, elementLocator, name, GetButtonSupplier());
         }
 
-        public static IList<Button> FindButtons(this IElementFactory elementFactory, By elementLocator, ElementsCount elementsCount = ElementsCount.MoreThenZero)
+        public static IList<Button> FindButtons(this IElementFactory elementFactory, By elementLocator, string name = null, ElementsCount elementsCount = ElementsCount.MoreThenZero)
         {
-            return elementFactory.FindElements(elementLocator, GetButtonSupplier(), elementsCount);
+            return elementFactory.FindElements(elementLocator, name: name, GetButtonSupplier(), elementsCount);
         }
 
         private static ElementSupplier<Button> GetButtonSupplier()
