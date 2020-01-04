@@ -14,6 +14,11 @@
             Current instance of driver
             </summary>
         </member>
+        <member name="P:Aquality.Selenium.Core.Applications.IApplication.IsStarted">
+            <summary>
+            Defines if the application is already started or not.
+            </summary>
+        </member>
         <member name="M:Aquality.Selenium.Core.Applications.IApplication.SetImplicitWaitTimeout(System.TimeSpan)">
             <summary>
             Sets implicit wait timeout to browser.

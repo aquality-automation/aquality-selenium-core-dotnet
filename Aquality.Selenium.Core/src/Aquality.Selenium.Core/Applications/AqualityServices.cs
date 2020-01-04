@@ -16,7 +16,7 @@ namespace Aquality.Selenium.Core.Applications
 
         protected static bool IsApplicationStarted()
         {
-            return AppContainer.IsValueCreated && AppContainer.Value.Driver.SessionId != null;
+            return AppContainer.IsValueCreated && AppContainer.Value.IsStarted;
         }
         
         protected static TApplication GetApplication(Func<IServiceProvider, TApplication> startApplicationFunction, Func<IServiceCollection> serviceCollectionProvider = null)
