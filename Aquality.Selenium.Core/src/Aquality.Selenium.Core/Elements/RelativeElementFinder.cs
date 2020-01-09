@@ -31,16 +31,16 @@ namespace Aquality.Selenium.Core.Elements
             var resultElements = new List<IWebElement>();
             try
             {
-                ConditionalWait.WaitFor(() =>
+                ConditionalWait.WaitForTrue(() =>
                 {
                     foundElements = SearchContextSupplier().FindElements(locator).ToList();
                     resultElements = foundElements.Where(desiredState.ElementStateCondition).ToList();
                     return resultElements.Any();
                 }, timeout);
             }
-            catch (WebDriverTimeoutException ex)
+            catch (TimeoutException ex)
             {
-                HandleTimeoutException(ex, desiredState, locator, foundElements);
+                HandleTimeoutException(new WebDriverTimeoutException(ex.Message, ex), desiredState, locator, foundElements);
             }
             return resultElements.AsReadOnly();
         }
