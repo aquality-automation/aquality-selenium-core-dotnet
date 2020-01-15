@@ -1,5 +1,6 @@
 ﻿using System;
 using Aquality.Selenium.Core.Applications;
+using Aquality.Selenium.Core.Configurations;
 using Aquality.Selenium.Core.Elements.Interfaces;
 using Aquality.Selenium.Core.Localization;
 using Aquality.Selenium.Core.Logging;
@@ -16,6 +17,7 @@ namespace Aquality.Selenium.Core.Elements
     public abstract class Element : IElement
     {
         private readonly ElementState elementState;
+        private IElementCacheHandler elementCacheHandler;
 
         protected Element(By locator, string name, ElementState state)
         {
@@ -28,11 +30,28 @@ namespace Aquality.Selenium.Core.Elements
 
         public string Name { get; }
 
-        public virtual IElementStateProvider State => new ElementStateProvider(Locator, ConditionalWait, Finder);
+        public virtual IElementStateProvider State => CacheConfiguration.Enable 
+            ? (IElementStateProvider) new CachedElementStateProvider(Locator, ConditionalWait, Cache)
+            : new ElementStateProvider(Locator, ConditionalWait, Finder);
+
+        protected virtual IElementCacheHandler Cache
+        {
+            get
+            {
+                if (elementCacheHandler == null)
+                {
+                    elementCacheHandler = new ElementCacheHandler(Locator, elementState, Finder);
+                }
+
+                return elementCacheHandler;
+            }
+        }
 
         protected abstract ElementActionRetrier ActionRetrier { get; }
 
         protected abstract IApplication Application { get; }
+
+        protected abstract IElementCacheConfiguration CacheConfiguration { get; }
 
         protected abstract ConditionalWait ConditionalWait { get; }
 
@@ -67,7 +86,9 @@ namespace Aquality.Selenium.Core.Elements
         {
             try
             {
-                return (RemoteWebElement)Finder.FindElement(Locator, elementState, timeout);
+                return CacheConfiguration.Enable 
+                    ? Cache.GetElement(timeout)
+                    : (RemoteWebElement) Finder.FindElement(Locator, elementState, timeout);
             }
             catch (NoSuchElementException ex)
             {

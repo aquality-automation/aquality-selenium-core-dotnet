@@ -1,4 +1,5 @@
 ﻿using Aquality.Selenium.Core.Applications;
+using Aquality.Selenium.Core.Configurations;
 using Aquality.Selenium.Core.Elements;
 using Aquality.Selenium.Core.Elements.Interfaces;
 using Aquality.Selenium.Core.Localization;
@@ -18,6 +19,8 @@ namespace Aquality.Selenium.Core.Tests.Applications.WindowsApp.Elements
         protected override ElementActionRetrier ActionRetrier => AqualityServices.ServiceProvider.GetRequiredService<ElementActionRetrier>();
 
         protected override IApplication Application => AqualityServices.Application;
+
+        protected override IElementCacheConfiguration CacheConfiguration => AqualityServices.ServiceProvider.GetRequiredService<IElementCacheConfiguration>();
 
         protected override ConditionalWait ConditionalWait => AqualityServices.ServiceProvider.GetRequiredService<ConditionalWait>();
 

@@ -32,6 +32,7 @@ namespace Aquality.Selenium.Core.Applications
 
             services.AddSingleton(settingsFile);
             services.AddSingleton(Logger.Instance);
+            services.AddSingleton<IElementCacheConfiguration, ElementCacheConfiguration>();
             services.AddSingleton<ILoggerConfiguration, LoggerConfiguration>();
             services.AddSingleton<ITimeoutConfiguration, TimeoutConfiguration>();
             services.AddSingleton<IRetryConfiguration, RetryConfiguration>();
