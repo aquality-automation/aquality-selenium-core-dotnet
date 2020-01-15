@@ -33,13 +33,6 @@ namespace Aquality.Selenium.Core.Tests.Applications.Browser
             }
         }
 
-        public void WaitForPageToLoad()
-        {
-            AqualityServices.ServiceProvider.GetRequiredService<ConditionalWait>().WaitForTrue(
-                () => AqualityServices.Application.Driver.ExecuteJavaScript<bool>(
-                    "return document['readyState'] ? 'complete' === document.readyState : true;"));
-        }
-
         public void Quit()
         {
             Driver?.Quit();
