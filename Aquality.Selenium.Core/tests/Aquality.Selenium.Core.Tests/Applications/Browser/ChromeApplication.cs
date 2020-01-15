@@ -1,10 +1,7 @@
 ﻿using Aquality.Selenium.Core.Applications;
 using Aquality.Selenium.Core.Configurations;
-using Aquality.Selenium.Core.Waitings;
-using Microsoft.Extensions.DependencyInjection;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Remote;
-using OpenQA.Selenium.Support.Extensions;
 using System;
 
 namespace Aquality.Selenium.Core.Tests.Applications.Browser
