@@ -33,7 +33,7 @@ namespace Aquality.Selenium.Core.Elements
                 try
                 {
                     var isDisplayed = remoteElement.Displayed;
-                    // no refresh needed if the property is available;
+                    // no refresh needed if the property is available
                     return false;
                 }
                 catch
