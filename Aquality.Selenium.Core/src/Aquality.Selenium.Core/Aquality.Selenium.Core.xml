@@ -67,7 +67,7 @@
             Represents element's cache configuration.
             </summary>
         </member>
-        <member name="P:Aquality.Selenium.Core.Configurations.IElementCacheConfiguration.Enable">
+        <member name="P:Aquality.Selenium.Core.Configurations.IElementCacheConfiguration.IsEnabled">
             <summary>
             Is element caching allowed or not.
             </summary>

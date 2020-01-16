@@ -79,15 +79,23 @@ namespace Aquality.Selenium.Core.Tests.Configurations
         [Test]
         public void Should_ReturnFalse_InElementCacheEnable_WhenElementCacheIsAbsent()
         {
-            Assert.IsFalse(ServiceProvider.GetRequiredService<IElementCacheConfiguration>().Enable,
+            Assert.IsFalse(ServiceProvider.GetRequiredService<IElementCacheConfiguration>().IsEnabled,
                 nameof(Should_ReturnFalse_InElementCacheEnable_WhenElementCacheIsAbsent));
+        }
+
+        [Test]
+        public void Should_ReturnTrue_InElementCacheEnable_WhenElementCacheIsDisabled()
+        {
+            Environment.SetEnvironmentVariable("elementCache.isEnabled", "true");
+            Assert.IsTrue(ServiceProvider.GetRequiredService<IElementCacheConfiguration>().IsEnabled,
+                nameof(Should_ReturnTrue_InElementCacheEnable_WhenElementCacheIsDisabled));
         }
 
         [Test]
         public void Should_ReturnFalse_InElementCacheEnable_WhenElementCacheIsDisabled()
         {
-            Environment.SetEnvironmentVariable(".elementCache.enable", "false");
-            Assert.IsFalse(ServiceProvider.GetRequiredService<IElementCacheConfiguration>().Enable,
+            Environment.SetEnvironmentVariable("elementCache.isEnabled", "false");
+            Assert.IsFalse(ServiceProvider.GetRequiredService<IElementCacheConfiguration>().IsEnabled,
                 nameof(Should_ReturnFalse_InElementCacheEnable_WhenElementCacheIsDisabled));
         }
     }

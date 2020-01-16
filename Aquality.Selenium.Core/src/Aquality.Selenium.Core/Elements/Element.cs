@@ -30,7 +30,7 @@ namespace Aquality.Selenium.Core.Elements
 
         public string Name { get; }
 
-        public virtual IElementStateProvider State => CacheConfiguration.Enable 
+        public virtual IElementStateProvider State => CacheConfiguration.IsEnabled 
             ? (IElementStateProvider) new CachedElementStateProvider(Locator, ConditionalWait, Cache)
             : new ElementStateProvider(Locator, ConditionalWait, Finder);
 
@@ -86,7 +86,7 @@ namespace Aquality.Selenium.Core.Elements
         {
             try
             {
-                return CacheConfiguration.Enable 
+                return CacheConfiguration.IsEnabled 
                     ? Cache.GetElement(timeout)
                     : (RemoteWebElement) Finder.FindElement(Locator, elementState, timeout);
             }

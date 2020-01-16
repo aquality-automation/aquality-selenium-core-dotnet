@@ -13,6 +13,6 @@
     "language": "en"
   },
   "elementCache": {
-    "enable": false
+    "isEnabled": false
   }
 }

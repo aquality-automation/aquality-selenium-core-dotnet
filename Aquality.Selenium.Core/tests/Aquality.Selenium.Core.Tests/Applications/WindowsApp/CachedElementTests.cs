@@ -9,7 +9,7 @@ namespace Aquality.Selenium.Core.Tests.Applications.WindowsApp
 {
     public class CachedElementTests : TestWithApplication
     {
-        private const string ElementCacheVariableName = "elementCache.enable"; 
+        private const string ElementCacheVariableName = "elementCache.isEnabled"; 
         
         private IElementFactory Factory => AqualityServices.ServiceProvider.GetRequiredService<IElementFactory>();
 

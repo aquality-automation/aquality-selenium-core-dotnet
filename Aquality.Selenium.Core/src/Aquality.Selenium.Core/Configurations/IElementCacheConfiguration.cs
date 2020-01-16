@@ -8,6 +8,6 @@
         /// <summary>
         /// Is element caching allowed or not.
         /// </summary>
-        bool Enable { get; }
+        bool IsEnabled { get; }
     }
 }

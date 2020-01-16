@@ -32,7 +32,7 @@ namespace Aquality.Selenium.Core.Elements
             }
             catch (Exception e)
             {
-                if (exceptionsToHandle != null && exceptionsToHandle.Any(type => type.IsAssignableFrom(e.GetType())))
+                if (handledExceptions.Any(type => type.IsAssignableFrom(e.GetType())))
                 {
                     return false;
                 }

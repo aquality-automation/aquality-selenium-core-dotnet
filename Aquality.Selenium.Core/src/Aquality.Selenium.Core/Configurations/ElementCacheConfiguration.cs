@@ -11,10 +11,10 @@
         /// <param name="settingsFile">Settings file.</param>
         public ElementCacheConfiguration(ISettingsFile settingsFile)
         {
-            var jPath = $".elementCache.{nameof(Enable).ToLower()}";
-            Enable = settingsFile.IsValuePresent(jPath) && settingsFile.GetValue<bool>(jPath);
+            var jPath = ".elementCache.isEnabled";
+            IsEnabled = settingsFile.IsValuePresent(jPath) && settingsFile.GetValue<bool>(jPath);
         }
 
-        public bool Enable { get; }
+        public bool IsEnabled { get; }
     }
 }
