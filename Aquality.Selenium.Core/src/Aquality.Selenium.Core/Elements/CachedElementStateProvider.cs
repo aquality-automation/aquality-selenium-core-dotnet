@@ -58,35 +58,35 @@ namespace Aquality.Selenium.Core.Elements
 
         public virtual bool WaitForDisplayed(TimeSpan? timeout = null)
         {
-            return WaitForConditionWithLogging(() => TryInvokeFunction(element => element.Displayed), "displayed", timeout);
+            return WaitForCondition(() => TryInvokeFunction(element => element.Displayed), "displayed", timeout);
         }
 
         public virtual bool WaitForEnabled(TimeSpan? timeout = null)
         {
-            return WaitForConditionWithLogging(() => IsEnabled, "enabled", timeout);
+            return WaitForCondition(() => IsEnabled, "enabled", timeout);
         }
 
         public virtual bool WaitForExist(TimeSpan? timeout = null)
         {
-            return WaitForConditionWithLogging(() => TryInvokeFunction(element => true), "exist", timeout);
+            return WaitForCondition(() => TryInvokeFunction(element => true), "exist", timeout);
         }
 
         public virtual bool WaitForNotDisplayed(TimeSpan? timeout = null)
         {
-            return WaitForConditionWithLogging(() => !IsDisplayed, "invisible or absent", timeout);
+            return WaitForCondition(() => !IsDisplayed, "invisible or absent", timeout);
         }
 
         public virtual bool WaitForNotEnabled(TimeSpan? timeout = null)
         {
-            return WaitForConditionWithLogging(() => !IsEnabled, "disabled", timeout);
+            return WaitForCondition(() => !IsEnabled, "disabled", timeout);
         }
 
         public virtual bool WaitForNotExist(TimeSpan? timeout = null)
         {
-            return WaitForConditionWithLogging(() => !IsExist, "absent", timeout);
+            return WaitForCondition(() => !IsExist, "absent", timeout);
         }
 
-        protected virtual bool WaitForConditionWithLogging(Func<bool> condition, string conditionName, TimeSpan? timeout)
+        protected virtual bool WaitForCondition(Func<bool> condition, string conditionName, TimeSpan? timeout)
         {
             var result = conditionalWait.WaitFor(condition, timeout);
             if (!result)

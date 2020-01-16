@@ -13,7 +13,7 @@ namespace Aquality.Selenium.Core.Tests.Applications.Browser
     {
         private static readonly By RemoveButtonLoc = By.XPath("//button[.='Remove']");
         private static readonly By ContentLoc = By.Id("checkbox");
-        private static readonly Uri DynamicContentUrl = new Uri("http://the-internet.herokuapp.com/dynamic_controls");
+        private static readonly Uri DynamicContentUrl = new Uri($"{TestSite}/dynamic_controls");
         private const string ElementCacheVariableName = "elementCache.isEnabled"; 
         
         private static readonly Func<IElementStateProvider, bool>[] StateFunctionsFalseWhenElementStale
@@ -52,7 +52,6 @@ namespace Aquality.Selenium.Core.Tests.Applications.Browser
             AqualityServices.Application.Driver.Navigate().Refresh();
             var newToString = example.GetElement().ToString();
             Assert.AreNotEqual(exToString, newToString);
-
         }
         
         [Test]
