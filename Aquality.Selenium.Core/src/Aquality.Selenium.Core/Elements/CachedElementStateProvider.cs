@@ -21,8 +21,11 @@ namespace Aquality.Selenium.Core.Elements
             this.locator = locator;
         }
 
+        protected virtual IList<Type> ExceptionsHandledByDefault => new List<Type> { typeof(StaleElementReferenceException) };
+
         protected virtual bool TryInvokeFunction(Func<IWebElement, bool> func, IList<Type> exceptionsToHandle = null)
         {
+            var handledExceptions = exceptionsToHandle ?? ExceptionsHandledByDefault;
             try
             {
                 return func(elementCacheHandler.GetElement(TimeSpan.Zero));
