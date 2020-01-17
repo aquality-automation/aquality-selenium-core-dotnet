@@ -124,10 +124,8 @@ namespace Aquality.Selenium.Core.Tests.Applications.Browser
             var testElement = new Label(ContentLoc, "Example", ElementState.ExistsInAnyState);
             testElement.State.WaitForClickable();
             new Label(RemoveButtonLoc, "Remove", ElementState.Displayed).Click();
-            AqualityServices.ServiceProvider.GetRequiredService<ConditionalWait>().WaitFor(driver =>
-            {
-                return testElement.Cache.IsStale;
-            }, message: "Element should be stale when it disappeared.");
+            AqualityServices.ServiceProvider.GetRequiredService<ConditionalWait>().WaitForTrue(
+                () => testElement.Cache.IsStale, message: "Element should be stale when it disappeared.");
             AqualityServices.Application.Driver.Navigate().Refresh();
             Assert.IsTrue(testElement.Cache.IsStale, "Element should remain stale after the page refresh.");
             Assert.AreEqual(expectedValue, stateCondition(testElement.State), 
