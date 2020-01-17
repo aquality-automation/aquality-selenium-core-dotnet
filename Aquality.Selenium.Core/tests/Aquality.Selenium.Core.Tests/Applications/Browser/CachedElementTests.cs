@@ -9,7 +9,6 @@ using System;
 
 namespace Aquality.Selenium.Core.Tests.Applications.Browser
 {
-    [Parallelizable(ParallelScope.Children)]
     public class CachedElementTests : TestWithBrowser
     {
         private static readonly By RemoveButtonLoc = By.XPath("//button[.='Remove']");
