@@ -34,6 +34,16 @@ namespace Aquality.Selenium.Core.Utilities
         public virtual IList<Type> HandledExceptions { get; }
 
         /// <summary>
+        /// Decides should the occured exception be handled (ignored during the retry) or not.
+        /// </summary>
+        /// <param name="exception">Exception to proceed.</param>
+        /// <returns>True if the exception should be ignored, false otherwise.</returns>
+        protected virtual bool IsExceptionHandled(Exception exception)
+        {
+            return HandledExceptions.Any(type => type.IsAssignableFrom(exception.GetType()));
+        }
+
+        /// <summary>
         /// Retries the action when the handled exception <see cref="HandledExceptions"/> occures.
         /// </summary>
         /// <param name="action">Action to be applied.</param>
@@ -79,11 +89,6 @@ namespace Aquality.Selenium.Core.Utilities
             }
 
             return result;
-        }
-
-        private bool IsExceptionHandled(Exception exception)
-        {
-            return HandledExceptions.Any(type => type.IsAssignableFrom(exception.GetType()));
         }
     }
 }
