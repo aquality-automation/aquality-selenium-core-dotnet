@@ -47,7 +47,7 @@ namespace Aquality.Selenium.Core.Elements
             }
         }
 
-        protected abstract ElementActionRetrier ActionRetrier { get; }
+        protected abstract IElementActionRetrier ActionRetrier { get; }
 
         protected abstract IApplication Application { get; }
 

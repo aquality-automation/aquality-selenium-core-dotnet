@@ -16,7 +16,7 @@ namespace Aquality.Selenium.Core.Tests.Applications.Browser
         {
         }
 
-        protected override ElementActionRetrier ActionRetrier => AqualityServices.ServiceProvider.GetRequiredService<ElementActionRetrier>();
+        protected override IElementActionRetrier ActionRetrier => AqualityServices.ServiceProvider.GetRequiredService<IElementActionRetrier>();
 
         protected override IApplication Application => AqualityServices.Application;
 
