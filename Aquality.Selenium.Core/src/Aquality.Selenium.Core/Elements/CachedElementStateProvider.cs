@@ -21,18 +21,17 @@ namespace Aquality.Selenium.Core.Elements
             this.locator = locator;
         }
 
-        protected virtual IList<Type> ExceptionsHandledByDefault => new List<Type> { typeof(StaleElementReferenceException) };
+        protected virtual IList<Type> HandledExceptions => new List<Type> { typeof(StaleElementReferenceException), typeof(NoSuchElementException) };
 
-        protected virtual bool TryInvokeFunction(Func<IWebElement, bool> func, IList<Type> exceptionsToHandle = null)
+        protected virtual bool TryInvokeFunction(Func<IWebElement, bool> func)
         {
-            var handledExceptions = exceptionsToHandle ?? ExceptionsHandledByDefault;
             try
             {
-                return func(elementCacheHandler.GetElement(TimeSpan.Zero));
+                return func(elementCacheHandler.GetElement(TimeSpan.Zero, ElementState.ExistsInAnyState));
             }
             catch (Exception e)
             {
-                if (handledExceptions.Any(type => type.IsAssignableFrom(e.GetType())))
+                if (HandledExceptions.Any(type => type.IsAssignableFrom(e.GetType())))
                 {
                     return false;
                 }
@@ -40,11 +39,9 @@ namespace Aquality.Selenium.Core.Elements
             }
         }
 
-        public virtual bool IsDisplayed => !elementCacheHandler.IsStale 
-            && TryInvokeFunction(element => element.Displayed, new List<Type> { typeof(StaleElementReferenceException), typeof(NoSuchElementException) });
+        public virtual bool IsDisplayed => !elementCacheHandler.IsStale && TryInvokeFunction(element => element.Displayed);
 
-        public virtual bool IsExist => !elementCacheHandler.IsStale
-            && TryInvokeFunction(element => true, new List<Type> { typeof(NoSuchElementException) });
+        public virtual bool IsExist => !elementCacheHandler.IsStale && TryInvokeFunction(element => true);
 
         public virtual bool IsClickable => TryInvokeFunction(element => element.Displayed && element.Enabled);
 

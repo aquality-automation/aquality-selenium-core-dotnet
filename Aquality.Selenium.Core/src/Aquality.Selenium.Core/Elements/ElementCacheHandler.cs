@@ -20,35 +20,33 @@ namespace Aquality.Selenium.Core.Elements
             elementFinder = finder;
         }
 
-        public bool IsStale => remoteElement != null && IsRefreshNeeded;
+        public bool IsStale => remoteElement != null && IsRefreshNeeded();
 
-        public bool IsRefreshNeeded
+        public bool IsRefreshNeeded(ElementState? customState = null)
         {
-            get
+            if (remoteElement == null)
             {
-                if (remoteElement == null)
-                {
-                    return true;
-                }
-                try
-                {
-                    var isDisplayed = remoteElement.Displayed;
-                    // no refresh needed if the property is available
-                    return false;
-                }
-                catch
-                {
-                    return true;
-                }
+                return true;
+            }
+            try
+            {
+                var isDisplayed = remoteElement.Displayed;
+                // refresh is needed only if the property is not match to expected element state
+                return (customState ?? state) == ElementState.Displayed && !isDisplayed;
+            }
+            catch
+            {
+                // refresh is needed if the property is not available
+                return true;
             }
         }
 
-        public RemoteWebElement GetElement(TimeSpan? timeout = null)
+        public RemoteWebElement GetElement(TimeSpan? timeout = null, ElementState? customState = null)
         {
 
-            if (IsRefreshNeeded)
+            if (IsRefreshNeeded(customState))
             {
-                remoteElement = (RemoteWebElement)elementFinder.FindElement(locator, state, timeout);
+                remoteElement = (RemoteWebElement)elementFinder.FindElement(locator, customState ?? state, timeout);
             }
 
             return remoteElement;

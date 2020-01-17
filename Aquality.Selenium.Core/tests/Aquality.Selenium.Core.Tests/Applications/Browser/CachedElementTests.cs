@@ -13,7 +13,10 @@ namespace Aquality.Selenium.Core.Tests.Applications.Browser
     {
         private static readonly By RemoveButtonLoc = By.XPath("//button[.='Remove']");
         private static readonly By ContentLoc = By.Id("checkbox");
+        private static readonly By StartLoc = By.XPath("//*[@id='start']//button");
+        private static readonly By LoadingLoc = By.Id("loading");
         private static readonly Uri DynamicContentUrl = new Uri($"{TestSite}/dynamic_controls");
+        private static readonly Uri DynamicLoadingUrl = new Uri($"{TestSite}/dynamic_loading/1");
         private const string ElementCacheVariableName = "elementCache.isEnabled"; 
         
         private static readonly Func<IElementStateProvider, bool>[] StateFunctionsFalseWhenElementStale
@@ -40,12 +43,60 @@ namespace Aquality.Selenium.Core.Tests.Applications.Browser
         public new void SetUp()
         {
             Environment.SetEnvironmentVariable(ElementCacheVariableName, true.ToString());
+        }
+
+        private void StartLoading()
+        {
+            AqualityServices.Application.Driver.Navigate().GoToUrl(DynamicLoadingUrl);
+            new Label(StartLoc, "start", ElementState.Displayed).Click();
+        }
+
+        private void OpenDynamicContent()
+        {
             AqualityServices.Application.Driver.Navigate().GoToUrl(DynamicContentUrl);
+        }
+
+        private void WaitForLoading(Label loader)
+        {
+            Assume.That(loader.State.WaitForDisplayed(), "Loader should be displayed in the beginning");
+            Assume.That(loader.State.WaitForNotDisplayed(), "Loader should not be displayed in the end");
+        }
+
+        [Test]
+        public void Should_ReturnFalse_AtWaitForDisplayed_WhenElementIsNotDisplayed()
+        {
+            var loader = new Label(LoadingLoc, "loader", ElementState.Displayed);
+            StartLoading();
+            WaitForLoading(loader);
+            Assert.IsFalse(loader.State.WaitForDisplayed(TimeSpan.Zero), nameof(Should_ReturnFalse_AtWaitForDisplayed_WhenElementIsNotDisplayed));
+        }
+
+        [Test]
+        public void Should_ReturnTrue_AtWaitForExist_WhenElementIsNotDisplayed()
+        {
+            var loader = new Label(LoadingLoc, "loader", ElementState.Displayed);
+            StartLoading();
+            WaitForLoading(loader);
+            Assert.IsTrue(loader.State.WaitForExist(TimeSpan.Zero), nameof(Should_ReturnTrue_AtWaitForExist_WhenElementIsNotDisplayed));
+        }
+
+        [Test]
+        public void Should_BeStale_WhenBecameInvisible()
+        {
+            StartLoading();
+            var loader = new Label(LoadingLoc, "loader", ElementState.Displayed);
+            Assume.That(loader.State.WaitForDisplayed(), "Loader should be displayed in the beginning");
+            Assert.IsTrue(AqualityServices.ServiceProvider.GetRequiredService<ConditionalWait>().WaitFor(
+                () => loader.Cache.IsStale), "Loader should become invisible and be treated as stale");
+            Assert.IsFalse(loader.State.IsDisplayed, "Invisible loader should be not displayed");
+            Assert.IsFalse(loader.State.IsExist, "Loader that was displayed previously and become invisible should be treated as disappeared");
+            Assert.IsTrue(loader.State.WaitForExist(TimeSpan.Zero), "When waiting for existance, we should get an actual element's state");
         }
 
         [Test]
         public void Should_RefreshElement_WhenItIsStale()
         {
+            OpenDynamicContent();
             var example = new Label(ContentLoc, "Example", ElementState.Displayed);
             example.GetElement();
             var exToString = example.GetElement().ToString();
@@ -68,6 +119,7 @@ namespace Aquality.Selenium.Core.Tests.Applications.Browser
 
         private void AssertStateConditionAfterRefresh(Func<IElementStateProvider, bool> stateCondition, bool expectedValue)
         {
+            OpenDynamicContent();
             var testElement = new Label(ContentLoc, "Example", ElementState.ExistsInAnyState);
             testElement.State.WaitForClickable();
             new Label(RemoveButtonLoc, "Remove", ElementState.Displayed).Click();
