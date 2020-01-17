@@ -8,6 +8,8 @@ namespace Aquality.Selenium.Core.Tests.Applications.Browser
     [Parallelizable(ParallelScope.All)]
     public abstract class TestWithBrowser
     {
+        protected static string TestSite => "http://the-internet.herokuapp.com";
+
         protected ServiceProvider ServiceProvider { get; private set; }
 
         [SetUp]

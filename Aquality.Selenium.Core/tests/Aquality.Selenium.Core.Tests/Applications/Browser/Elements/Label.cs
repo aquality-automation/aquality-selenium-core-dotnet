@@ -1,4 +1,5 @@
 ﻿using Aquality.Selenium.Core.Elements;
+using Aquality.Selenium.Core.Elements.Interfaces;
 using Aquality.Selenium.Core.Tests.Applications.Browser;
 using OpenQA.Selenium;
 
@@ -11,5 +12,7 @@ namespace Aquality.Selenium.Core.Tests.Applications.WindowsApp.Elements
         }
 
         protected override string ElementType { get; } = "Label";
+
+        public new IElementCacheHandler Cache => base.Cache;
     }
 }

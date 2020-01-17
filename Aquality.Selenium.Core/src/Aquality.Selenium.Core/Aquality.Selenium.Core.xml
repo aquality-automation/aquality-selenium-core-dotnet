@@ -51,6 +51,27 @@
             </summary>
             <returns>An instance of settings</returns>
         </member>
+        <member name="T:Aquality.Selenium.Core.Configurations.ElementCacheConfiguration">
+            <summary>
+            Provides element's cache configuration
+            </summary>
+        </member>
+        <member name="M:Aquality.Selenium.Core.Configurations.ElementCacheConfiguration.#ctor(Aquality.Selenium.Core.Configurations.ISettingsFile)">
+            <summary>
+            Instantiates class using <see cref="T:Aquality.Selenium.Core.Configurations.ISettingsFile"/> with general settings.
+            </summary>
+            <param name="settingsFile">Settings file.</param>
+        </member>
+        <member name="T:Aquality.Selenium.Core.Configurations.IElementCacheConfiguration">
+            <summary>
+            Represents element's cache configuration.
+            </summary>
+        </member>
+        <member name="P:Aquality.Selenium.Core.Configurations.IElementCacheConfiguration.IsEnabled">
+            <summary>
+            Is element caching allowed or not.
+            </summary>
+        </member>
         <member name="T:Aquality.Selenium.Core.Configurations.ILoggerConfiguration">
             <summary>
             Describes logger configuration.
@@ -290,6 +311,28 @@
             <summary>
             Clicks the element.
             </summary>
+        </member>
+        <member name="T:Aquality.Selenium.Core.Elements.Interfaces.IElementCacheHandler">
+            <summary>
+            Allows to use cached element.
+            </summary>
+        </member>
+        <member name="P:Aquality.Selenium.Core.Elements.Interfaces.IElementCacheHandler.IsRefreshNeeded">
+            <summary>
+            Determines is the cached element refresh needed.
+            </summary>
+        </member>
+        <member name="P:Aquality.Selenium.Core.Elements.Interfaces.IElementCacheHandler.IsStale">
+            <summary>
+            Determines is the element stale.
+            </summary>
+        </member>
+        <member name="M:Aquality.Selenium.Core.Elements.Interfaces.IElementCacheHandler.GetElement(System.Nullable{System.TimeSpan})">
+            <summary>
+            Allows to get cached element.
+            </summary>
+            <param name="timeout">Timeout used to retrive the element when <see cref="P:Aquality.Selenium.Core.Elements.Interfaces.IElementCacheHandler.IsRefreshNeeded"/> is true.</param>
+            <returns>Cached element.</returns>
         </member>
         <member name="T:Aquality.Selenium.Core.Elements.Interfaces.IElementFactory">
             <summary>

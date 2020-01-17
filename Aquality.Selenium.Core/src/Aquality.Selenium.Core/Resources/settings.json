@@ -11,5 +11,8 @@
   },
   "logger": {
     "language": "en"
+  },
+  "elementCache": {
+    "isEnabled": false
   }
 }
