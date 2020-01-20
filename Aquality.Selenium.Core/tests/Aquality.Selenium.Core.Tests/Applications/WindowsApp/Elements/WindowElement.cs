@@ -22,7 +22,7 @@ namespace Aquality.Selenium.Core.Tests.Applications.WindowsApp.Elements
 
         protected override IElementCacheConfiguration CacheConfiguration => AqualityServices.ServiceProvider.GetRequiredService<IElementCacheConfiguration>();
 
-        protected override ConditionalWait ConditionalWait => AqualityServices.ServiceProvider.GetRequiredService<ConditionalWait>();
+        protected override IConditionalWait ConditionalWait => AqualityServices.ServiceProvider.GetRequiredService<IConditionalWait>();
 
         protected override IElementFactory Factory => AqualityServices.ServiceProvider.GetRequiredService<IElementFactory>();
 

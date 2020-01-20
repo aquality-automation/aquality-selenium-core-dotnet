@@ -10,14 +10,14 @@ namespace Aquality.Selenium.Core.Elements
     {
         private readonly By elementLocator;
 
-        public ElementStateProvider(By elementLocator, ConditionalWait conditionalWait, IElementFinder elementFinder)
+        public ElementStateProvider(By elementLocator, IConditionalWait conditionalWait, IElementFinder elementFinder)
         {
             this.elementLocator = elementLocator;
             ConditionalWait = conditionalWait;
             ElementFinder = elementFinder;
         }
 
-        private ConditionalWait ConditionalWait { get; }
+        private IConditionalWait ConditionalWait { get; }
 
         private IElementFinder ElementFinder { get; }
 

@@ -12,14 +12,16 @@ namespace Aquality.Selenium.Core.Tests.Applications.WindowsApp
 {
     public class RelativeElementFinderTests : TestWithApplication
     {
+        private IConditionalWait ConditionalWait => AqualityServices.ServiceProvider.GetRequiredService<IConditionalWait>();
+
         private IElementFinder ElementFinder => new RelativeElementFinder(
             AqualityServices.ServiceProvider.GetRequiredService<ILocalizedLogger>(),
-            AqualityServices.ServiceProvider.GetRequiredService<ConditionalWait>(),
+            ConditionalWait,
             () => AqualityServices.Application.Driver.FindElement(CalculatorWindow.WindowLocator));
 
         private IElementStateProvider GetElementStateProvider(By locator) => new ElementStateProvider(
             locator,
-            AqualityServices.ServiceProvider.GetRequiredService<ConditionalWait>(),
+            ConditionalWait,
             ElementFinder);
         
         [Test]

@@ -17,14 +17,14 @@ namespace Aquality.Selenium.Core.Elements
     {
         private const string ByXpathIdentifier = "By.XPath";
 
-        public ElementFactory(ConditionalWait conditionalWait, IElementFinder elementFinder, ILocalizationManager localizationManager)
+        public ElementFactory(IConditionalWait conditionalWait, IElementFinder elementFinder, ILocalizationManager localizationManager)
         {
             ConditionalWait = conditionalWait;
             ElementFinder = elementFinder;
             LocalizationManager = localizationManager;
         }
 
-        protected ConditionalWait ConditionalWait { get; }
+        protected IConditionalWait ConditionalWait { get; }
 
         protected IElementFinder ElementFinder { get; }
 

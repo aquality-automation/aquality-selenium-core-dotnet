@@ -11,10 +11,10 @@ namespace Aquality.Selenium.Core.Elements
     public class CachedElementStateProvider : IElementStateProvider
     {
         private readonly IElementCacheHandler elementCacheHandler;
-        private readonly ConditionalWait conditionalWait;
+        private readonly IConditionalWait conditionalWait;
         private readonly By locator;
 
-        public CachedElementStateProvider(By locator, ConditionalWait conditionalWait, IElementCacheHandler elementCacheHandler)
+        public CachedElementStateProvider(By locator, IConditionalWait conditionalWait, IElementCacheHandler elementCacheHandler)
         {
             this.elementCacheHandler = elementCacheHandler;
             this.conditionalWait = conditionalWait;

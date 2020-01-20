@@ -14,7 +14,7 @@ namespace Aquality.Selenium.Core.Elements
     /// </summary>
     public class ElementFinder : IElementFinder
     {
-        public ElementFinder(ILocalizedLogger logger, ConditionalWait conditionalWait)
+        public ElementFinder(ILocalizedLogger logger, IConditionalWait conditionalWait)
         {
             Logger = logger;
             ConditionalWait = conditionalWait;
@@ -22,7 +22,7 @@ namespace Aquality.Selenium.Core.Elements
 
         private ILocalizedLogger Logger { get; }
 
-        private ConditionalWait ConditionalWait { get; }
+        private IConditionalWait ConditionalWait { get; }
 
         public virtual IWebElement FindElement(By locator, ElementState state = ElementState.ExistsInAnyState, TimeSpan? timeout = null)
         {

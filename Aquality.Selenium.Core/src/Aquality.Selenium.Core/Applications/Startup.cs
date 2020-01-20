@@ -40,7 +40,7 @@ namespace Aquality.Selenium.Core.Applications
             services.AddSingleton<ILocalizedLogger, LocalizedLogger>();
             services.AddSingleton<IElementActionRetrier, ElementActionRetrier>();
 
-            services.AddTransient<ConditionalWait>();
+            services.AddTransient<IConditionalWait, ConditionalWait>();
             services.AddTransient<IElementFinder, ElementFinder>();
             services.AddTransient<IElementFactory, ElementFactory>();
             return services;
