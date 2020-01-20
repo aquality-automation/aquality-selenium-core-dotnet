@@ -11,7 +11,9 @@ namespace Aquality.Selenium.Core.Elements.Interfaces
         /// <summary>
         /// Determines is the cached element refresh needed.
         /// </summary>
-        bool IsRefreshNeeded { get; }
+        /// <param name="customState">Custom element's existance state used for search.</param>
+        /// <returns></returns>
+        bool IsRefreshNeeded(ElementState? customState = null);
 
         /// <summary>
         /// Determines is the element stale.
@@ -21,8 +23,9 @@ namespace Aquality.Selenium.Core.Elements.Interfaces
         /// <summary>
         /// Allows to get cached element.
         /// </summary>
-        /// <param name="timeout">Timeout used to retrive the element when <see cref="IsRefreshNeeded"/> is true.</param>
+        /// <param name="timeout">Timeout used to retrive the element when <see cref="IsRefreshNeeded(ElementState?)"/> is true.</param>
+        /// <param name="customState">Custom element's existance state used for search.</param>
         /// <returns>Cached element.</returns>
-        RemoteWebElement GetElement(TimeSpan? timeout = null);
+        RemoteWebElement GetElement(TimeSpan? timeout = null, ElementState? customState = null);
     }
 }

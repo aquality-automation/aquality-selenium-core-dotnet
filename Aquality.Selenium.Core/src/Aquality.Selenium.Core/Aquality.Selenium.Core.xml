@@ -317,21 +317,24 @@
             Allows to use cached element.
             </summary>
         </member>
-        <member name="P:Aquality.Selenium.Core.Elements.Interfaces.IElementCacheHandler.IsRefreshNeeded">
+        <member name="M:Aquality.Selenium.Core.Elements.Interfaces.IElementCacheHandler.IsRefreshNeeded(System.Nullable{Aquality.Selenium.Core.Elements.ElementState})">
             <summary>
             Determines is the cached element refresh needed.
             </summary>
+            <param name="customState">Custom element's existance state used for search.</param>
+            <returns></returns>
         </member>
         <member name="P:Aquality.Selenium.Core.Elements.Interfaces.IElementCacheHandler.IsStale">
             <summary>
             Determines is the element stale.
             </summary>
         </member>
-        <member name="M:Aquality.Selenium.Core.Elements.Interfaces.IElementCacheHandler.GetElement(System.Nullable{System.TimeSpan})">
+        <member name="M:Aquality.Selenium.Core.Elements.Interfaces.IElementCacheHandler.GetElement(System.Nullable{System.TimeSpan},System.Nullable{Aquality.Selenium.Core.Elements.ElementState})">
             <summary>
             Allows to get cached element.
             </summary>
-            <param name="timeout">Timeout used to retrive the element when <see cref="P:Aquality.Selenium.Core.Elements.Interfaces.IElementCacheHandler.IsRefreshNeeded"/> is true.</param>
+            <param name="timeout">Timeout used to retrive the element when <see cref="M:Aquality.Selenium.Core.Elements.Interfaces.IElementCacheHandler.IsRefreshNeeded(System.Nullable{Aquality.Selenium.Core.Elements.ElementState})"/> is true.</param>
+            <param name="customState">Custom element's existance state used for search.</param>
             <returns>Cached element.</returns>
         </member>
         <member name="T:Aquality.Selenium.Core.Elements.Interfaces.IElementFactory">
