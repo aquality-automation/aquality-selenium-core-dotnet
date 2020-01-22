@@ -16,59 +16,93 @@ We use interfaces where is possible, so you can implement your own version of ta
 
 We use Dependency Injection to simplify overriding of implementations.
 
+### Components of solution
+
+1. Applications component provides classes and interfaces which help us work with application and DI container. [AqualityServices](https://github.com/aquality-automation/aquality-selenium-core-dotnet/blob/master/Aquality.Selenium.Core/src/Aquality.Selenium.Core/Applications/AqualityServices.cs) can get\set service provider and application. [Startup](https://github.com/aquality-automation/aquality-selenium-core-dotnet/blob/master/Aquality.Selenium.Core/src/Aquality.Selenium.Core/Applications/Startup.cs) is needed to setup DI container.
+
+2. Configurations component provides classes and interfaces which describe most common configurations of project.
+
+3. Elements component describes classes and interfaces which works with UI elements.
+
+4. Solution contains logger and support several languages, Localization and Logging components helps us to implement this.
+
+5. Resources contains localization and project configuration in json files.
+
+6. Utilities.
+
+7. Waitings component contains classes and interfaces which implement some common waitings, for example, wait till condition is satisfied.
+
 ### Quick start
 
 1. To start work with this package, simply add the nuget dependency Aquality.Selenium.Core to your project.
 
 2. Setup DI container using Startup.cs. 
 
-The simpliest way is to create your ApplicationManager class extended from abstract ApplicationManager with the following simple signature:
+The simpliest way is to create your AqualityServices class extended from abstract AqualityServices with the following simple signature:
 ```csharp
 
-        public class ApplicationManager : ApplicationManager<ApplicationManager, YourApplication>
+    public class AqualityServices : AqualityServices<YourApplication>
+    {
+        public new static bool IsApplicationStarted => IsApplicationStarted();
+
+        public static YourApplication Application => GetApplication(services => StartApplication(services));
+
+        public static IServiceProvider ServiceProvider => GetServiceProvider(services => Application);
+
+        private static IApplication StartApplication(IServiceProvider services)
         {
-            public static IApplication Application => GetApplication(StartApplicationFunction);
-
-            public static IServiceProvider ServiceProvider => GetServiceProvider(services => Application);
-
-            private static Func<IServiceProvider, IApplication> StartApplicationFunction => // your implementation here;
+            your implementation;
         }
+    }
 ```
 
-Or, if you need to register your own services / rewrite the implementation, you can achieve it this way:
+If you need to register your own services / rewrite the implementation, you need override [Startup](https://github.com/aquality-automation/aquality-selenium-core-dotnet/blob/master/Aquality.Selenium.Core/src/Aquality.Selenium.Core/Applications/Startup.cs) and implement AqualityServices like in example below:
 
 ```csharp
-
-        public class ApplicationManager : ApplicationManager<ApplicationManager, YourApplication>
+        public class AqualityServices : AqualityServices<IApplication>
         {
-            public static YourApplication Application => GetApplication(StartApplicationFunction, () => RegisterServices(services => Application));
+            private static ThreadLocal<YourStartup> startup = new ThreadLocal<YourStartup>();
 
-            public static IServiceProvider ServiceProvider => GetServiceProvider(services => Application, () => RegisterServices(services => Application));
+            public new static bool IsApplicationStarted => IsApplicationStarted();
+            
+            public static YourApplication Application => GetApplication(StartApplicationFunction, () => startup.Value.ConfigureServices(new ServiceCollection(), services => Application));
 
-            private static IServiceCollection RegisterServices(Func<IServiceProvider, YourApplication> applicationSupplier)
+            public static IServiceProvider ServiceProvider => GetServiceProvider(services => Application,
+                () => startup.Value.ConfigureServices(new ServiceCollection(), services => Application));
+
+            public static void SetStartup(Startup startup)
             {
-                var services = new ServiceCollection();
-                var startup = new Startup();
-                var settingsFile = startup.GetSettings();
-                startup.ConfigureServices(services, applicationSupplier, settingsFile);
-                services.AddSingleton<ITimeoutConfiguration>(new CustomTimeoutConfiguration(settingsFile));
-                return services;
+                if (startup != null)
+                {
+                    AqualityServices.startup.Value = (YourStartup)startup;
+                }
             }
 
-            private static Func<IServiceProvider, YourApplication> StartApplicationFunction => // your implementation here;
+            private static Func<IServiceProvider, YourApplication> StartApplicationFunction => (services) => your implementation;
+        }
+
+        public class YourStartup : Startup
+        {
+            public override IServiceCollection ConfigureServices(IServiceCollection services, Func<IServiceProvider, IApplication> applicationProvider, ISettingsFile settings = null)
+            {
+                var settingsFile = new JsonSettingsFile($"Resources.settings.{SpecialSettingsFile}.json", Assembly.GetExecutingAssembly());
+                base.ConfigureServices(services, applicationProvider, settingsFile);
+                //your services like services.AddSingleton<ITimeoutConfiguration>(new TestTimeoutConfiguration(settingsFile));
+                return services;
+            }
         }
 ```
-3. That's it! Work with Application via ApplicationManager or via element services.
+3. That's it! Work with Application via AqualityServices or via element services.
 
 All the services could be resolved from the DI container via ServiceProvider.
 
 ```csharp
-            ApplicationManager.Application.Driver.FindElement(CalculatorWindow.OneButton).Click();
-            ApplicationManager.ServiceProvider.GetRequiredService<ConditionalWait>().WaitFor(driver =>
+            AqualityServices.Application.Driver.FindElement(CalculatorWindow.OneButton).Click();
+            AqualityServices.ServiceProvider.GetService<IConditionalWait>().WaitFor(driver =>
             {
                 return driver.FindElements(By.XPath("//*")).Count > 0;
             })
-            ApplicationManager.ServiceProvider.GetRequiredService<IElementFinder>()
+            AqualityServices.ServiceProvider.GetService<IElementFinder>()
                 .FindElement(CalculatorWindow.ResultsLabel, timeout: LittleTimeout)
 ```
 
@@ -80,17 +114,17 @@ All the services could be resolved from the DI container via ServiceProvider.
         {
         }
 
-        protected override ElementActionRetrier ActionRetrier => ApplicationManager.ServiceProvider.GetRequiredService<ElementActionRetrier>();
+        protected override IElementActionRetrier ActionRetrier => AqualityServices.ServiceProvider.GetService<IElementActionRetrier>();
 
         protected override IApplication Application => ApplicationManager.Application;
 
-        protected override ConditionalWait ConditionalWait => ApplicationManager.ServiceProvider.GetRequiredService<ConditionalWait>();
+        protected override IConditionalWait ConditionalWait => AqualityServices.ServiceProvider.GetService<IConditionalWait>();
 
-        protected override IElementFactory Factory => ApplicationManager.ServiceProvider.GetRequiredService<IElementFactory>();
+        protected override IElementFactory Factory => AqualityServices.ServiceProvider.GetService<IElementFactory>();
 
-        protected override IElementFinder Finder => ApplicationManager.ServiceProvider.GetRequiredService<IElementFinder>();
+        protected override IElementFinder Finder => AqualityServices.ServiceProvider.GetService<IElementFinder>();
 
-        protected override LocalizationLogger LocalizationLogger => ApplicationManager.ServiceProvider.GetRequiredService<LocalizationLogger>();
+        protected override ILocalizedLogger LocalizedLogger => AqualityServices.ServiceProvider.GetService<ILocalizedLogger>();
     }
 ```
 
@@ -122,7 +156,7 @@ All the services could be resolved from the DI container via ServiceProvider.
 ```
 
 Or create your own ElementFactory! You can extend it from Core's ElementFactory or just implement IElementFactory interface.
-(Don't forget to register it in the DI container at ApplicationManager!).
+(Don't forget to register it in the DI container at AqualityServices!).
 
 6. Work with Windows/Pages/Forms according to PageObject pattern.
 Create a base Form class with protected access to IApplication instance and IElementFactory (and any other needed service) via ApplicationManager. Other forms will inherit from this one with the mentioned services available. Take a look at example here:
@@ -157,13 +191,13 @@ Create a base Form class with protected access to IApplication instance and IEle
         /// Instance of logger <see cref="Logging.Logger">
         /// </summary>
         /// <value>Logger instance.</value>
-        protected Logger Logger => ApplicationManager.ServiceProvider.GetRequiredService<Logger>();
+        protected Logger Logger => AqualityServices.ServiceProvider.GetService<Logger>();
 
         /// <summary>
         /// Element factory <see cref="IElementFactory">
         /// </summary>
         /// <value>Element factory.</value>
-        protected IElementFactory ElementFactory => ApplicationManager.ServiceProvider.GetRequiredService<IElementFactory>();
+        protected IElementFactory ElementFactory => AqualityServices.ServiceProvider.GetService<IElementFactory>();
 
         /// <summary>
         /// Return form state for form locator
