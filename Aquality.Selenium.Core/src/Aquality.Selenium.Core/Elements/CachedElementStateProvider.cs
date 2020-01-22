@@ -50,7 +50,15 @@ namespace Aquality.Selenium.Core.Elements
         public virtual void WaitForClickable(TimeSpan? timeout = null)
         {
             var errorMessage = $"Element {locator} has not become clickable after timeout.";
-            conditionalWait.WaitForTrue(() => IsClickable, timeout, message: errorMessage);
+            try
+            {
+                conditionalWait.WaitForTrue(() => IsClickable, timeout, message: errorMessage);
+            }
+            catch (TimeoutException e)
+            {
+                throw new WebDriverTimeoutException(e.Message, e);
+            }
+            
         }
 
         public virtual bool WaitForDisplayed(TimeSpan? timeout = null)
