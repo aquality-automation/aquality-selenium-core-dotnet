@@ -74,7 +74,7 @@ If you need to register your own services / rewrite the implementation, you need
             {
                 if (startup != null)
                 {
-                    TestAqualityServices.startup.Value = (TestStartup)startup;
+                    AqualityServices.startup.Value = (YourStartup)startup;
                 }
             }
 
@@ -114,7 +114,7 @@ All the services could be resolved from the DI container via ServiceProvider.
         {
         }
 
-        protected override ElementActionRetrier ActionRetrier => AqualityServices.ServiceProvider.GetService<ElementActionRetrier>();
+        protected override IElementActionRetrier ActionRetrier => AqualityServices.ServiceProvider.GetService<IElementActionRetrier>();
 
         protected override IApplication Application => ApplicationManager.Application;
 
@@ -124,7 +124,7 @@ All the services could be resolved from the DI container via ServiceProvider.
 
         protected override IElementFinder Finder => AqualityServices.ServiceProvider.GetService<IElementFinder>();
 
-        protected override LocalizationLogger LocalizationLogger => AqualityServices.ServiceProvider.GetService<LocalizationLogger>();
+        protected override ILocalizedLogger LocalizedLogger => AqualityServices.ServiceProvider.GetService<ILocalizedLogger>();
     }
 ```
 
