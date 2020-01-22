@@ -14,14 +14,14 @@ namespace Aquality.Selenium.Core.Elements
     /// </summary>
     public class RelativeElementFinder : ElementFinder
     {
-        public RelativeElementFinder(ILocalizedLogger logger, ConditionalWait conditionalWait, Func<ISearchContext> searchContextSupplier) 
+        public RelativeElementFinder(ILocalizedLogger logger, IConditionalWait conditionalWait, Func<ISearchContext> searchContextSupplier) 
             : base(logger, conditionalWait)
         {
             ConditionalWait = conditionalWait;
             SearchContextSupplier = searchContextSupplier;
         }
 
-        private ConditionalWait ConditionalWait { get; }
+        private IConditionalWait ConditionalWait { get; }
 
         private Func<ISearchContext> SearchContextSupplier { get; }
 

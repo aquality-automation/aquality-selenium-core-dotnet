@@ -15,7 +15,7 @@ namespace Aquality.Selenium.Core.Tests.Applications.Browser
         private static readonly Type[] TypesNotRequireApplication = 
         { 
             typeof(IElementActionRetrier),
-            typeof(ConditionalWait),
+            typeof(IConditionalWait),
             typeof(Logger),
             typeof(ILocalizationManager),
             typeof(ILocalizedLogger),

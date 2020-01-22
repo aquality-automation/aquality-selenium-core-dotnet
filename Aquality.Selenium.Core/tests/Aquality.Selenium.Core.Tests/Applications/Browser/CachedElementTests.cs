@@ -39,6 +39,8 @@ namespace Aquality.Selenium.Core.Tests.Applications.Browser
                 state => !state.WaitForNotEnabled(TimeSpan.Zero),
             };
 
+        private IConditionalWait ConditionalWait => AqualityServices.ServiceProvider.GetRequiredService<IConditionalWait>();
+
         [SetUp]
         public new void SetUp()
         {
@@ -86,7 +88,7 @@ namespace Aquality.Selenium.Core.Tests.Applications.Browser
             StartLoading();
             var loader = new Label(LoadingLoc, "loader", ElementState.Displayed);
             Assume.That(loader.State.WaitForDisplayed(), "Loader should be displayed in the beginning");
-            Assert.IsTrue(AqualityServices.ServiceProvider.GetRequiredService<ConditionalWait>().WaitFor(
+            Assert.IsTrue(ConditionalWait.WaitFor(
                 () => loader.Cache.IsStale), "Loader should become invisible and be treated as stale");
             Assert.IsFalse(loader.State.IsDisplayed, "Invisible loader should be not displayed");
             Assert.IsFalse(loader.State.IsExist, "Loader that was displayed previously and become invisible should be treated as disappeared");
@@ -123,7 +125,7 @@ namespace Aquality.Selenium.Core.Tests.Applications.Browser
             var testElement = new Label(ContentLoc, "Example", ElementState.ExistsInAnyState);
             testElement.State.WaitForClickable();
             new Label(RemoveButtonLoc, "Remove", ElementState.Displayed).Click();
-            AqualityServices.ServiceProvider.GetRequiredService<ConditionalWait>().WaitForTrue(
+            ConditionalWait.WaitForTrue(
                 () => testElement.Cache.IsStale, message: "Element should be stale when it disappeared.");
             AqualityServices.Application.Driver.Navigate().Refresh();
             Assert.IsTrue(testElement.Cache.IsStale, "Element should remain stale after the page refresh.");

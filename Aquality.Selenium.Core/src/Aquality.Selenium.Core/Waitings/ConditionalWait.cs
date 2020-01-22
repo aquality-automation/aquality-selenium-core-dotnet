@@ -12,9 +12,9 @@ using System.Threading;
 namespace Aquality.Selenium.Core.Waitings
 {
     /// <summary>
-    /// This class is using for waiting any conditions.
+    /// This class is used for waiting any conditions.
     /// </summary>
-    public class ConditionalWait
+    public class ConditionalWait : IConditionalWait
     {
         private readonly ITimeoutConfiguration timeoutConfiguration;
         private readonly IServiceProvider serviceProvider;
@@ -68,18 +68,15 @@ namespace Aquality.Selenium.Core.Waitings
         /// <param name="condition">Predicate for waiting</param>
         /// <param name="timeout">Condition timeout. Default value is <see cref="ITimeoutConfiguration.Condition"/></param>
         /// <param name="pollingInterval">Condition check interval. Default value is <see cref="ITimeoutConfiguration.PollingInterval"/></param>
+        /// <param name="exceptionsToIgnore">Possible exceptions that have to be ignored. </param>
         /// <returns>True if condition satisfied and false otherwise.</returns>
-        public bool WaitFor(Func<bool> condition, TimeSpan? timeout = null, TimeSpan? pollingInterval = null)
+        public bool WaitFor(Func<bool> condition, TimeSpan? timeout = null, TimeSpan? pollingInterval = null, IList<Type> exceptionsToIgnore = null)
         {
-            try
+            return IsConditionSatisfied(() =>
             {
-                WaitForTrue(condition, timeout, pollingInterval);
+                WaitForTrue(condition, timeout, pollingInterval, exceptionsToIgnore: exceptionsToIgnore);
                 return true;
-            }
-            catch (TimeoutException)
-            {
-                return false;
-            }
+            }, new List<Type> { typeof(TimeoutException) });
         }
 
         /// <summary>
@@ -89,8 +86,9 @@ namespace Aquality.Selenium.Core.Waitings
         /// <param name="timeout">Condition timeout. Default value is <see cref="ITimeoutConfiguration.Condition"/></param>
         /// <param name="pollingInterval">Condition check interval. Default value is <see cref="ITimeoutConfiguration.PollingInterval"/></param>
         /// <param name="message">Part of error message in case of Timeout exception</param>
+        /// <param name="exceptionsToIgnore">Possible exceptions that have to be ignored. </param>
         /// <exception cref="TimeoutException">Throws when timeout exceeded and condition not satisfied.</exception>
-        public void WaitForTrue(Func<bool> condition, TimeSpan? timeout = null, TimeSpan? pollingInterval = null, string message = null)
+        public void WaitForTrue(Func<bool> condition, TimeSpan? timeout = null, TimeSpan? pollingInterval = null, string message = null, IList<Type> exceptionsToIgnore = null)
         {
             if (condition == null)
             {
@@ -102,7 +100,7 @@ namespace Aquality.Selenium.Core.Waitings
             var stopwatch = Stopwatch.StartNew();
             while (true)
             {
-                if (condition())
+                if (IsConditionSatisfied(condition, exceptionsToIgnore ?? new List<Type>()))
                 {
                     return;
                 }
@@ -119,6 +117,23 @@ namespace Aquality.Selenium.Core.Waitings
                 }
 
                 Thread.Sleep(checkInterval);
+            }
+        }
+
+        private bool IsConditionSatisfied(Func<bool> condition, IList<Type> exceptionsToIgnore)
+        {
+            try
+            {
+                return condition();
+            }
+            catch (Exception exception)
+            {
+                if (exceptionsToIgnore.Any(type => type.IsAssignableFrom(exception.GetType())))
+                {
+                    return false;
+                }
+
+                throw;
             }
         }
 

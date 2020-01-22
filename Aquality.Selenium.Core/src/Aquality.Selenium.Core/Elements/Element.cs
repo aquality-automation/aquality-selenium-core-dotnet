@@ -53,7 +53,7 @@ namespace Aquality.Selenium.Core.Elements
 
         protected abstract IElementCacheConfiguration CacheConfiguration { get; }
 
-        protected abstract ConditionalWait ConditionalWait { get; }
+        protected abstract IConditionalWait ConditionalWait { get; }
 
         protected abstract string ElementType { get; }
 
