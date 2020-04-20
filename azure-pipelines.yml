@@ -1,13 +1,13 @@
-variables:
-  buildConfiguration: 'Release'
-  webDriverVersion: '77.0.3865.40'
-  isRemote: true
-
 trigger:
 - master
 
 pool:
   vmImage: 'windows-latest'
+
+variables:
+  buildConfiguration: 'Release'
+  webDriverVersion: '80.0.3987.106'
+  isRemote: true
 
 steps:
 - task: GitVersion@5
