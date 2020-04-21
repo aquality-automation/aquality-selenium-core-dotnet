@@ -115,6 +115,7 @@ namespace Aquality.Selenium.Core.Tests.Applications.Browser
         }
 
         [Test]
+        [Ignore("Tests should be updated: find out more stable example")]
         public void Should_ReturnCorrectState_True_WhenWindowIsRefreshed([ValueSource(nameof(StateFunctionsTrueWhenElementStaleWhichRetriveElement))] Func<IElementStateProvider, bool> stateCondition)
         {
             AssertStateConditionAfterRefresh(stateCondition, expectedValue: true);
