@@ -17,6 +17,7 @@ namespace Aquality.Selenium.Core.Tests.Applications.Browser
         private static readonly By LoadingLoc = By.Id("loading");
         private static readonly Uri DynamicContentUrl = new Uri($"{TestSite}/dynamic_controls");
         private static readonly Uri DynamicLoadingUrl = new Uri($"{TestSite}/dynamic_loading/1");
+        
         private const string ElementCacheVariableName = "elementCache.isEnabled"; 
         
         private static readonly Func<IElementStateProvider, bool>[] StateFunctionsFalseWhenElementStale
@@ -88,8 +89,7 @@ namespace Aquality.Selenium.Core.Tests.Applications.Browser
             StartLoading();
             var loader = new Label(LoadingLoc, "loader", ElementState.Displayed);
             Assume.That(loader.State.WaitForDisplayed(), "Loader should be displayed in the beginning");
-            Assert.IsTrue(ConditionalWait.WaitFor(
-                () => loader.Cache.IsStale), "Loader should become invisible and be treated as stale");
+            Assert.IsTrue(ConditionalWait.WaitFor(() => loader.Cache.IsStale), "Loader should become invisible and be treated as stale");
             Assert.IsFalse(loader.State.IsDisplayed, "Invisible loader should be not displayed");
             Assert.IsFalse(loader.State.IsExist, "Loader that was displayed previously and become invisible should be treated as disappeared");
             Assert.IsTrue(loader.State.WaitForExist(TimeSpan.Zero), "When waiting for existance, we should get an actual element's state");
@@ -108,6 +108,7 @@ namespace Aquality.Selenium.Core.Tests.Applications.Browser
         }
         
         [Test]
+        [Ignore("Tests should be updated")]
         public void Should_ReturnCorrectState_False_WhenWindowIsRefreshed([ValueSource(nameof(StateFunctionsFalseWhenElementStale))] Func<IElementStateProvider, bool> stateCondition)
         {
             AssertStateConditionAfterRefresh(stateCondition, expectedValue: false);
@@ -125,8 +126,7 @@ namespace Aquality.Selenium.Core.Tests.Applications.Browser
             var testElement = new Label(ContentLoc, "Example", ElementState.ExistsInAnyState);
             testElement.State.WaitForClickable();
             new Label(RemoveButtonLoc, "Remove", ElementState.Displayed).Click();
-            ConditionalWait.WaitForTrue(
-                () => testElement.Cache.IsStale, message: "Element should be stale when it disappeared.");
+            ConditionalWait.WaitForTrue(() => testElement.Cache.IsStale, message: "Element should be stale when it disappeared.");
             AqualityServices.Application.Driver.Navigate().Refresh();
             Assert.IsTrue(testElement.Cache.IsStale, "Element should remain stale after the page refresh.");
             Assert.AreEqual(expectedValue, stateCondition(testElement.State), 
