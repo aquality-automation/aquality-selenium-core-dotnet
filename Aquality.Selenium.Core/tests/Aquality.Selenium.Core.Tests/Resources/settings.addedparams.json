@@ -23,7 +23,7 @@
         "profile.default_content_settings.popups": "0",
         "disable-popup-blocking": "true"
       },
-      "startArguments": ["1", "2", "3"]
+      "startArguments": [ "1", "2", "3" ]
     }
   }
 }

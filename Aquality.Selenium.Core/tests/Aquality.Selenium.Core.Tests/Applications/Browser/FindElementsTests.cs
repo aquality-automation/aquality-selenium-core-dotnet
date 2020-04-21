@@ -15,6 +15,7 @@ namespace Aquality.Selenium.Core.Tests.Applications.Browser
         private static readonly By NotExistElementLoc = By.XPath("//div[@class='testtest']");
         private static readonly By ContentLoc = By.XPath("//div[contains(@class,'example')]");
         private static readonly Uri HoversURL = new Uri($"{TestSite}/hovers");
+
         private IElementFactory elementFactory;
 
         [SetUp]
