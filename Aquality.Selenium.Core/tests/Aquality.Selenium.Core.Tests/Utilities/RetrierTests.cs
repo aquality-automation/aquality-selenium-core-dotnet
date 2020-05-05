@@ -1,4 +1,5 @@
-﻿using Aquality.Selenium.Core.Configurations;
+﻿using Aquality.Selenium.Core.Applications;
+using Aquality.Selenium.Core.Configurations;
 using Aquality.Selenium.Core.Logging;
 using Aquality.Selenium.Core.Tests.Applications.Browser;
 using Microsoft.Extensions.DependencyInjection;
@@ -7,9 +8,17 @@ using System;
 
 namespace Aquality.Selenium.Core.Tests.Utilities
 {
-    public abstract class RetrierTests : TestWithBrowser
+    [TestFixture]
+    [Parallelizable(ParallelScope.All)]
+    public abstract class RetrierTests
     {
         protected const int ACCURACY = 100;
+
+        [SetUp]
+        public void SetUp()
+        {
+            new Startup().ConfigureServices(new ServiceCollection(), serviceCollection => AqualityServices.Application);
+        }
 
         protected Logger Logger => AqualityServices.ServiceProvider.GetRequiredService<Logger>();
 
