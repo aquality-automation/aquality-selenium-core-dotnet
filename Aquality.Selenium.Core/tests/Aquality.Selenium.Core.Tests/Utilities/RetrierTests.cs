@@ -36,14 +36,10 @@ namespace Aquality.Selenium.Core.Tests.Utilities
             action();
             watch.Stop();
             var duration = watch.ElapsedMilliseconds;
-
-            Assert.IsTrue(duration >= PollingInterval, 
-                $"Duration '{duration}' should be more than polling interval '{PollingInterval}'");
-
             var doubledAccuracyPollingInterval = 2 * PollingInterval + ACCURACY;
 
-            Assert.IsTrue(duration <= doubledAccuracyPollingInterval, 
-                $"Duration '{duration}' should be less than doubled polling interval '{doubledAccuracyPollingInterval}'");
+            Assert.IsTrue(PollingInterval <= duration && duration <= doubledAccuracyPollingInterval, 
+                $"Duration '{duration}' should be more than '{PollingInterval}' and less than '{doubledAccuracyPollingInterval}'");
         }
 
         protected void Retrier_ShouldWork_CorrectTimes(Type handledException, ref int actualAttempts, Action action)

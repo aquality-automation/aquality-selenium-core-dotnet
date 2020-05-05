@@ -57,7 +57,6 @@ namespace Aquality.Selenium.Core.Tests.Utilities
         {
             Assert.Throws<InvalidOperationException>(() => ActionRetrier.DoWithRetry(() => {
                 throw new InvalidOperationException();
-                Console.WriteLine(1);
             }, new List<Type>()));
         }
 
@@ -66,7 +65,9 @@ namespace Aquality.Selenium.Core.Tests.Utilities
         {
             Assert.Throws<InvalidOperationException>(() => ActionRetrier.DoWithRetry(() => {
                 throw new InvalidOperationException();
+#pragma warning disable CS0162 // Unreachable code detected
                 return string.Empty;
+#pragma warning restore CS0162 // Unreachable code detected
             }, new List<Type>()));
         }
 
@@ -89,7 +90,9 @@ namespace Aquality.Selenium.Core.Tests.Utilities
                     ActionRetrier.DoWithRetry(() => {
                         Logger.Info($"current attempt is {actualAttempts++}");
                         throw new InvalidOperationException();
+#pragma warning disable CS0162 // Unreachable code detected
                         return string.Empty;
+#pragma warning restore CS0162 // Unreachable code detected
                     }, HandledExceptions));
         }
 
