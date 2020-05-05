@@ -7,7 +7,7 @@ using System;
 
 namespace Aquality.Selenium.Core.Tests.Utilities
 {
-    public abstract class RetrierTests
+    public abstract class RetrierTests : TestWithBrowser
     {
         protected const int ACCURACY = 100;
 

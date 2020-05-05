@@ -72,6 +72,7 @@ namespace Aquality.Selenium.Core.Utilities
         /// <summary>
         /// Decides should the occured exception be handled (ignored during the retry) or not.
         /// </summary>
+        /// <param name="handledExceptions">Exceptions to be handled.</param>
         /// <param name="exception">Exception to proceed.</param>
         /// <returns>True if the exception should be ignored, false otherwise.</returns>
         protected virtual bool IsExceptionHandled(IEnumerable<Type> handledExceptions, Exception exception)
