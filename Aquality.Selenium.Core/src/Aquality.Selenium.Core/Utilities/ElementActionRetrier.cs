@@ -2,28 +2,20 @@
 using OpenQA.Selenium;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
 
 namespace Aquality.Selenium.Core.Utilities
 {
     /// <summary>
     /// Retries an action or function when <see cref="HandledExceptions"/> occures.
     /// </summary>
-    public class ElementActionRetrier : IElementActionRetrier
+    public class ElementActionRetrier : ActionRetrier, IElementActionRetrier
     {
-        private readonly IRetryConfiguration retryConfiguration;
-
         /// <summary>
         /// Instantiates the class using retry configuration.
         /// </summary>
         /// <param name="retryConfiguration">Retry configuration.</param>
-        /// <param name="handledExceptions">Exceptions to be handled. 
-        /// If set to null, <see cref="StaleElementReferenceException"/> and <see cref="InvalidElementStateException"/> will be handled.</param>
-        public ElementActionRetrier(IRetryConfiguration retryConfiguration, IList<Type> handledExceptions = null)
+        public ElementActionRetrier(IRetryConfiguration retryConfiguration) : base(retryConfiguration)
         {
-            this.retryConfiguration = retryConfiguration;
-            HandledExceptions = handledExceptions ?? new List<Type> { typeof(StaleElementReferenceException), typeof(InvalidElementStateException) };
         }
 
         /// <summary>
@@ -31,17 +23,7 @@ namespace Aquality.Selenium.Core.Utilities
         /// Set by the constructor parameter.
         /// If were not passed to constructor, <see cref="StaleElementReferenceException"/> and <see cref="InvalidElementStateException"/> will be handled.
         /// </summary>
-        public virtual IList<Type> HandledExceptions { get; }
-
-        /// <summary>
-        /// Decides should the occured exception be handled (ignored during the retry) or not.
-        /// </summary>
-        /// <param name="exception">Exception to proceed.</param>
-        /// <returns>True if the exception should be ignored, false otherwise.</returns>
-        protected virtual bool IsExceptionHandled(Exception exception)
-        {
-            return HandledExceptions.Any(type => type.IsAssignableFrom(exception.GetType()));
-        }
+        public virtual IList<Type> HandledExceptions => new List<Type> { typeof(StaleElementReferenceException), typeof(InvalidElementStateException) };
 
         /// <summary>
         /// Retries the action when the handled exception <see cref="HandledExceptions"/> occures.
@@ -49,11 +31,7 @@ namespace Aquality.Selenium.Core.Utilities
         /// <param name="action">Action to be applied.</param>
         public virtual void DoWithRetry(Action action)
         {
-            DoWithRetry(() =>
-            {
-                action();
-                return true;
-            });
+            DoWithRetry(action, HandledExceptions);
         }
 
         /// <summary>
@@ -64,31 +42,7 @@ namespace Aquality.Selenium.Core.Utilities
         /// <returns>Result of the function.</returns>
         public virtual T DoWithRetry<T>(Func<T> function)
         {
-            var retryAttemptsLeft = retryConfiguration.Number;
-            var actualInterval = retryConfiguration.PollingInterval;
-            var result = default(T);
-            while (retryAttemptsLeft >= 0)
-            {
-                try
-                {
-                    result = function();
-                    break;
-                }
-                catch (Exception exception)
-                {
-                    if (IsExceptionHandled(exception) && retryAttemptsLeft != 0)
-                    {
-                        Thread.Sleep(actualInterval);
-                        retryAttemptsLeft--;
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-            }
-
-            return result;
+            return DoWithRetry(function, HandledExceptions);
         }
     }
 }

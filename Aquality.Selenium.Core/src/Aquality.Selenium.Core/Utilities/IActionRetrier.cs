@@ -1,32 +1,27 @@
-﻿using OpenQA.Selenium;
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 namespace Aquality.Selenium.Core.Utilities
 {
     /// <summary>
-    /// Retries an action or function when <see cref="HandledExceptions"/> occures.
+    /// Retries an action or function when handledExceptions occurs.
     /// </summary>
-    public interface IElementActionRetrier : IActionRetrier
+    public interface IActionRetrier
     {
-        /// <summary>
-        /// Exceptions to be ignored during action retrying.
-        /// By the default implementation, <see cref="StaleElementReferenceException"/> and <see cref="InvalidElementStateException"/> are handled.
-        /// </summary>
-        IList<Type> HandledExceptions { get; }
-
         /// <summary>
         /// Retries the action when the handled exception <see cref="HandledExceptions"/> occures.
         /// </summary>
         /// <param name="action">Action to be applied.</param>
-        void DoWithRetry(Action action);
+        /// <param name="handledExceptions">Exceptions to be handled.</param>
+        void DoWithRetry(Action action, IEnumerable<Type> handledExceptions);
 
         /// <summary>
         /// Retries the function when the handled exception <see cref="HandledExceptions"/> occures.
         /// </summary>
         /// <typeparam name="T">Return type of function.</typeparam>
         /// <param name="function">Function to be applied.</param>
+        /// <param name="handledExceptions">Exceptions to be handled.</param>
         /// <returns>Result of the function.</returns>
-        T DoWithRetry<T>(Func<T> function);
+        T DoWithRetry<T>(Func<T> function, IEnumerable<Type> handledExceptions);
     }
 }
