@@ -33,6 +33,7 @@ namespace Aquality.Selenium.Core.Utilities
         /// Retries the action when the handled exception <see cref="HandledExceptions"/> occures.
         /// </summary>
         /// <param name="action">Action to be applied.</param>
+        /// <param name="handledExceptions">Exceptions to be handled.</param>
         public override void DoWithRetry(Action action, IEnumerable<Type> handledExceptions = null)
         {
             var exceptionsToHandle = handledExceptions ?? HandledExceptions;
@@ -44,6 +45,7 @@ namespace Aquality.Selenium.Core.Utilities
         /// </summary>
         /// <typeparam name="T">Return type of function.</typeparam>
         /// <param name="function">Function to be applied.</param>
+        /// <param name="handledExceptions">Exceptions to be handled.</param>
         /// <returns>Result of the function.</returns>
         public override T DoWithRetry<T>(Func<T> function, IEnumerable<Type> handledExceptions = null)
         {
