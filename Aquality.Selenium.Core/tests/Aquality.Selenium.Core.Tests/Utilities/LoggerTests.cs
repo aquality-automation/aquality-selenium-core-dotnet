@@ -6,7 +6,7 @@ using System.IO;
 
 namespace Aquality.Selenium.Core.Tests.Utilities
 {
-    [NonParallelizableAttribute]
+    [NonParallelizable]
     public class LoggerTests
     {
         private const string AddTargetLogFile = "AddTargetTestLog.log";

@@ -2,58 +2,44 @@
 using OpenQA.Selenium;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
 
 namespace Aquality.Selenium.Core.Utilities
 {
     /// <summary>
     /// Retries an action or function when <see cref="HandledExceptions"/> occures.
     /// </summary>
-    public class ElementActionRetrier : IElementActionRetrier
+    public class ElementActionRetrier : ActionRetrier, IElementActionRetrier
     {
-        private readonly IRetryConfiguration retryConfiguration;
-
         /// <summary>
         /// Instantiates the class using retry configuration.
         /// </summary>
         /// <param name="retryConfiguration">Retry configuration.</param>
-        /// <param name="handledExceptions">Exceptions to be handled. 
-        /// If set to null, <see cref="StaleElementReferenceException"/> and <see cref="InvalidElementStateException"/> will be handled.</param>
-        public ElementActionRetrier(IRetryConfiguration retryConfiguration, IList<Type> handledExceptions = null)
+        public ElementActionRetrier(IRetryConfiguration retryConfiguration) : base(retryConfiguration)
         {
-            this.retryConfiguration = retryConfiguration;
-            HandledExceptions = handledExceptions ?? new List<Type> { typeof(StaleElementReferenceException), typeof(InvalidElementStateException) };
+            HandledExceptions = new List<Type>
+            {
+                typeof(StaleElementReferenceException),
+                typeof(InvalidElementStateException)
+            };
         }
 
         /// <summary>
         /// Exceptions to be ignored during action retrying.
         /// Set by the constructor parameter.
-        /// If were not passed to constructor, <see cref="StaleElementReferenceException"/> and <see cref="InvalidElementStateException"/> will be handled.
+        /// If were not passed to constructor, <see cref="StaleElementReferenceException"/> 
+        /// and <see cref="InvalidElementStateException"/> will be handled.
         /// </summary>
-        public virtual IList<Type> HandledExceptions { get; }
-
-        /// <summary>
-        /// Decides should the occured exception be handled (ignored during the retry) or not.
-        /// </summary>
-        /// <param name="exception">Exception to proceed.</param>
-        /// <returns>True if the exception should be ignored, false otherwise.</returns>
-        protected virtual bool IsExceptionHandled(Exception exception)
-        {
-            return HandledExceptions.Any(type => type.IsAssignableFrom(exception.GetType()));
-        }
+        public virtual IEnumerable<Type> HandledExceptions { get; set; }
 
         /// <summary>
         /// Retries the action when the handled exception <see cref="HandledExceptions"/> occures.
         /// </summary>
         /// <param name="action">Action to be applied.</param>
-        public virtual void DoWithRetry(Action action)
+        /// <param name="handledExceptions">Exceptions to be handled.</param>
+        public override void DoWithRetry(Action action, IEnumerable<Type> handledExceptions = null)
         {
-            DoWithRetry(() =>
-            {
-                action();
-                return true;
-            });
+            var exceptionsToHandle = handledExceptions ?? HandledExceptions;
+            base.DoWithRetry(action, exceptionsToHandle);
         }
 
         /// <summary>
@@ -61,34 +47,12 @@ namespace Aquality.Selenium.Core.Utilities
         /// </summary>
         /// <typeparam name="T">Return type of function.</typeparam>
         /// <param name="function">Function to be applied.</param>
+        /// <param name="handledExceptions">Exceptions to be handled.</param>
         /// <returns>Result of the function.</returns>
-        public virtual T DoWithRetry<T>(Func<T> function)
+        public override T DoWithRetry<T>(Func<T> function, IEnumerable<Type> handledExceptions = null)
         {
-            var retryAttemptsLeft = retryConfiguration.Number;
-            var actualInterval = retryConfiguration.PollingInterval;
-            var result = default(T);
-            while (retryAttemptsLeft >= 0)
-            {
-                try
-                {
-                    result = function();
-                    break;
-                }
-                catch (Exception exception)
-                {
-                    if (IsExceptionHandled(exception) && retryAttemptsLeft != 0)
-                    {
-                        Thread.Sleep(actualInterval);
-                        retryAttemptsLeft--;
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-            }
-
-            return result;
+            var exceptionsToHandle = handledExceptions ?? HandledExceptions;
+            return base.DoWithRetry(function, exceptionsToHandle);
         }
     }
 }
