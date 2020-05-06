@@ -15,6 +15,11 @@ stages:
     displayName: Analyse code with SonarQube
 
     steps:
+    - task: GitVersion@5
+      displayName: 'Run GitVersion'
+      inputs:
+        runtime: 'core'
+
     - task: SonarCloudPrepare@1
       displayName: 'Prepare SonarCloud analysis'
       inputs:
