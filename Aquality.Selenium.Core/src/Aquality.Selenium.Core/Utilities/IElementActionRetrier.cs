@@ -11,8 +11,9 @@ namespace Aquality.Selenium.Core.Utilities
     {
         /// <summary>
         /// Exceptions to be ignored during action retrying.
-        /// By the default implementation, <see cref="StaleElementReferenceException"/> and <see cref="InvalidElementStateException"/> are handled.
+        /// By the default implementation, <see cref="StaleElementReferenceException"/> 
+        /// and <see cref="InvalidElementStateException"/> are handled.
         /// </summary>
-        IList<Type> HandledExceptions { get; }
+        IEnumerable<Type> HandledExceptions { get; set; }
     }
 }

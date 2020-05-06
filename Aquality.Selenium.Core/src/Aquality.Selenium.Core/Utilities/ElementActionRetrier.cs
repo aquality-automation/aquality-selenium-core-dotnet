@@ -16,18 +16,20 @@ namespace Aquality.Selenium.Core.Utilities
         /// <param name="retryConfiguration">Retry configuration.</param>
         public ElementActionRetrier(IRetryConfiguration retryConfiguration) : base(retryConfiguration)
         {
+            HandledExceptions = new List<Type>
+            {
+                typeof(StaleElementReferenceException),
+                typeof(InvalidElementStateException)
+            };
         }
 
         /// <summary>
         /// Exceptions to be ignored during action retrying.
         /// Set by the constructor parameter.
-        /// If were not passed to constructor, <see cref="StaleElementReferenceException"/> and <see cref="InvalidElementStateException"/> will be handled.
+        /// If were not passed to constructor, <see cref="StaleElementReferenceException"/> 
+        /// and <see cref="InvalidElementStateException"/> will be handled.
         /// </summary>
-        public virtual IList<Type> HandledExceptions => new List<Type> 
-        { 
-            typeof(StaleElementReferenceException), 
-            typeof(InvalidElementStateException) 
-        };
+        public virtual IEnumerable<Type> HandledExceptions { get; set; }
 
         /// <summary>
         /// Retries the action when the handled exception <see cref="HandledExceptions"/> occures.
