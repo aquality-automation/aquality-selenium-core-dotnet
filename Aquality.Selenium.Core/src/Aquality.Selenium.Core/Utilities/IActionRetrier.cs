@@ -13,7 +13,7 @@ namespace Aquality.Selenium.Core.Utilities
         /// </summary>
         /// <param name="action">Action to be applied.</param>
         /// <param name="handledExceptions">Exceptions to be handled.</param>
-        void DoWithRetry(Action action, IEnumerable<Type> handledExceptions);
+        void DoWithRetry(Action action, IEnumerable<Type> handledExceptions = null);
 
         /// <summary>
         /// Retries the action when one of the handledExceptions occures.
@@ -22,6 +22,6 @@ namespace Aquality.Selenium.Core.Utilities
         /// <param name="function">Function to be applied.</param>
         /// <param name="handledExceptions">Exceptions to be handled.</param>
         /// <returns>Result of the function.</returns>
-        T DoWithRetry<T>(Func<T> function, IEnumerable<Type> handledExceptions);
+        T DoWithRetry<T>(Func<T> function, IEnumerable<Type> handledExceptions = null);
     }
 }
