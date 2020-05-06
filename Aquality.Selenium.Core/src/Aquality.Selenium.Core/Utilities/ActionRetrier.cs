@@ -24,7 +24,7 @@ namespace Aquality.Selenium.Core.Utilities
         /// </summary>
         /// <param name="action">Action to be applied.</param>
         /// <param name="handledExceptions">Exceptions to be handled.</param>
-        public virtual void DoWithRetry(Action action, IEnumerable<Type> handledExceptions)
+        public virtual void DoWithRetry(Action action, IEnumerable<Type> handledExceptions = null)
         {
             DoWithRetry(() =>
             {
@@ -40,8 +40,9 @@ namespace Aquality.Selenium.Core.Utilities
         /// <param name="function">Function to be applied.</param>
         /// <param name="handledExceptions">Exceptions to be handled.</param>
         /// <returns>Result of the function.</returns>
-        public virtual T DoWithRetry<T>(Func<T> function, IEnumerable<Type> handledExceptions)
+        public virtual T DoWithRetry<T>(Func<T> function, IEnumerable<Type> handledExceptions = null)
         {
+            var exceptionsToHandle = handledExceptions ?? new List<Type>();
             var retryAttemptsLeft = retryConfiguration.Number;
             var actualInterval = retryConfiguration.PollingInterval;
             var result = default(T);
@@ -55,7 +56,7 @@ namespace Aquality.Selenium.Core.Utilities
                 }
                 catch (Exception exception)
                 {
-                    if (IsExceptionHandled(handledExceptions, exception) && retryAttemptsLeft != 0)
+                    if (IsExceptionHandled(exceptionsToHandle, exception) && retryAttemptsLeft != 0)
                     {
                         Thread.Sleep(actualInterval);
                         retryAttemptsLeft--;
