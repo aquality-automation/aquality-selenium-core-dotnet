@@ -23,15 +23,20 @@ namespace Aquality.Selenium.Core.Utilities
         /// Set by the constructor parameter.
         /// If were not passed to constructor, <see cref="StaleElementReferenceException"/> and <see cref="InvalidElementStateException"/> will be handled.
         /// </summary>
-        public virtual IList<Type> HandledExceptions => new List<Type> { typeof(StaleElementReferenceException), typeof(InvalidElementStateException) };
+        public virtual IList<Type> HandledExceptions => new List<Type> 
+        { 
+            typeof(StaleElementReferenceException), 
+            typeof(InvalidElementStateException) 
+        };
 
         /// <summary>
         /// Retries the action when the handled exception <see cref="HandledExceptions"/> occures.
         /// </summary>
         /// <param name="action">Action to be applied.</param>
-        public virtual void DoWithRetry(Action action)
+        public override void DoWithRetry(Action action, IEnumerable<Type> handledExceptions = null)
         {
-            DoWithRetry(action, HandledExceptions);
+            var exceptionsToHandle = handledExceptions ?? HandledExceptions;
+            base.DoWithRetry(action, exceptionsToHandle);
         }
 
         /// <summary>
@@ -40,9 +45,10 @@ namespace Aquality.Selenium.Core.Utilities
         /// <typeparam name="T">Return type of function.</typeparam>
         /// <param name="function">Function to be applied.</param>
         /// <returns>Result of the function.</returns>
-        public virtual T DoWithRetry<T>(Func<T> function)
+        public override T DoWithRetry<T>(Func<T> function, IEnumerable<Type> handledExceptions = null)
         {
-            return DoWithRetry(function, HandledExceptions);
+            var exceptionsToHandle = handledExceptions ?? HandledExceptions;
+            return base.DoWithRetry(function, exceptionsToHandle);
         }
     }
 }
