@@ -8,7 +8,7 @@ namespace Aquality.Selenium.Core.Tests.Utilities
 {
     public class ElementActionRetrierTests : RetrierTests
     {
-        private IElementActionRetrier ElementActionRetrier => new ElementActionRetrier(RertyConfiguration);
+        private IElementActionRetrier ElementActionRetrier => new ElementActionRetrier(RetryConfiguration);
 
         private static readonly Exception[] handledExceptions = new List<Exception>
         {

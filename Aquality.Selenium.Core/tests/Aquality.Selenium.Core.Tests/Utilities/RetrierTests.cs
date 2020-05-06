@@ -22,11 +22,11 @@ namespace Aquality.Selenium.Core.Tests.Utilities
 
         protected Logger Logger => AqualityServices.ServiceProvider.GetRequiredService<Logger>();
 
-        protected IRetryConfiguration RertyConfiguration => AqualityServices.ServiceProvider.GetRequiredService<IRetryConfiguration>();
+        protected IRetryConfiguration RetryConfiguration => AqualityServices.ServiceProvider.GetRequiredService<IRetryConfiguration>();
         
-        protected int PollingInterval => RertyConfiguration.PollingInterval.Milliseconds;
+        protected int PollingInterval => RetryConfiguration.PollingInterval.Milliseconds;
 
-        protected int RetriesCount => RertyConfiguration.Number;
+        protected int RetriesCount => RetryConfiguration.Number;
 
         protected void Retrier_ShouldWork_OnceIfMethodSucceeded(Action action)
         {

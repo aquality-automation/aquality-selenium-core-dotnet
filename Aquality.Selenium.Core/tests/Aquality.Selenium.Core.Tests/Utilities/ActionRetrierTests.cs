@@ -9,7 +9,7 @@ namespace Aquality.Selenium.Core.Tests.Utilities
     {
         private IEnumerable<Type> HandledExceptions => new List<Type> { typeof(InvalidOperationException) };
         
-        private IActionRetrier ActionRetrier => new ActionRetrier(RertyConfiguration);
+        private IActionRetrier ActionRetrier => new ActionRetrier(RetryConfiguration);
 
         [Test]
         public void Retrier_ShouldWork_OnceIfMethodSucceeded()
