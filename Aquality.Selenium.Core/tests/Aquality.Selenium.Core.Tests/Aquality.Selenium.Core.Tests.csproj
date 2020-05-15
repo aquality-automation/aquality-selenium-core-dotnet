@@ -7,11 +7,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Resources\GetElementXPath.js" />
     <None Remove="Resources\settings.embeddedresource.json" />
     <None Remove="Resources\settings.special.json" />
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="Resources\GetElementXPath.js" />
     <EmbeddedResource Include="Resources\settings.embeddedresource.json">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </EmbeddedResource>

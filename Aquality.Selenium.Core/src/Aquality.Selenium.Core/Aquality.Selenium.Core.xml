@@ -366,11 +366,24 @@
             <exception cref="T:System.InvalidOperationException">Thrown when the supplier is null, and no constructor with required arguments was found.</exception>
             <returns>Instance of child element</returns>
         </member>
+        <member name="M:Aquality.Selenium.Core.Elements.Interfaces.IElementFactory.FindChildElements``1(Aquality.Selenium.Core.Elements.Interfaces.IElement,OpenQA.Selenium.By,System.String,Aquality.Selenium.Core.Elements.ElementSupplier{``0},Aquality.Selenium.Core.Elements.ElementsCount,Aquality.Selenium.Core.Elements.ElementState)">
+            <summary>
+            Finds list of child elements by their locator relative to parent element.
+            </summary>
+            <typeparam name="T">Type of child elements that has to implement IElement.</typeparam>
+            <param name="parentElement">Parent element.</param>
+            <param name="childLocator">Locator of child elements relative to their parent.</param>
+            <param name="supplier">Delegate that defines constructor of element in case of custom element type.</param>
+            <param name="state">Child elements state.</param>
+            <param name="name">Child elements name.</param>
+            <exception cref="T:System.InvalidOperationException">Thrown when the supplier is null, and no constructor with required arguments was found.</exception>
+            <returns>List of child elements.</returns>
+        </member>
         <member name="M:Aquality.Selenium.Core.Elements.Interfaces.IElementFactory.FindElements``1(OpenQA.Selenium.By,System.String,Aquality.Selenium.Core.Elements.ElementSupplier{``0},Aquality.Selenium.Core.Elements.ElementsCount,Aquality.Selenium.Core.Elements.ElementState)">
             <summary>
             Finds list of elements by base locator.
             </summary>
-            <typeparam name="T">Type of elements that have to implement IElement.</typeparam>
+            <typeparam name="T">Type of elements that has to implement IElement.</typeparam>
             <param name="locator">Base elements locator.</param>
             <param name="supplier">Delegate that defines constructor of element in case of custom elements.</param>
             <param name="expectedCount">Expected number of elements that have to be found (zero, more then zero, any).</param>
@@ -525,6 +538,17 @@
             <param name="state">Child element state.</param>
             <returns>Instance of child element.</returns>
         </member>
+        <member name="M:Aquality.Selenium.Core.Elements.Interfaces.IParent.FindChildElements``1(OpenQA.Selenium.By,System.String,Aquality.Selenium.Core.Elements.ElementSupplier{``0},Aquality.Selenium.Core.Elements.ElementsCount,Aquality.Selenium.Core.Elements.ElementState)">
+            <summary>
+            Finds child elements of current element by its locator.
+            </summary>
+            <typeparam name="T">Type of child elements that has to implement IElement.</typeparam>
+            <param name="childLocator">Locator of child elements relative to their parent.</param>
+            <param name="name">Child elements name.</param>
+            <param name="supplier">Delegate that defines constructor of child element in case of custom element type.</param>
+            <param name="state">Child elements state.</param>
+            <returns>List of child elements.</returns>
+        </member>
         <member name="T:Aquality.Selenium.Core.Elements.RelativeElementFinder">
             <summary>
             Implementation of <see cref="T:Aquality.Selenium.Core.Elements.Interfaces.IElementFinder"/> for a relative <see cref="T:OpenQA.Selenium.ISearchContext"/> supplier
@@ -650,45 +674,69 @@
             <param name="message">Message</param>
             <param name="exception">Exception</param>
         </member>
+        <member name="M:Aquality.Selenium.Core.Utilities.ActionRetrier.#ctor(Aquality.Selenium.Core.Configurations.IRetryConfiguration)">
+            <summary>
+            Instantiates the class using retry configuration.
+            </summary>
+            <param name="retryConfiguration">Retry configuration.</param>
+        </member>
+        <member name="M:Aquality.Selenium.Core.Utilities.ActionRetrier.DoWithRetry(System.Action,System.Collections.Generic.IEnumerable{System.Type})">
+            <summary>
+            Retries the action when one of the handledExceptions occures.
+            </summary>
+            <param name="action">Action to be applied.</param>
+            <param name="handledExceptions">Exceptions to be handled.</param>
+        </member>
+        <member name="M:Aquality.Selenium.Core.Utilities.ActionRetrier.DoWithRetry``1(System.Func{``0},System.Collections.Generic.IEnumerable{System.Type})">
+            <summary>
+            Retries the action when one of the handledExceptions occures.
+            </summary>
+            <typeparam name="T">Return type of function.</typeparam>
+            <param name="function">Function to be applied.</param>
+            <param name="handledExceptions">Exceptions to be handled.</param>
+            <returns>Result of the function.</returns>
+        </member>
+        <member name="M:Aquality.Selenium.Core.Utilities.ActionRetrier.IsExceptionHandled(System.Collections.Generic.IEnumerable{System.Type},System.Exception)">
+            <summary>
+            Decides should the occured exception be handled (ignored during the retry) or not.
+            </summary>
+            <param name="handledExceptions">Exceptions to be handled.</param>
+            <param name="exception">Exception to proceed.</param>
+            <returns>True if the exception should be ignored, false otherwise.</returns>
+        </member>
         <member name="T:Aquality.Selenium.Core.Utilities.ElementActionRetrier">
             <summary>
             Retries an action or function when <see cref="P:Aquality.Selenium.Core.Utilities.ElementActionRetrier.HandledExceptions"/> occures.
             </summary>
         </member>
-        <member name="M:Aquality.Selenium.Core.Utilities.ElementActionRetrier.#ctor(Aquality.Selenium.Core.Configurations.IRetryConfiguration,System.Collections.Generic.IList{System.Type})">
+        <member name="M:Aquality.Selenium.Core.Utilities.ElementActionRetrier.#ctor(Aquality.Selenium.Core.Configurations.IRetryConfiguration)">
             <summary>
             Instantiates the class using retry configuration.
             </summary>
             <param name="retryConfiguration">Retry configuration.</param>
-            <param name="handledExceptions">Exceptions to be handled. 
-            If set to null, <see cref="T:OpenQA.Selenium.StaleElementReferenceException"/> and <see cref="T:OpenQA.Selenium.InvalidElementStateException"/> will be handled.</param>
         </member>
         <member name="P:Aquality.Selenium.Core.Utilities.ElementActionRetrier.HandledExceptions">
             <summary>
             Exceptions to be ignored during action retrying.
             Set by the constructor parameter.
-            If were not passed to constructor, <see cref="T:OpenQA.Selenium.StaleElementReferenceException"/> and <see cref="T:OpenQA.Selenium.InvalidElementStateException"/> will be handled.
+            If were not passed to constructor, <see cref="T:OpenQA.Selenium.StaleElementReferenceException"/> 
+            and <see cref="T:OpenQA.Selenium.InvalidElementStateException"/> will be handled.
             </summary>
         </member>
-        <member name="M:Aquality.Selenium.Core.Utilities.ElementActionRetrier.IsExceptionHandled(System.Exception)">
-            <summary>
-            Decides should the occured exception be handled (ignored during the retry) or not.
-            </summary>
-            <param name="exception">Exception to proceed.</param>
-            <returns>True if the exception should be ignored, false otherwise.</returns>
-        </member>
-        <member name="M:Aquality.Selenium.Core.Utilities.ElementActionRetrier.DoWithRetry(System.Action)">
+        <member name="M:Aquality.Selenium.Core.Utilities.ElementActionRetrier.DoWithRetry(System.Action,System.Collections.Generic.IEnumerable{System.Type})">
             <summary>
             Retries the action when the handled exception <see cref="P:Aquality.Selenium.Core.Utilities.ElementActionRetrier.HandledExceptions"/> occures.
             </summary>
             <param name="action">Action to be applied.</param>
+            <param name="handledExceptions">Exceptions to be handled.</param>
         </member>
-        <member name="M:Aquality.Selenium.Core.Utilities.ElementActionRetrier.DoWithRetry``1(System.Func{``0})">
+        <member name="M:Aquality.Selenium.Core.Utilities.ElementActionRetrier.DoWithRetry``1(System.Func{``0},System.Collections.Generic.IEnumerable{System.Type})">
             <summary>
             Retries the function when <see cref="P:Aquality.Selenium.Core.Utilities.ElementActionRetrier.HandledExceptions"/> occures.
             </summary>
             <typeparam name="T">Return type of function.</typeparam>
             <param name="function">Function to be applied.</param>
+            <param name="handledExceptions">Exceptions to be handled.</param>
             <returns>Result of the function.</returns>
         </member>
         <member name="T:Aquality.Selenium.Core.Utilities.EnumExtensions">
@@ -762,30 +810,38 @@
             <param name="fileInfo">Required file info.</param>
             <returns>Text of the file.</returns>
         </member>
+        <member name="T:Aquality.Selenium.Core.Utilities.IActionRetrier">
+            <summary>
+            Retries an action or function when handledExceptions occurs.
+            </summary>
+        </member>
+        <member name="M:Aquality.Selenium.Core.Utilities.IActionRetrier.DoWithRetry(System.Action,System.Collections.Generic.IEnumerable{System.Type})">
+            <summary>
+            Retries the action when one of the handledExceptions occures.
+            </summary>
+            <param name="action">Action to be applied.</param>
+            <param name="handledExceptions">Exceptions to be handled.</param>
+        </member>
+        <member name="M:Aquality.Selenium.Core.Utilities.IActionRetrier.DoWithRetry``1(System.Func{``0},System.Collections.Generic.IEnumerable{System.Type})">
+            <summary>
+            Retries the action when one of the handledExceptions occures.
+            </summary>
+            <typeparam name="T">Return type of function.</typeparam>
+            <param name="function">Function to be applied.</param>
+            <param name="handledExceptions">Exceptions to be handled.</param>
+            <returns>Result of the function.</returns>
+        </member>
         <member name="T:Aquality.Selenium.Core.Utilities.IElementActionRetrier">
             <summary>
-            Retries an action or function when <see cref="P:Aquality.Selenium.Core.Utilities.IElementActionRetrier.HandledExceptions"/> occures.
+            Retries an action or function when one of <see cref="P:Aquality.Selenium.Core.Utilities.IElementActionRetrier.HandledExceptions"/> occures.
             </summary>
         </member>
         <member name="P:Aquality.Selenium.Core.Utilities.IElementActionRetrier.HandledExceptions">
             <summary>
             Exceptions to be ignored during action retrying.
-            By the default implementation, <see cref="T:OpenQA.Selenium.StaleElementReferenceException"/> and <see cref="T:OpenQA.Selenium.InvalidElementStateException"/> are handled.
+            By the default implementation, <see cref="T:OpenQA.Selenium.StaleElementReferenceException"/> 
+            and <see cref="T:OpenQA.Selenium.InvalidElementStateException"/> are handled.
             </summary>
-        </member>
-        <member name="M:Aquality.Selenium.Core.Utilities.IElementActionRetrier.DoWithRetry(System.Action)">
-            <summary>
-            Retries the action when the handled exception <see cref="P:Aquality.Selenium.Core.Utilities.IElementActionRetrier.HandledExceptions"/> occures.
-            </summary>
-            <param name="action">Action to be applied.</param>
-        </member>
-        <member name="M:Aquality.Selenium.Core.Utilities.IElementActionRetrier.DoWithRetry``1(System.Func{``0})">
-            <summary>
-            Retries the function when the handled exception <see cref="P:Aquality.Selenium.Core.Utilities.IElementActionRetrier.HandledExceptions"/> occures.
-            </summary>
-            <typeparam name="T">Return type of function.</typeparam>
-            <param name="function">Function to be applied.</param>
-            <returns>Result of the function.</returns>
         </member>
         <member name="T:Aquality.Selenium.Core.Utilities.JsonSettingsFile">
             <summary>

@@ -43,6 +43,11 @@ namespace Aquality.Selenium.Core.Elements
             return elementSupplier(new ByChained(parentElement.Locator, childLocator), name ?? $"Child element of {parentElement.Name}", state);
         }
 
+        public virtual IList<T> FindChildElements<T>(IElement parentElement, By childLocator, string name = null, ElementSupplier<T> supplier = null, ElementsCount expectedCount = ElementsCount.Any, ElementState state = ElementState.Displayed) where T : IElement
+        {
+            return FindElements(new ByChained(parentElement.Locator, childLocator), name ?? $"Child element of {parentElement.Name}", supplier, expectedCount, state);
+        }
+
         public virtual IList<T> FindElements<T>(By locator, string name = null, ElementSupplier<T> supplier = null, ElementsCount expectedCount = ElementsCount.Any, ElementState state = ElementState.Displayed) where T : IElement
         {
             var elementSupplier = ResolveSupplier(supplier);
@@ -88,8 +93,8 @@ namespace Aquality.Selenium.Core.Elements
         protected virtual By GenerateXpathLocator(By baseLocator, IWebElement webElement, int elementIndex)
         {
             var strBaseLocator = baseLocator.ToString();
-            var elementLocator = strBaseLocator.Contains(ByXpathIdentifier)
-                    ? $"({strBaseLocator.Split(':')[1].Trim()})[{elementIndex}]"
+            var elementLocator = strBaseLocator.StartsWith(ByXpathIdentifier)
+                    ? $"({strBaseLocator.Substring(strBaseLocator.IndexOf(':') + 1).Trim()})[{elementIndex}]"
                     : throw new NotSupportedException($"Multiple elements' locator {baseLocator} is not {ByXpathIdentifier}, and is not supported yet");
             return By.XPath(elementLocator);
         }
