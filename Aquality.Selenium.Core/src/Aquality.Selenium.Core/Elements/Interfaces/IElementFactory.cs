@@ -40,6 +40,7 @@ namespace Aquality.Selenium.Core.Elements.Interfaces
         /// <param name="parentElement">Parent element.</param>
         /// <param name="childLocator">Locator of child elements relative to their parent.</param>
         /// <param name="supplier">Delegate that defines constructor of element in case of custom element type.</param>
+        /// <param name="expectedCount">Expected number of elements that have to be found (zero, more then zero, any).</param>
         /// <param name="state">Child elements state.</param>
         /// <param name="name">Child elements name.</param>
         /// <exception cref="InvalidOperationException">Thrown when the supplier is null, and no constructor with required arguments was found.</exception>

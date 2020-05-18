@@ -23,6 +23,7 @@ namespace Aquality.Selenium.Core.Tests.Applications.Browser
 
             new CustomStartup().ConfigureServices(services, serviceCollection => AqualityServices.Application);
             ServiceProvider = services.BuildServiceProvider();
+            AqualityServices.ServiceProvider = ServiceProvider;
         }
 
         [TearDown]
