@@ -16,14 +16,14 @@ namespace Aquality.Selenium.Core.Tests.Applications.Browser
 
         protected override IList<T> FindElements<T>(By locator, string name = null, ElementSupplier<T> supplier = null, ElementsCount expectedCount = ElementsCount.Any, ElementState state = ElementState.Displayed)
         {
-            return elementFactory.FindChildElements(parentElement, locator, name, supplier, expectedCount, state);
+            return ParentElement.FindChildElements(locator, name, supplier, expectedCount, state);
         }
 
         [Test]
         public void Should_GetCorrectNumberOfChilds_ForRelativeChildLocator()
         {
             var expectedCount = 1;
-            var elementsCount = elementFactory.FindChildElements<Label>(customParent, DisplayedElementsLoc).Count;
+            var elementsCount = ElementFactory.FindChildElements<Label>(customParent, DisplayedElementsLoc).Count;
             Assert.AreEqual(expectedCount, elementsCount, $"Elements count for relative locator should be {expectedCount}");
         }
 
@@ -31,14 +31,14 @@ namespace Aquality.Selenium.Core.Tests.Applications.Browser
         public void Should_GetCorrectNumberOfChilds_ForAbsoluteChildLocator()
         {
             var expectedCount = 3;
-            var elementsCount = elementFactory.FindChildElements<Label>(customParent, base.DisplayedElementsLoc).Count;
+            var elementsCount = ElementFactory.FindChildElements<Label>(customParent, base.DisplayedElementsLoc).Count;
             Assert.AreEqual(expectedCount, elementsCount, $"Elements count for absolute locator should be {expectedCount}");
         }
 
         [Test]
         public void Should_SetWorkableLocators_ToChildElements()
         {
-            var foundElements = elementFactory.FindChildElements<Label>(customParent, base.DisplayedElementsLoc);
+            var foundElements = ElementFactory.FindChildElements<Label>(customParent, base.DisplayedElementsLoc);
             Assert.DoesNotThrow(() =>
             {
                 foundElements.Select(element => element.GetElement()).ToList();

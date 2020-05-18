@@ -12,29 +12,29 @@ namespace Aquality.Selenium.Core.Tests.Applications.Browser
 {
     public class FindElementsTests : TestWithBrowser
     {
+        private static readonly By ContentLoc = By.XPath("//div[contains(@class,'example')]");
+        private static readonly Uri HoversURL = new Uri($"{TestSite}/hovers");
+
         protected virtual By HiddenElementsLoc => By.XPath("//h5");
         protected virtual By DisplayedElementsLoc => By.XPath("//img[@alt='User Avatar']");
         protected virtual By DottedLoc => By.XPath("//img[@alt='User Avatar']/parent::div");
         protected virtual By NotExistElementLoc => By.XPath("//div[@class='testtest']");
-
-        private static readonly By ContentLoc = By.XPath("//div[contains(@class,'example')]");
-        private static readonly Uri HoversURL = new Uri($"{TestSite}/hovers");
         
-        protected static IElementFactory elementFactory;
-        protected static Label parentElement;
+        protected IElementFactory ElementFactory { get; private set; }
+        protected Label ParentElement { get; private set; }
 
         protected virtual IList<T> FindElements<T>(By locator, string name = null, ElementSupplier<T> supplier = null, ElementsCount expectedCount = ElementsCount.Any, ElementState state = ElementState.Displayed) where T : IElement
         {
-            return elementFactory.FindElements(locator, name, supplier, expectedCount, state);
+            return ElementFactory.FindElements(locator, name, supplier, expectedCount, state);
         }
 
         [SetUp]
         public new void SetUp()
         {
-            elementFactory = ServiceProvider.GetRequiredService<IElementFactory>();
+            ElementFactory = ServiceProvider.GetRequiredService<IElementFactory>();
             AqualityServices.Application.Driver.Navigate().GoToUrl(HoversURL);
-            parentElement = new Label(ContentLoc, "Example", ElementState.Displayed);
-            parentElement.Click();
+            ParentElement = new Label(ContentLoc, "Example", ElementState.Displayed);
+            ParentElement.Click();
         }
 
         [TestCase(ElementsCount.MoreThenZero, ElementState.Displayed, 3)]
