@@ -1,4 +1,6 @@
-﻿using Aquality.Selenium.Core.Utilities;
+﻿using Aquality.Selenium.Core.Tests.Applications.Browser;
+using Aquality.Selenium.Core.Utilities;
+using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
@@ -10,6 +12,12 @@ namespace Aquality.Selenium.Core.Tests.Utilities
         private IEnumerable<Type> HandledExceptions => new List<Type> { typeof(InvalidOperationException) };
         
         private IActionRetrier ActionRetrier => new ActionRetrier(RetryConfiguration);
+
+        [Test]
+        public void Retrier_ShouldBePossible_ToGetFromAqualitySrvices()
+        {
+            Assert.DoesNotThrow(() => AqualityServices.ServiceProvider.GetRequiredService<IActionRetrier>());
+        }
 
         [Test]
         public void Retrier_ShouldWork_OnceIfMethodSucceeded()
