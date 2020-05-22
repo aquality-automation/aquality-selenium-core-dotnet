@@ -16,7 +16,18 @@ namespace Aquality.Selenium.Core.Tests.Applications.Browser
 
         public static ChromeApplication Application => GetApplication(services => StartChrome(services));
 
-        public static IServiceProvider ServiceProvider => GetServiceProvider(services => Application);
+        public static IServiceProvider ServiceProvider 
+        { 
+            get
+            {
+                return GetServiceProvider(services => Application);
+            }
+            set
+            {
+                SetServiceProvider(value);
+            }
+        }
+            
 
         private static ChromeApplication StartChrome(IServiceProvider services)
         {

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Aquality.Selenium.Core.Applications;
 using Aquality.Selenium.Core.Configurations;
 using Aquality.Selenium.Core.Elements.Interfaces;
@@ -74,6 +75,11 @@ namespace Aquality.Selenium.Core.Elements
         public T FindChildElement<T>(By childLocator, string name = null, ElementSupplier<T> supplier = null, ElementState state = ElementState.Displayed) where T : IElement
         {
             return Factory.FindChildElement(this, childLocator, name, supplier, state);
+        }
+
+        public IList<T> FindChildElements<T>(By childLocator, string name = null, ElementSupplier<T> supplier = null, ElementsCount expectedCount = ElementsCount.Any, ElementState state = ElementState.Displayed) where T : IElement
+        {
+            return Factory.FindChildElements(this, childLocator, name, supplier, expectedCount, state);
         }
 
         public string GetAttribute(string attr)

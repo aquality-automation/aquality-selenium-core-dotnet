@@ -16,6 +16,8 @@ namespace Aquality.Selenium.Core.Elements
     public class ElementFactory : IElementFactory
     {
         private const string ByXpathIdentifier = "By.XPath";
+        private const string ByTagNameIdentifier = "By.TagName";
+        private const string TagNameXPathPrefix = "//";
 
         public ElementFactory(IConditionalWait conditionalWait, IElementFinder elementFinder, ILocalizationManager localizationManager)
         {
@@ -40,7 +42,12 @@ namespace Aquality.Selenium.Core.Elements
         public virtual T FindChildElement<T>(IElement parentElement, By childLocator, string name = null, ElementSupplier<T> supplier = null, ElementState state = ElementState.Displayed) where T : IElement
         {
             var elementSupplier = ResolveSupplier(supplier);
-            return elementSupplier(new ByChained(parentElement.Locator, childLocator), name ?? $"Child element of {parentElement.Name}", state);
+            return elementSupplier(GenerateAbsoluteChildLocator(parentElement.Locator, childLocator), name ?? $"Child element of {parentElement.Name}", state);
+        }
+
+        public virtual IList<T> FindChildElements<T>(IElement parentElement, By childLocator, string name = null, ElementSupplier<T> supplier = null, ElementsCount expectedCount = ElementsCount.Any, ElementState state = ElementState.Displayed) where T : IElement
+        {
+            return FindElements(GenerateAbsoluteChildLocator(parentElement.Locator, childLocator), name ?? $"Child element of {parentElement.Name}", supplier, expectedCount, state);
         }
 
         public virtual IList<T> FindElements<T>(By locator, string name = null, ElementSupplier<T> supplier = null, ElementsCount expectedCount = ElementsCount.Any, ElementState state = ElementState.Displayed) where T : IElement
@@ -87,11 +94,63 @@ namespace Aquality.Selenium.Core.Elements
         /// <returns>target element's locator</returns>
         protected virtual By GenerateXpathLocator(By baseLocator, IWebElement webElement, int elementIndex)
         {
-            var strBaseLocator = baseLocator.ToString();
-            var elementLocator = strBaseLocator.Contains(ByXpathIdentifier)
-                    ? $"({strBaseLocator.Split(':')[1].Trim()})[{elementIndex}]"
-                    : throw new NotSupportedException($"Multiple elements' locator {baseLocator} is not {ByXpathIdentifier}, and is not supported yet");
+            var elementLocator = IsLocatorSupportedForXPathExtraction(baseLocator)
+                    ? $"({ExtractXPathFromLocator(baseLocator)})[{elementIndex}]"
+                    : throw new NotSupportedException($"Multiple elements' baseLocator type {baseLocator} is not supported yet");
             return By.XPath(elementLocator);
+        }
+
+        /// <summary>
+        /// Generates absolute child locator for target element.
+        /// </summary>
+        /// <param name="parentLocator">parent locator</param>
+        /// <param name="childLocator">child locator relative to parent</param>
+        /// <returns>absolute locator of the child</returns>
+        protected virtual By GenerateAbsoluteChildLocator(By parentLocator, By childLocator)
+        {
+            if (IsLocatorSupportedForXPathExtraction(parentLocator) && IsLocatorSupportedForXPathExtraction(childLocator))
+            {
+                var childLocatorString = ExtractXPathFromLocator(childLocator);
+                var parentLocatorString = ExtractXPathFromLocator(parentLocator);
+                return By.XPath(parentLocatorString +
+                    $"{(childLocatorString.StartsWith(".") ? childLocatorString.Substring(1) : childLocatorString)}");
+            }
+            return new ByChained(parentLocator, childLocator);
+        }
+
+        /// <summary>
+        /// Extracts XPath from passed locator.
+        /// Current implementation works only with ByXPath.class and ByTagName locator types,
+        /// but you can implement your own for the specific WebDriver type.
+        /// </summary>
+        /// <param name="locator">locator to get xpath from.</param>
+        /// <returns>extracted XPath.</returns>
+        protected virtual string ExtractXPathFromLocator(By locator)
+        {
+            var stringLocator = locator.ToString();
+            string getLocatorWithoutPrefix() => stringLocator.Substring(stringLocator.IndexOf(':') + 1).Trim();
+            if (stringLocator.StartsWith(ByXpathIdentifier))
+            {
+                return getLocatorWithoutPrefix();
+            }
+            if (stringLocator.StartsWith(ByTagNameIdentifier))
+            {
+                return $"{TagNameXPathPrefix}{getLocatorWithoutPrefix()}";
+            }
+
+            throw new NotSupportedException($"Cannot define xpath from locator {stringLocator}. Locator type is not supported yet");
+        }
+
+        /// <summary>
+        /// Defines is the locator can be transformed to xpath or not.
+        /// Current implementation works only with ByXPath.class and ByTagName locator types,
+        /// but you can implement your own for the specific WebDriver type.
+        /// </summary>
+        /// <param name="locator">locator to transform</param>
+        /// <returns>true if the locator can be transformed to xpath, false otherwise.</returns>
+        protected virtual bool IsLocatorSupportedForXPathExtraction(By locator)
+        {
+            return locator.ToString().StartsWith(ByXpathIdentifier) || locator.ToString().StartsWith(ByTagNameIdentifier);
         }
 
         /// <summary>

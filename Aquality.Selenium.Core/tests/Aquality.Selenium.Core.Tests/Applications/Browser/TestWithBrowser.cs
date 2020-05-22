@@ -1,6 +1,10 @@
 ﻿using Aquality.Selenium.Core.Applications;
+using Aquality.Selenium.Core.Configurations;
+using Aquality.Selenium.Core.Elements.Interfaces;
+using Aquality.Selenium.Core.Tests.Applications.Browser.Elements;
 using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
+using System;
 
 namespace Aquality.Selenium.Core.Tests.Applications.Browser
 {
@@ -17,8 +21,9 @@ namespace Aquality.Selenium.Core.Tests.Applications.Browser
         {
             var services = new ServiceCollection();
 
-            new Startup().ConfigureServices(services, serviceCollection => AqualityServices.Application);
+            new CustomStartup().ConfigureServices(services, serviceCollection => AqualityServices.Application);
             ServiceProvider = services.BuildServiceProvider();
+            AqualityServices.ServiceProvider = ServiceProvider;
         }
 
         [TearDown]
@@ -27,6 +32,16 @@ namespace Aquality.Selenium.Core.Tests.Applications.Browser
             if (AqualityServices.IsApplicationStarted)
             {
                 AqualityServices.Application.Quit();
+            }
+        }
+
+        private class CustomStartup : Startup
+        {
+            public override IServiceCollection ConfigureServices(IServiceCollection services, Func<IServiceProvider, IApplication> applicationProvider, ISettingsFile settings = null)
+            {
+                base.ConfigureServices(services, applicationProvider, settings);
+                services.AddSingleton<IElementFactory, WebElementFactory>();
+                return services;
             }
         }
     }
