@@ -225,6 +225,32 @@
             <param name="elementIndex">index of target element</param>
             <returns>target element's locator</returns>
         </member>
+        <member name="M:Aquality.Selenium.Core.Elements.ElementFactory.GenerateAbsoluteChildLocator(OpenQA.Selenium.By,OpenQA.Selenium.By)">
+            <summary>
+            Generates absolute child locator for target element.
+            </summary>
+            <param name="parentLocator">parent locator</param>
+            <param name="childLocator">child locator relative to parent</param>
+            <returns>absolute locator of the child</returns>
+        </member>
+        <member name="M:Aquality.Selenium.Core.Elements.ElementFactory.ExtractXPathFromLocator(OpenQA.Selenium.By)">
+            <summary>
+            Extracts XPath from passed locator.
+            Current implementation works only with ByXPath.class and ByTagName locator types,
+            but you can implement your own for the specific WebDriver type.
+            </summary>
+            <param name="locator">locator to get xpath from.</param>
+            <returns>extracted XPath.</returns>
+        </member>
+        <member name="M:Aquality.Selenium.Core.Elements.ElementFactory.IsLocatorSupportedForXPathExtraction(OpenQA.Selenium.By)">
+            <summary>
+            Defines is the locator can be transformed to xpath or not.
+            Current implementation works only with ByXPath.class and ByTagName locator types,
+            but you can implement your own for the specific WebDriver type.
+            </summary>
+            <param name="locator">locator to transform</param>
+            <returns>true if the locator can be transformed to xpath, false otherwise.</returns>
+        </member>
         <member name="M:Aquality.Selenium.Core.Elements.ElementFactory.ResolveSupplier``1(Aquality.Selenium.Core.Elements.ElementSupplier{``0})">
             <summary>
             Resolves element supplier or return itself if it is not null
