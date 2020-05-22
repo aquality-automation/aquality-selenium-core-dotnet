@@ -69,7 +69,8 @@ namespace Aquality.Selenium.Core.Tests.Applications.Browser
         private void CheckChildLocatorIsXpathAndStartsFromParent(string childLocatorString)
         {
             StringAssert.StartsWith("By.XPath", childLocatorString);
-            StringAssert.Contains(customParent.Locator.ToString(), childLocatorString);
+            var parentLocatorString = customParent.Locator.ToString();
+            StringAssert.Contains(parentLocatorString.Substring(parentLocatorString.IndexOf(':') + 1).Trim(), childLocatorString);
         }
     }
 }
