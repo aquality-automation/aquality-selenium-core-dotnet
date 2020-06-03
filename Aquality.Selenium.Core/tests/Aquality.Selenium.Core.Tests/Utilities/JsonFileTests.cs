@@ -83,6 +83,29 @@ namespace Aquality.Selenium.Core.Tests.Utilities
         }
 
         [Test]
+        public void Should_BePossibleTo_GetNotEmptyValueDictionary()
+        {
+            var expectedDict = new Dictionary<string, object>
+            {
+                {"intl.accept_languages", "en"},
+                {"profile.default_content_settings.popups", "0"},
+                {"disable-popup-blocking", "true"}
+            };
+            Assert.AreEqual(expectedDict,
+                AddedParamsSettings.GetValueDictionaryOrEmpty<object>(".driverSettings.chrome.options"),
+                "Dictionary of keys and values was received successively");
+        }
+
+        [Test]
+        public void Should_BePossibleTo_GetEmptyValueDictionary()
+        {
+            var expectedDict = new Dictionary<string, object>();
+            Assert.AreEqual(expectedDict,
+                AddedParamsSettings.GetValueDictionaryOrEmpty<object>(".some.absent.path"),
+                "Dictionary of keys and values was not empty");
+        }
+
+        [Test]
         [NonParallelizable]
         public void Should_BePossibleTo_OverrideDictionaryOfValues_FromEnvVar()
         {
