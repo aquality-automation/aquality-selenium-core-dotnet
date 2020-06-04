@@ -957,6 +957,18 @@
             <param name="path">Path to a value. Depends on file format, it can be xpath, path etc.</param>
             <returns>List of values or empty List.</returns>
         </member>
+        <member name="M:Aquality.Selenium.Core.Utilities.SettingsFileExtensions.GetValueDictionaryOrEmpty``1(Aquality.Selenium.Core.Configurations.ISettingsFile,System.String)">
+            <summary>
+            Gets dictionary of values from environment\setting file or empty Dictionary if path doesn't exist in file and environment variables.
+            Exception will not be thrown.
+            Note that each value of dictionary that is present in settings file can be overriden via Environment variable with the same name;
+            (e.g. for capability "safebrowsing.enabled" at dictionary path ".driverSettings.chrome.options" you can set environment variable "driverSettings.chrome.options.safebrowsing.enabled")
+            </summary>
+            <typeparam name="T">Type of a value.</typeparam>
+            <param name="file">Settings file.</param>
+            <param name="path">Path to a value. Depends on file format, it can be xpath, path etc.</param>
+            <returns>Dictionary of values or empty Dictionary.</returns>
+        </member>
         <member name="M:Aquality.Selenium.Core.Utilities.SettingsFileExtensions.GetValueOrDefault``1(Aquality.Selenium.Core.Configurations.ISettingsFile,System.String,``0)">
             <summary>
             Gets value from environment\setting file or return default of T if path doesn't exist in file and environment variables.
