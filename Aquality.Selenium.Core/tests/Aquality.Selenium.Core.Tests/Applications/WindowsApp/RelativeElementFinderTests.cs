@@ -22,7 +22,8 @@ namespace Aquality.Selenium.Core.Tests.Applications.WindowsApp
         private IElementStateProvider GetElementStateProvider(By locator) => new ElementStateProvider(
             locator,
             ConditionalWait,
-            ElementFinder);
+            ElementFinder,
+            (messageKey, stateKey) => AqualityServices.ServiceProvider.GetRequiredService<ILocalizedLogger>().Debug(messageKey, args: stateKey));
         
         [Test]
         public void Should_FindChildElements_ViaRelativeElementFinder()

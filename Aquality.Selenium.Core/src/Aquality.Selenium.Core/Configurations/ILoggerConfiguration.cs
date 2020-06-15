@@ -25,5 +25,10 @@
         /// Do log text value or not.
         /// </summary>
         bool LogTextValue { get; }
+
+        /// <summary>
+        /// Do log wait for element's state or not.
+        /// </summary>
+        bool LogWaitForState { get; }
     }
 }

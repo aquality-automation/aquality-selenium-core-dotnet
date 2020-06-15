@@ -9,5 +9,14 @@
   "loc.no.elements.found.by.locator": "No elements were found by locator '{0}'",
   "loc.elements.were.found.but.not.in.state": "Elements were found by locator '{0}' but not in desired state {1}",
   "loc.elements.found.but.should.not": "No elements should be found by locator '{0}' in {1} state",
-  "loc.search.of.elements.failed": "Search of element by locator '{0}' failed"
+  "loc.search.of.elements.failed": "Search of element by locator '{0}' failed",
+  "loc.wait.for.state": "Waiting for element to be {0}",
+  "loc.wait.for.state.failed": "Element has not become {0} after timeout",
+  "loc.el.state.displayed": "displayed",
+  "loc.el.state.not.displayed": "invisible or absent",
+  "loc.el.state.exist": "exist",
+  "loc.el.state.not.exist": "absent",
+  "loc.el.state.enabled": "enabled",
+  "loc.el.state.not.enabled": "disabled",
+  "loc.el.state.clickable": "clickable"
 }

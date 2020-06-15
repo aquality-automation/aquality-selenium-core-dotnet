@@ -16,7 +16,14 @@ namespace Aquality.Selenium.Core.Tests.Localization
         private static readonly string[] KeysWithoutParams = 
         { 
             ClickingKey, 
-            "loc.get.text", 
+            "loc.get.text",
+            "loc.el.state.displayed",
+            "loc.el.state.not.displayed",
+            "loc.el.state.exist",
+            "loc.el.state.not.exist",
+            "loc.el.state.enabled",
+            "loc.el.state.not.enabled",
+            "loc.el.state.clickable"
         };
         private static readonly string[] KeysWithParams =
         {
@@ -27,7 +34,9 @@ namespace Aquality.Selenium.Core.Tests.Localization
             "loc.no.elements.found.in.state",
             "loc.no.elements.found.by.locator",
             "loc.elements.were.found.but.not.in.state",
-            "loc.elements.found.but.should.not"
+            "loc.elements.found.but.should.not",
+            "loc.wait.for.state",
+            "loc.wait.for.state.failed"
         };
 
         [Test]
@@ -123,6 +132,8 @@ namespace Aquality.Selenium.Core.Tests.Localization
             public bool LogAttributeValue => throw new NotImplementedException();
 
             public bool LogTextValue => throw new NotImplementedException();
+
+            public bool LogWaitForState => throw new NotImplementedException();
         }
     }
 }

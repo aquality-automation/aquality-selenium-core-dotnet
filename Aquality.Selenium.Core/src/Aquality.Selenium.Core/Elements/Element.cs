@@ -32,8 +32,8 @@ namespace Aquality.Selenium.Core.Elements
         public string Name { get; }
 
         public virtual IElementStateProvider State => CacheConfiguration.IsEnabled 
-            ? (IElementStateProvider) new CachedElementStateProvider(Locator, ConditionalWait, Cache)
-            : new ElementStateProvider(Locator, ConditionalWait, Finder);
+            ? (IElementStateProvider) new CachedElementStateProvider(Locator, ConditionalWait, Cache, LogElementState)
+            : new ElementStateProvider(Locator, ConditionalWait, Finder, LogElementState);
 
         protected virtual IElementCacheHandler Cache
         {
@@ -64,9 +64,26 @@ namespace Aquality.Selenium.Core.Elements
 
         protected abstract ILocalizedLogger LocalizedLogger { get; }
 
+        protected abstract ILocalizationManager LocalizationManager { get; }
+
         protected virtual ILoggerConfiguration LoggerConfiguration => LocalizedLogger.Configuration;
 
         protected virtual Logger Logger => Logger.Instance;
+        
+        protected virtual LogElementState LogElementState
+        {
+            get
+            {
+                return (string messageKey, string stateKey) =>
+                {
+                    if (LoggerConfiguration.LogWaitForState)
+                    {
+                        var actionName = LocalizationManager.GetLocalizedMessage(stateKey);
+                        LocalizedLogger.InfoElementAction(ElementType, Name, messageKey, actionName);
+                    }
+                };
+            }
+        }
 
         public void Click()
         {

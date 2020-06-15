@@ -19,6 +19,7 @@ namespace Aquality.Selenium.Core.Configurations
             LogPageSource = settingsFile.GetValueOrDefault(".logger.logPageSource", true);
             LogAttributeValue = settingsFile.GetValueOrDefault(".logger.logAttributeValue", true);
             LogTextValue = settingsFile.GetValueOrDefault(".logger.logTextValue", true);
+            LogWaitForState = settingsFile.GetValueOrDefault(".logger.logWaitForState", true);
         }
 
         public string Language { get; }
@@ -28,5 +29,7 @@ namespace Aquality.Selenium.Core.Configurations
         public bool LogAttributeValue { get; }
 
         public bool LogTextValue { get; }
+
+        public bool LogWaitForState { get; }
     }
 }

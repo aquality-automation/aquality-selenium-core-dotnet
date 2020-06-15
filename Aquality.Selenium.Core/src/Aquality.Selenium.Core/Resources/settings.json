@@ -13,7 +13,8 @@
     "language": "en",
     "logPageSource": true,
     "logAttributeValue": true,
-    "logTextValue": true
+    "logTextValue": true,
+    "logWaitForState": true
   },
   "elementCache": {
     "isEnabled": false
