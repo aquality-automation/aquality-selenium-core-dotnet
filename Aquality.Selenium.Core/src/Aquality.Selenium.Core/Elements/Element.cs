@@ -64,7 +64,7 @@ namespace Aquality.Selenium.Core.Elements
 
         protected abstract ILocalizedLogger LocalizedLogger { get; }
 
-        protected abstract ILoggerConfiguration LoggerConfiguration { get; }
+        protected virtual ILoggerConfiguration LoggerConfiguration => LocalizedLogger.Configuration;
 
         protected virtual Logger Logger => Logger.Instance;
 

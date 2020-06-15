@@ -1,4 +1,5 @@
-﻿using Aquality.Selenium.Core.Logging;
+﻿using Aquality.Selenium.Core.Configurations;
+using Aquality.Selenium.Core.Logging;
 using System;
 
 namespace Aquality.Selenium.Core.Localization
@@ -8,11 +9,14 @@ namespace Aquality.Selenium.Core.Localization
         private readonly ILocalizationManager localizationManager;
         private readonly Logger logger;
 
-        public LocalizedLogger(ILocalizationManager localizationManager, Logger logger)
+        public LocalizedLogger(ILocalizationManager localizationManager, Logger logger, ILoggerConfiguration configuration)
         {
             this.localizationManager = localizationManager;
             this.logger = logger;
+            Configuration = configuration;
         }
+
+        public ILoggerConfiguration Configuration { get; }
 
         public void InfoElementAction(string elementType, string elementName, string messageKey, params object[] args)
         {
