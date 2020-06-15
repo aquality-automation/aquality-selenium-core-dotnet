@@ -1,7 +1,9 @@
 ﻿{
   "loc.clicking": "Націскаем",
   "loc.el.getattr": "Атрымліваем атрыбут '{0}'",
+  "loc.el.attr.value": "Значэнне атрыбута '{0}': [{1}]",
   "loc.get.text": "Атрымліваем тэкст элемента",
+  "loc.text.value": "Тэкст элемента: [{0}]",
   "loc.text.sending.keys": "Націскаем клавішы '{0}'",
   "loc.no.elements.found.in.state": "Не знайшлі элементаў па лакатару '{0}' у {1} стане",
   "loc.no.elements.found.by.locator": "Не знайшлі элементаў па лакатару '{0}'",

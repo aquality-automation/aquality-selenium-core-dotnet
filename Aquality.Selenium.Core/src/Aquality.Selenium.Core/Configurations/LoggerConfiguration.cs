@@ -16,8 +16,17 @@ namespace Aquality.Selenium.Core.Configurations
         public LoggerConfiguration(ISettingsFile settingsFile)
         {
             Language = settingsFile.GetValueOrDefault(".logger.language", DefaultLanguage);
+            LogPageSource = settingsFile.GetValueOrDefault(".logger.logPageSource", true);
+            LogAttributeValue = settingsFile.GetValueOrDefault(".logger.logAttributeValue", true);
+            LogTextValue = settingsFile.GetValueOrDefault(".logger.logTextValue", true);
         }
 
         public string Language { get; }
+
+        public bool LogPageSource { get; }
+
+        public bool LogAttributeValue { get; }
+
+        public bool LogTextValue { get; }
     }
 }

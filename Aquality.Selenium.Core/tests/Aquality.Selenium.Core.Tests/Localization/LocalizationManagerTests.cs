@@ -21,6 +21,8 @@ namespace Aquality.Selenium.Core.Tests.Localization
         private static readonly string[] KeysWithParams =
         {
             "loc.el.getattr",
+            "loc.el.attr.value",
+            "loc.text.value",
             "loc.text.sending.keys",
             "loc.no.elements.found.in.state",
             "loc.no.elements.found.by.locator",
@@ -115,6 +117,12 @@ namespace Aquality.Selenium.Core.Tests.Localization
         private class DynamicConfiguration : ILoggerConfiguration
         {
             public string Language { get; set; }
+
+            public bool LogPageSource => throw new NotImplementedException();
+
+            public bool LogAttributeValue => throw new NotImplementedException();
+
+            public bool LogTextValue => throw new NotImplementedException();
         }
     }
 }

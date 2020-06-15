@@ -10,7 +10,10 @@
     "pollingInterval": 300
   },
   "logger": {
-    "language": "en"
+    "language": "en",
+    "logPageSource": true,
+    "logAttributeValue": true,
+    "logTextValue": true
   },
   "elementCache": {
     "isEnabled": false

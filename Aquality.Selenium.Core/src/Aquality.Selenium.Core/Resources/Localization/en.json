@@ -1,7 +1,9 @@
 ﻿{
   "loc.clicking": "Clicking",
   "loc.el.getattr": "Getting attribute '{0}'",
+  "loc.el.attr.value": "Value of attribute '{0}': [{1}]",
   "loc.get.text": "Getting text from element",
+  "loc.text.value": "Element's text: [{0}]",
   "loc.text.sending.keys": "Sending keys '{0}'",
   "loc.no.elements.found.in.state": "No elements with locator '{0}' were found in {1} state",
   "loc.no.elements.found.by.locator": "No elements were found by locator '{0}'",

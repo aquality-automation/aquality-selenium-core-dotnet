@@ -83,6 +83,21 @@
             </summary>
             <value>Supported language.</value>
         </member>
+        <member name="P:Aquality.Selenium.Core.Configurations.ILoggerConfiguration.LogPageSource">
+            <summary>
+            Perform page source logging in case of catastrophic failures or not.
+            </summary>
+        </member>
+        <member name="P:Aquality.Selenium.Core.Configurations.ILoggerConfiguration.LogAttributeValue">
+            <summary>
+            Do log attribute value or not.
+            </summary>
+        </member>
+        <member name="P:Aquality.Selenium.Core.Configurations.ILoggerConfiguration.LogTextValue">
+            <summary>
+            Do log text value or not.
+            </summary>
+        </member>
         <member name="T:Aquality.Selenium.Core.Configurations.IRetryConfiguration">
             <summary>
             Describes retry configuration.

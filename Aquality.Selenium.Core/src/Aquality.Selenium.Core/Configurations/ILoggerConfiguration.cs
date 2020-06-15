@@ -10,5 +10,20 @@
         /// </summary>
         /// <value>Supported language.</value>
         string Language { get; }
+
+        /// <summary>
+        /// Perform page source logging in case of catastrophic failures or not.
+        /// </summary>
+        bool LogPageSource { get; }
+
+        /// <summary>
+        /// Do log attribute value or not.
+        /// </summary>
+        bool LogAttributeValue { get; }
+
+        /// <summary>
+        /// Do log text value or not.
+        /// </summary>
+        bool LogTextValue { get; }
     }
 }

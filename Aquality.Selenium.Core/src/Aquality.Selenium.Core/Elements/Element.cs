@@ -64,6 +64,8 @@ namespace Aquality.Selenium.Core.Elements
 
         protected abstract ILocalizedLogger LocalizedLogger { get; }
 
+        protected abstract ILoggerConfiguration LoggerConfiguration { get; }
+
         protected virtual Logger Logger => Logger.Instance;
 
         public void Click()
@@ -85,7 +87,13 @@ namespace Aquality.Selenium.Core.Elements
         public string GetAttribute(string attr)
         {
             LogElementAction("loc.el.getattr", attr);
-            return DoWithRetry(() => GetElement().GetAttribute(attr));
+            var value = DoWithRetry(() => GetElement().GetAttribute(attr));
+            if (LoggerConfiguration.LogAttributeValue)
+            {
+                LogElementAction("loc.el.attr.value", attr, value);
+            }
+            
+            return value;
         }
 
         public virtual RemoteWebElement GetElement(TimeSpan? timeout = null)
@@ -96,7 +104,7 @@ namespace Aquality.Selenium.Core.Elements
                     ? Cache.GetElement(timeout)
                     : (RemoteWebElement) Finder.FindElement(Locator, elementState, timeout);
             }
-            catch (NoSuchElementException ex)
+            catch (NoSuchElementException ex) when (LoggerConfiguration.LogPageSource)
             {
                 LogPageSource(ex);
                 throw;
@@ -121,7 +129,13 @@ namespace Aquality.Selenium.Core.Elements
             get
             {
                 LogElementAction("loc.get.text");
-                return DoWithRetry(() => GetElement().Text);
+                var value = DoWithRetry(() => GetElement().Text);
+                if (LoggerConfiguration.LogTextValue)
+                {
+                    LogElementAction("loc.text.value", value);
+                }
+                
+                return value;
             }
         }
 
