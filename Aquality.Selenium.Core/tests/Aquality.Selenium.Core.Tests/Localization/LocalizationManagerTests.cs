@@ -9,10 +9,13 @@ namespace Aquality.Selenium.Core.Tests.Localization
 {
     public sealed class LocalizationManagerTests : TestWithoutApplication
     {
+        private const string ClickingKey = "loc.clicking";
+        private const string ClickingValueBe = "Націскаем";
+        private const string ClickingValueEn = "Clicking";
         private static readonly string[] SupportedLanguages = { "be", "en", "ru" };
         private static readonly string[] KeysWithoutParams = 
         { 
-            "loc.clicking", 
+            ClickingKey, 
             "loc.get.text", 
         };
         private static readonly string[] KeysWithParams =
@@ -31,13 +34,13 @@ namespace Aquality.Selenium.Core.Tests.Localization
             Environment.SetEnvironmentVariable("profile", "custom");
             SetUp();
             Environment.SetEnvironmentVariable("profile", string.Empty);
-            Assert.AreEqual("Націскаем", ServiceProvider.GetService<ILocalizationManager>().GetLocalizedMessage("loc.clicking"));
+            Assert.AreEqual(ClickingValueBe, ServiceProvider.GetService<ILocalizationManager>().GetLocalizedMessage(ClickingKey));
         }
 
         [Test]
         public void Should_BePossibleTo_UseLocalizationManager_ForClicking()
         {
-            Assert.AreEqual("Clicking", ServiceProvider.GetService<ILocalizationManager>().GetLocalizedMessage("loc.clicking"));
+            Assert.AreEqual(ClickingValueEn, ServiceProvider.GetService<ILocalizationManager>().GetLocalizedMessage(ClickingKey));
         }
 
         [Test]
@@ -57,6 +60,31 @@ namespace Aquality.Selenium.Core.Tests.Localization
             var localizedValue = new LocalizationManager(configuration, Logger.Instance).GetLocalizedMessage(key);
             Assert.AreNotEqual(key, localizedValue, "Value should be defined in resource files");
             Assert.IsNotEmpty(localizedValue, "Value should not be empty");
+        }
+
+        [Test]
+        public void Should_ReturnNonKeyValue_ForKeysPresentInCore_IfLanguageMissedInSiblingAssembly()
+        {
+            var configuration = new DynamicConfiguration
+            {
+                Language = "en"
+            };
+            var localizedValue = new LocalizationManager(configuration, Logger.Instance, GetType().Assembly).GetLocalizedMessage(ClickingKey);
+
+            Assert.AreEqual(ClickingValueEn, localizedValue, "Value should match to expected");
+        }
+
+        [Test]
+        public void Should_ReturnNonKeyValue_ForKeysPresentInCore_IfKeyMissedInSiblingAssembly()
+        {
+
+            var configuration = new DynamicConfiguration
+            {
+                Language = "be"
+            };
+            var localizedValue = new LocalizationManager(configuration, Logger.Instance, GetType().Assembly).GetLocalizedMessage(ClickingKey);
+
+            Assert.AreEqual(ClickingValueBe, localizedValue, "Value should match to expected");
         }
 
         [Test]
