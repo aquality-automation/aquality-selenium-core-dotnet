@@ -128,12 +128,6 @@ namespace Aquality.Selenium.Core.Tests.Localization
             public string Language { get; set; }
 
             public bool LogPageSource => throw new NotImplementedException();
-
-            public bool LogAttributeValue => throw new NotImplementedException();
-
-            public bool LogTextValue => throw new NotImplementedException();
-
-            public bool LogWaitForState => throw new NotImplementedException();
         }
     }
 }
