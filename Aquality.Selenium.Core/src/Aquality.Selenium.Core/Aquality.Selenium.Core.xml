@@ -88,21 +88,6 @@
             Perform page source logging in case of catastrophic failures or not.
             </summary>
         </member>
-        <member name="P:Aquality.Selenium.Core.Configurations.ILoggerConfiguration.LogAttributeValue">
-            <summary>
-            Do log attribute value or not.
-            </summary>
-        </member>
-        <member name="P:Aquality.Selenium.Core.Configurations.ILoggerConfiguration.LogTextValue">
-            <summary>
-            Do log text value or not.
-            </summary>
-        </member>
-        <member name="P:Aquality.Selenium.Core.Configurations.ILoggerConfiguration.LogWaitForState">
-            <summary>
-            Do log wait for element's state or not.
-            </summary>
-        </member>
         <member name="T:Aquality.Selenium.Core.Configurations.IRetryConfiguration">
             <summary>
             Describes retry configuration.

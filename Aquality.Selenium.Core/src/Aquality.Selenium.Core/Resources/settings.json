@@ -11,10 +11,7 @@
   },
   "logger": {
     "language": "en",
-    "logPageSource": true,
-    "logAttributeValue": true,
-    "logTextValue": true,
-    "logWaitForState": true
+    "logPageSource": true
   },
   "elementCache": {
     "isEnabled": false
