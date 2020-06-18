@@ -31,9 +31,9 @@ namespace Aquality.Selenium.Core.Elements
 
         public string Name { get; }
 
-        public virtual IElementStateProvider State => CacheConfiguration.IsEnabled 
-            ? (IElementStateProvider) new CachedElementStateProvider(Locator, ConditionalWait, Cache)
-            : new ElementStateProvider(Locator, ConditionalWait, Finder);
+        public virtual IElementStateProvider State => CacheConfiguration.IsEnabled
+            ? (IElementStateProvider) new CachedElementStateProvider(Locator, ConditionalWait, Cache, LogElementState)
+            : new ElementStateProvider(Locator, ConditionalWait, Finder, LogElementState);
 
         protected virtual IElementCacheHandler Cache
         {
@@ -64,7 +64,15 @@ namespace Aquality.Selenium.Core.Elements
 
         protected abstract ILocalizedLogger LocalizedLogger { get; }
 
+        protected abstract ILocalizationManager LocalizationManager { get; }
+
+        protected virtual ILoggerConfiguration LoggerConfiguration => LocalizedLogger.Configuration;
+
         protected virtual Logger Logger => Logger.Instance;
+
+        protected virtual LogElementState LogElementState =>
+            (string messageKey, string stateKey)
+            => LocalizedLogger.InfoElementAction(ElementType, Name, messageKey, LocalizationManager.GetLocalizedMessage(stateKey));
 
         public void Click()
         {
@@ -85,18 +93,21 @@ namespace Aquality.Selenium.Core.Elements
         public string GetAttribute(string attr)
         {
             LogElementAction("loc.el.getattr", attr);
-            return DoWithRetry(() => GetElement().GetAttribute(attr));
+            var value = DoWithRetry(() => GetElement().GetAttribute(attr));
+            LogElementAction("loc.el.attr.value", attr, value);
+
+            return value;
         }
 
         public virtual RemoteWebElement GetElement(TimeSpan? timeout = null)
         {
             try
             {
-                return CacheConfiguration.IsEnabled 
+                return CacheConfiguration.IsEnabled
                     ? Cache.GetElement(timeout)
                     : (RemoteWebElement) Finder.FindElement(Locator, elementState, timeout);
             }
-            catch (NoSuchElementException ex)
+            catch (NoSuchElementException ex) when (LoggerConfiguration.LogPageSource)
             {
                 LogPageSource(ex);
                 throw;
@@ -121,7 +132,10 @@ namespace Aquality.Selenium.Core.Elements
             get
             {
                 LogElementAction("loc.get.text");
-                return DoWithRetry(() => GetElement().Text);
+                var value = DoWithRetry(() => GetElement().Text);
+                LogElementAction("loc.text.value", value);
+
+                return value;
             }
         }
 

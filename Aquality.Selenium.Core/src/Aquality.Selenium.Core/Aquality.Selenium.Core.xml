@@ -83,6 +83,11 @@
             </summary>
             <value>Supported language.</value>
         </member>
+        <member name="P:Aquality.Selenium.Core.Configurations.ILoggerConfiguration.LogPageSource">
+            <summary>
+            Perform page source logging in case of catastrophic failures or not.
+            </summary>
+        </member>
         <member name="T:Aquality.Selenium.Core.Configurations.IRetryConfiguration">
             <summary>
             Describes retry configuration.
@@ -577,6 +582,13 @@
             <param name="state">Child elements state.</param>
             <returns>List of child elements.</returns>
         </member>
+        <member name="T:Aquality.Selenium.Core.Elements.LogElementState">
+            <summary>
+            Logs element state.
+            </summary>
+            <param name="messageKey">Key of localized message to log.</param>
+            <param name="stateKey">Key of localized state to log.</param>
+        </member>
         <member name="T:Aquality.Selenium.Core.Elements.RelativeElementFinder">
             <summary>
             Implementation of <see cref="T:Aquality.Selenium.Core.Elements.Interfaces.IElementFinder"/> for a relative <see cref="T:OpenQA.Selenium.ISearchContext"/> supplier
@@ -598,6 +610,11 @@
         <member name="T:Aquality.Selenium.Core.Localization.ILocalizedLogger">
             <summary>
             Log messages to different languages
+            </summary>
+        </member>
+        <member name="P:Aquality.Selenium.Core.Localization.ILocalizedLogger.Configuration">
+            <summary>
+            Gets logger configuration.
             </summary>
         </member>
         <member name="M:Aquality.Selenium.Core.Localization.ILocalizedLogger.InfoElementAction(System.String,System.String,System.String,System.Object[])">

@@ -9,12 +9,14 @@ namespace Aquality.Selenium.Core.Elements
     public class ElementStateProvider : IElementStateProvider
     {
         private readonly By elementLocator;
+        private readonly LogElementState logElementState;
 
-        public ElementStateProvider(By elementLocator, IConditionalWait conditionalWait, IElementFinder elementFinder)
+        public ElementStateProvider(By elementLocator, IConditionalWait conditionalWait, IElementFinder elementFinder, LogElementState logElementState)
         {
             this.elementLocator = elementLocator;
             ConditionalWait = conditionalWait;
             ElementFinder = elementFinder;
+            this.logElementState = logElementState;
         }
 
         private IConditionalWait ConditionalWait { get; }
@@ -31,22 +33,22 @@ namespace Aquality.Selenium.Core.Elements
 
         public bool WaitForDisplayed(TimeSpan? timeout = null)
         {
-            return IsAnyElementFound(timeout, ElementState.Displayed);
+            return DoAndLogWaitForState(() => IsAnyElementFound(timeout, ElementState.Displayed), "displayed");
         }
 
         public bool WaitForNotDisplayed(TimeSpan? timeout = null)
         {
-            return ConditionalWait.WaitFor(() => !IsDisplayed, timeout);
+            return DoAndLogWaitForState(() => ConditionalWait.WaitFor(() => !IsDisplayed, timeout), "not.displayed");
         }
 
         public bool WaitForExist(TimeSpan? timeout = null)
         {
-            return IsAnyElementFound(timeout, ElementState.ExistsInAnyState);
+            return DoAndLogWaitForState(() => IsAnyElementFound(timeout, ElementState.ExistsInAnyState), "exist");
         }
 
         public bool WaitForNotExist(TimeSpan? timeout = null)
         {
-            return ConditionalWait.WaitFor(() => !IsExist, timeout);
+            return DoAndLogWaitForState(() => ConditionalWait.WaitFor(() => !IsExist, timeout), "not.exist");
         }
 
         private bool IsAnyElementFound(TimeSpan? timeout, ElementState state)
@@ -56,12 +58,12 @@ namespace Aquality.Selenium.Core.Elements
 
         public bool WaitForEnabled(TimeSpan? timeout = null)
         {
-            return IsElementInDesiredState(element => IsElementEnabled(element), "ENABLED", timeout);
+            return DoAndLogWaitForState(() => IsElementInDesiredState(element => IsElementEnabled(element), "ENABLED", timeout), "enabled");
         }
 
         public bool WaitForNotEnabled(TimeSpan? timeout = null)
         {
-            return IsElementInDesiredState(element => !IsElementEnabled(element), "NOT ENABLED", timeout);
+            return DoAndLogWaitForState(() => IsElementInDesiredState(element => !IsElementEnabled(element), "NOT ENABLED", timeout), "not.enabled");
         }
 
         protected virtual bool IsElementEnabled(IWebElement element)
@@ -81,7 +83,17 @@ namespace Aquality.Selenium.Core.Elements
 
         public void WaitForClickable(TimeSpan? timeout = null)
         {
-            IsElementClickable(timeout, false);
+            var conditionKey = "loc.el.state.clickable";
+            try
+            {
+                logElementState("loc.wait.for.state", conditionKey);
+                IsElementClickable(timeout, false);
+            }
+            catch
+            {
+                logElementState("loc.wait.for.state.failed", conditionKey);
+                throw;
+            }
         }
 
         private bool IsElementClickable(TimeSpan? timeout, bool catchTimeoutException)
@@ -96,6 +108,24 @@ namespace Aquality.Selenium.Core.Elements
         private bool IsElementInDesiredCondition(TimeSpan? timeout, DesiredState elementStateCondition)
         {
             return ElementFinder.FindElements(elementLocator, elementStateCondition, timeout).Any();
+        }
+        
+        private bool DoAndLogWaitForState(Func<bool> waitingAction, string conditionKeyPart, TimeSpan? timeout = null)
+        {
+            if (TimeSpan.Zero == timeout)
+            {
+                return waitingAction();
+            }
+
+            var conditionKey = $"loc.el.state.{conditionKeyPart}";
+            logElementState("loc.wait.for.state", conditionKey);
+            var result = waitingAction();
+            if (!result)
+            {
+                logElementState("loc.wait.for.state.failed", conditionKey);
+            }
+
+            return result;
         }
     }
 }

@@ -1,5 +1,4 @@
 ﻿using Aquality.Selenium.Core.Elements.Interfaces;
-using Aquality.Selenium.Core.Logging;
 using Aquality.Selenium.Core.Waitings;
 using OpenQA.Selenium;
 using System;
@@ -11,12 +10,14 @@ namespace Aquality.Selenium.Core.Elements
     public class CachedElementStateProvider : IElementStateProvider
     {
         private readonly IElementCacheHandler elementCacheHandler;
+        private readonly LogElementState logElementState;
         private readonly IConditionalWait conditionalWait;
         private readonly By locator;
 
-        public CachedElementStateProvider(By locator, IConditionalWait conditionalWait, IElementCacheHandler elementCacheHandler)
+        public CachedElementStateProvider(By locator, IConditionalWait conditionalWait, IElementCacheHandler elementCacheHandler, LogElementState logElementState)
         {
             this.elementCacheHandler = elementCacheHandler;
+            this.logElementState = logElementState;
             this.conditionalWait = conditionalWait;
             this.locator = locator;
         }
@@ -50,12 +51,15 @@ namespace Aquality.Selenium.Core.Elements
         public virtual void WaitForClickable(TimeSpan? timeout = null)
         {
             var errorMessage = $"Element {locator} has not become clickable after timeout.";
+            var conditionKey = "loc.el.state.clickable";
             try
             {
+                logElementState("loc.wait.for.state", conditionKey);
                 conditionalWait.WaitForTrue(() => IsClickable, timeout, message: errorMessage);
             }
             catch (TimeoutException e)
             {
+                logElementState("loc.wait.for.state.failed", conditionKey);
                 throw new WebDriverTimeoutException(e.Message, e);
             }
             
@@ -78,26 +82,27 @@ namespace Aquality.Selenium.Core.Elements
 
         public virtual bool WaitForNotDisplayed(TimeSpan? timeout = null)
         {
-            return WaitForCondition(() => !IsDisplayed, "invisible or absent", timeout);
+            return WaitForCondition(() => !IsDisplayed, "not.displayed", timeout);
         }
 
         public virtual bool WaitForNotEnabled(TimeSpan? timeout = null)
         {
-            return WaitForCondition(() => !IsEnabled, "disabled", timeout);
+            return WaitForCondition(() => !IsEnabled, "not.enabled", timeout);
         }
 
         public virtual bool WaitForNotExist(TimeSpan? timeout = null)
         {
-            return WaitForCondition(() => !IsExist, "absent", timeout);
+            return WaitForCondition(() => !IsExist, "not.exist", timeout);
         }
 
-        protected virtual bool WaitForCondition(Func<bool> condition, string conditionName, TimeSpan? timeout)
+        protected virtual bool WaitForCondition(Func<bool> condition, string conditionKeyPart, TimeSpan? timeout)
         {
+            var conditionKey = $"loc.el.state.{conditionKeyPart}";
+            logElementState("loc.wait.for.state", conditionKey);
             var result = conditionalWait.WaitFor(condition, timeout);
             if (!result)
             {
-                var timeoutString = timeout == null ? string.Empty : $"of {timeout.Value.TotalSeconds} seconds";
-                Logger.Instance.Warn($"Element {locator} has not become {conditionName} after timeout {timeoutString}");
+                logElementState("loc.wait.for.state.failed", conditionKey);
             }
 
             return result;

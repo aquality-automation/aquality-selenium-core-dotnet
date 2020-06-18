@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Aquality.Selenium.Core.Configurations;
+using System;
 
 namespace Aquality.Selenium.Core.Localization
 {
@@ -7,6 +8,11 @@ namespace Aquality.Selenium.Core.Localization
     /// </summary>
     public interface ILocalizedLogger
     {
+        /// <summary>
+        /// Gets logger configuration.
+        /// </summary>
+        ILoggerConfiguration Configuration { get; }
+
         /// <summary>
         /// Logs localized message for action with INFO level which is applied for element, for example, click, send keys etc.
         /// </summary>

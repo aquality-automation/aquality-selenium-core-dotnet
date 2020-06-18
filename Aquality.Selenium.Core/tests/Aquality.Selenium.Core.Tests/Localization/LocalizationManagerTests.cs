@@ -9,20 +9,34 @@ namespace Aquality.Selenium.Core.Tests.Localization
 {
     public sealed class LocalizationManagerTests : TestWithoutApplication
     {
+        private const string ClickingKey = "loc.clicking";
+        private const string ClickingValueBe = "Націскаем";
+        private const string ClickingValueEn = "Clicking";
         private static readonly string[] SupportedLanguages = { "be", "en", "ru" };
         private static readonly string[] KeysWithoutParams = 
         { 
-            "loc.clicking", 
-            "loc.get.text", 
+            ClickingKey, 
+            "loc.get.text",
+            "loc.el.state.displayed",
+            "loc.el.state.not.displayed",
+            "loc.el.state.exist",
+            "loc.el.state.not.exist",
+            "loc.el.state.enabled",
+            "loc.el.state.not.enabled",
+            "loc.el.state.clickable"
         };
         private static readonly string[] KeysWithParams =
         {
             "loc.el.getattr",
+            "loc.el.attr.value",
+            "loc.text.value",
             "loc.text.sending.keys",
             "loc.no.elements.found.in.state",
             "loc.no.elements.found.by.locator",
             "loc.elements.were.found.but.not.in.state",
-            "loc.elements.found.but.should.not"
+            "loc.elements.found.but.should.not",
+            "loc.wait.for.state",
+            "loc.wait.for.state.failed"
         };
 
         [Test]
@@ -31,13 +45,13 @@ namespace Aquality.Selenium.Core.Tests.Localization
             Environment.SetEnvironmentVariable("profile", "custom");
             SetUp();
             Environment.SetEnvironmentVariable("profile", string.Empty);
-            Assert.AreEqual("Націскаем", ServiceProvider.GetService<ILocalizationManager>().GetLocalizedMessage("loc.clicking"));
+            Assert.AreEqual(ClickingValueBe, ServiceProvider.GetService<ILocalizationManager>().GetLocalizedMessage(ClickingKey));
         }
 
         [Test]
         public void Should_BePossibleTo_UseLocalizationManager_ForClicking()
         {
-            Assert.AreEqual("Clicking", ServiceProvider.GetService<ILocalizationManager>().GetLocalizedMessage("loc.clicking"));
+            Assert.AreEqual(ClickingValueEn, ServiceProvider.GetService<ILocalizationManager>().GetLocalizedMessage(ClickingKey));
         }
 
         [Test]
@@ -57,6 +71,31 @@ namespace Aquality.Selenium.Core.Tests.Localization
             var localizedValue = new LocalizationManager(configuration, Logger.Instance).GetLocalizedMessage(key);
             Assert.AreNotEqual(key, localizedValue, "Value should be defined in resource files");
             Assert.IsNotEmpty(localizedValue, "Value should not be empty");
+        }
+
+        [Test]
+        public void Should_ReturnNonKeyValue_ForKeysPresentInCore_IfLanguageMissedInSiblingAssembly()
+        {
+            var configuration = new DynamicConfiguration
+            {
+                Language = "en"
+            };
+            var localizedValue = new LocalizationManager(configuration, Logger.Instance, GetType().Assembly).GetLocalizedMessage(ClickingKey);
+
+            Assert.AreEqual(ClickingValueEn, localizedValue, "Value should match to expected");
+        }
+
+        [Test]
+        public void Should_ReturnNonKeyValue_ForKeysPresentInCore_IfKeyMissedInSiblingAssembly()
+        {
+
+            var configuration = new DynamicConfiguration
+            {
+                Language = "be"
+            };
+            var localizedValue = new LocalizationManager(configuration, Logger.Instance, GetType().Assembly).GetLocalizedMessage(ClickingKey);
+
+            Assert.AreEqual(ClickingValueBe, localizedValue, "Value should match to expected");
         }
 
         [Test]
@@ -87,6 +126,8 @@ namespace Aquality.Selenium.Core.Tests.Localization
         private class DynamicConfiguration : ILoggerConfiguration
         {
             public string Language { get; set; }
+
+            public bool LogPageSource => throw new NotImplementedException();
         }
     }
 }

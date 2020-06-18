@@ -29,5 +29,7 @@ namespace Aquality.Selenium.Core.Tests.Applications.Browser
         protected override IElementFinder Finder => AqualityServices.ServiceProvider.GetRequiredService<IElementFinder>();
 
         protected override ILocalizedLogger LocalizedLogger => AqualityServices.ServiceProvider.GetRequiredService<ILocalizedLogger>();
+
+        protected override ILocalizationManager LocalizationManager => AqualityServices.ServiceProvider.GetRequiredService<ILocalizationManager>();
     }
 }

@@ -10,5 +10,10 @@
         /// </summary>
         /// <value>Supported language.</value>
         string Language { get; }
+
+        /// <summary>
+        /// Perform page source logging in case of catastrophic failures or not.
+        /// </summary>
+        bool LogPageSource { get; }
     }
 }
