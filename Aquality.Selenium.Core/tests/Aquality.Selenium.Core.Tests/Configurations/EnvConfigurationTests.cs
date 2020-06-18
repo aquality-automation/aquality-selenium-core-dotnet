@@ -21,6 +21,14 @@ namespace Aquality.Selenium.Core.Tests.Configurations
         public void CleanUp()
         {
             Environment.SetEnvironmentVariable(ProfileVariableName, null);
+            Environment.SetEnvironmentVariable("timeouts.timeoutImplicit", null);
+            Environment.SetEnvironmentVariable("timeouts.timeoutCondition", null);
+            Environment.SetEnvironmentVariable("timeouts.timeoutPollingInterval", null);
+            Environment.SetEnvironmentVariable("timeouts.timeoutCommand", null);
+            Environment.SetEnvironmentVariable("retry.number", null);
+            Environment.SetEnvironmentVariable("retry.pollingInterval", null);
+            Environment.SetEnvironmentVariable("logger.language", null);
+            Environment.SetEnvironmentVariable("elementCache.isEnabled", null);
         }
 
         [Test]
