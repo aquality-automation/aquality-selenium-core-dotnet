@@ -124,12 +124,14 @@ namespace Aquality.Selenium.Core.Tests.Applications.Browser
         }
         
         [Test]
+        [Ignore("Tests should be updated: find out more stable example")]
         public void Should_ReturnCorrectState_False_WhenWindowIsReopened([ValueSource(nameof(StateFunctionsFalseWhenElementStale))] Func<IElementStateProvider, bool> stateCondition)
         {
             AssertStateConditionAfterReopen(stateCondition, expectedValue: false);
         }
 
         [Test]
+        [Ignore("Tests should be updated: find out more stable example")]
         public void Should_ReturnCorrectState_True_WhenWindowIsReopened([ValueSource(nameof(StateFunctionsTrueWhenElementStaleWhichRetriveElement))] Func<IElementStateProvider, bool> stateCondition)
         {
             AssertStateConditionAfterReopen(stateCondition, expectedValue: true);
