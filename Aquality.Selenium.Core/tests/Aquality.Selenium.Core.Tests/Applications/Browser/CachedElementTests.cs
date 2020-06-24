@@ -136,10 +136,10 @@ namespace Aquality.Selenium.Core.Tests.Applications.Browser
 
         private void AssertStateConditionAfterReopen(Func<IElementStateProvider, bool> stateCondition, bool expectedValue)
         {
-            OpenDynamicContent();
             Label testElement = null;
             ConditionalWait.WaitForTrue(() =>
             {
+                OpenDynamicContent();
                 testElement = new Label(ContentLoc, "Example", ElementState.ExistsInAnyState);
                 testElement.State.WaitForClickable();
                 AqualityServices.Application.Quit();
