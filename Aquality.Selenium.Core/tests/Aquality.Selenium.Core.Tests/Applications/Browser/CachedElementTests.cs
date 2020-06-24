@@ -40,6 +40,14 @@ namespace Aquality.Selenium.Core.Tests.Applications.Browser
                 state => !state.WaitForNotEnabled(TimeSpan.Zero),
             };
 
+        private static readonly Func<IElementStateProvider, bool>[] StateFunctionsThrowNoSuchElementException
+            = new Func<IElementStateProvider, bool>[]
+            {
+                state => state.IsEnabled,
+                state => state.WaitForEnabled(TimeSpan.Zero),
+                state => !state.WaitForNotEnabled(TimeSpan.Zero),
+            };
+
         private IConditionalWait ConditionalWait => AqualityServices.ServiceProvider.GetRequiredService<IConditionalWait>();
 
         [SetUp]
@@ -108,30 +116,35 @@ namespace Aquality.Selenium.Core.Tests.Applications.Browser
         }
         
         [Test]
-        [Ignore("Tests should be updated: find out more stable example")]
-        public void Should_ReturnCorrectState_False_WhenWindowIsRefreshed([ValueSource(nameof(StateFunctionsFalseWhenElementStale))] Func<IElementStateProvider, bool> stateCondition)
+        public void Should_ThrowNoSuchElementException_ForAbsentElement([ValueSource(nameof(StateFunctionsThrowNoSuchElementException))] Func<IElementStateProvider, bool> stateCondition)
+        { 
+            var label = new Label(By.Name("Absent element"), "Absent element", ElementState.Displayed);
+            Assert.Throws<NoSuchElementException>(() => stateCondition.Invoke(label.State));
+        }
+        
+        [Test]
+        public void Should_ReturnCorrectState_False_WhenWindowIsReopened([ValueSource(nameof(StateFunctionsFalseWhenElementStale))] Func<IElementStateProvider, bool> stateCondition)
         {
-            AssertStateConditionAfterRefresh(stateCondition, expectedValue: false);
+            AssertStateConditionAfterReopen(stateCondition, expectedValue: false);
         }
 
         [Test]
-        [Ignore("Tests should be updated: find out more stable example")]
-        public void Should_ReturnCorrectState_True_WhenWindowIsRefreshed([ValueSource(nameof(StateFunctionsTrueWhenElementStaleWhichRetriveElement))] Func<IElementStateProvider, bool> stateCondition)
+        public void Should_ReturnCorrectState_True_WhenWindowIsReopened([ValueSource(nameof(StateFunctionsTrueWhenElementStaleWhichRetriveElement))] Func<IElementStateProvider, bool> stateCondition)
         {
-            AssertStateConditionAfterRefresh(stateCondition, expectedValue: true);
+            AssertStateConditionAfterReopen(stateCondition, expectedValue: true);
         }
 
-        private void AssertStateConditionAfterRefresh(Func<IElementStateProvider, bool> stateCondition, bool expectedValue)
+        private void AssertStateConditionAfterReopen(Func<IElementStateProvider, bool> stateCondition, bool expectedValue)
         {
             OpenDynamicContent();
             var testElement = new Label(ContentLoc, "Example", ElementState.ExistsInAnyState);
             testElement.State.WaitForClickable();
-            new Label(RemoveButtonLoc, "Remove", ElementState.Displayed).Click();
-            ConditionalWait.WaitForTrue(() => testElement.Cache.IsStale, message: "Element should be stale when it disappeared.");
-            AqualityServices.Application.Driver.Navigate().Refresh();
-            Assert.IsTrue(testElement.Cache.IsStale, "Element should remain stale after the page refresh.");
+            AqualityServices.Application.Quit();
+            StartLoading();
+            ConditionalWait.WaitForTrue(() => testElement.Cache.IsStale, message: "Element should be stale after page is closed.");
+            OpenDynamicContent();
             Assert.AreEqual(expectedValue, stateCondition(testElement.State), 
-                "Element state condition is not expected after refreshing the window");            
+                "Element state condition is not expected after reopening the window");            
         }
 
         [TearDown]

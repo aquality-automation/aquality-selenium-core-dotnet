@@ -24,15 +24,16 @@ namespace Aquality.Selenium.Core.Elements
 
         protected virtual IList<Type> HandledExceptions => new List<Type> { typeof(StaleElementReferenceException), typeof(NoSuchElementException) };
 
-        protected virtual bool TryInvokeFunction(Func<IWebElement, bool> func)
+        protected virtual bool TryInvokeFunction(Func<IWebElement, bool> func, IList<Type> exceptionsToHandle = null)
         {
+            var handledExceptions = exceptionsToHandle ?? HandledExceptions;
             try
             {
                 return func(elementCacheHandler.GetElement(TimeSpan.Zero, ElementState.ExistsInAnyState));
             }
             catch (Exception e)
             {
-                if (HandledExceptions.Any(type => type.IsAssignableFrom(e.GetType())))
+                if (handledExceptions.Any(type => type.IsAssignableFrom(e.GetType())))
                 {
                     return false;
                 }
@@ -46,7 +47,7 @@ namespace Aquality.Selenium.Core.Elements
 
         public virtual bool IsClickable => TryInvokeFunction(element => element.Displayed && element.Enabled);
 
-        public virtual bool IsEnabled => TryInvokeFunction(element => element.Enabled);
+        public virtual bool IsEnabled => TryInvokeFunction(element => element.Enabled, new[] { typeof(StaleElementReferenceException) });
 
         public virtual void WaitForClickable(TimeSpan? timeout = null)
         {
