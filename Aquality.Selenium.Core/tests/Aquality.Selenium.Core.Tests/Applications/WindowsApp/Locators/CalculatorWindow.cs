@@ -20,5 +20,7 @@ namespace Aquality.Selenium.Core.Tests.Applications.WindowsApp.Locators
         public static By ResultsLabel => MobileBy.AccessibilityId("48");
 
         public static By EmptyButton => By.XPath("//*[@AutomationId='7']");
+
+        public static By AbsentElement => By.Name("Absent element");
     }
 }

@@ -3,6 +3,7 @@ using Aquality.Selenium.Core.Tests.Applications.WindowsApp.Elements;
 using Aquality.Selenium.Core.Tests.Applications.WindowsApp.Locators;
 using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
+using OpenQA.Selenium;
 using System;
 
 namespace Aquality.Selenium.Core.Tests.Applications.WindowsApp
@@ -29,6 +30,14 @@ namespace Aquality.Selenium.Core.Tests.Applications.WindowsApp
                 state => state.IsClickable,
                 state => state.WaitForDisplayed(TimeSpan.Zero),
                 state => state.WaitForExist(TimeSpan.Zero),
+                state => state.WaitForEnabled(TimeSpan.Zero),
+                state => !state.WaitForNotEnabled(TimeSpan.Zero),
+            };
+
+        private static readonly Func<IElementStateProvider, bool>[] StateFunctionsThrowNoSuchElementException
+            = new Func<IElementStateProvider, bool>[]
+            {
+                state => state.IsEnabled,
                 state => state.WaitForEnabled(TimeSpan.Zero),
                 state => !state.WaitForNotEnabled(TimeSpan.Zero),
             };
@@ -83,6 +92,13 @@ namespace Aquality.Selenium.Core.Tests.Applications.WindowsApp
             oneButton.State.WaitForClickable();
             var resultElement = oneButton.GetElement().ToString();
             Assert.AreNotEqual(initialElement, resultElement, errorMessage);
+        }
+
+        [Test]
+        public void Should_ThrowNoSuchElementException_ForAbsentElement([ValueSource(nameof(StateFunctionsThrowNoSuchElementException))] Func<IElementStateProvider, bool> stateCondition)
+        {
+            var button = Factory.GetButton(CalculatorWindow.AbsentElement, "Absent element");
+            Assert.Throws<NoSuchElementException>(() => stateCondition.Invoke(button.State));
         }
 
         [Test]
