@@ -142,7 +142,6 @@ namespace Aquality.Selenium.Core.Tests.Applications.Browser
                 OpenDynamicContent();
                 testElement = new Label(ContentLoc, "Example", ElementState.ExistsInAnyState);
                 testElement.State.WaitForClickable();
-                AqualityServices.Application.Quit();
                 StartLoading();
                 return testElement.Cache.IsStale;
             }, message: "Element should be stale after page is closed.");
