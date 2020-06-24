@@ -136,12 +136,16 @@ namespace Aquality.Selenium.Core.Tests.Applications.Browser
 
         private void AssertStateConditionAfterReopen(Func<IElementStateProvider, bool> stateCondition, bool expectedValue)
         {
-            OpenDynamicContent();
-            var testElement = new Label(ContentLoc, "Example", ElementState.ExistsInAnyState);
-            testElement.State.WaitForClickable();
-            AqualityServices.Application.Quit();
-            StartLoading();
-            ConditionalWait.WaitForTrue(() => testElement.Cache.IsStale, message: "Element should be stale after page is closed.");
+            Label testElement = null;
+            ConditionalWait.WaitForTrue(() =>
+            {
+                OpenDynamicContent();
+                testElement = new Label(ContentLoc, "Example", ElementState.ExistsInAnyState);
+                testElement.State.WaitForClickable();
+                StartLoading();
+                return testElement.Cache.IsStale;
+            }, message: "Element should be stale after page is closed.");
+            Assume.That(testElement, Is.Not.Null);
             OpenDynamicContent();
             Assert.AreEqual(expectedValue, stateCondition(testElement.State), 
                 "Element state condition is not expected after reopening the window");            
