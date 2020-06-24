@@ -140,12 +140,11 @@ namespace Aquality.Selenium.Core.Tests.Applications.Browser
             var testElement = new Label(ContentLoc, "Example", ElementState.ExistsInAnyState);
             testElement.State.WaitForClickable();
             AqualityServices.Application.Quit();
+            StartLoading();
+            ConditionalWait.WaitForTrue(() => testElement.Cache.IsStale, message: "Element should be stale after page is closed.");
             OpenDynamicContent();
-            ConditionalWait.WaitForTrue(() => testElement.Cache.IsStale, message: "Element should be stale after page is reopened.");
-            AqualityServices.Application.Driver.Navigate().Refresh();
-            Assert.IsTrue(testElement.Cache.IsStale, "Element should remain stale after the page refresh.");
             Assert.AreEqual(expectedValue, stateCondition(testElement.State), 
-                "Element state condition is not expected after refreshing the window");            
+                "Element state condition is not expected after reopening the window");            
         }
 
         [TearDown]
