@@ -96,26 +96,7 @@ namespace Aquality.Selenium.Core.Waitings
             }
             var waitTimeout = ResolveConditionTimeout(timeout);
             var checkInterval = ResolvePollingInterval(pollingInterval);
-            using (CancellationTokenSource cts = new CancellationTokenSource())
-            {
-                var token = cts.Token;
-                var waitTask = Task.Run(async () =>
-                {
-                    while (!IsConditionSatisfied(condition, exceptionsToIgnore ?? new List<Type>()))
-                    {
-                        await Task.Delay(checkInterval);
-                    }
-                }, 
-                token);
-                var finishedTask = await Task.WhenAny(waitTask, Task.Delay(waitTimeout, token));
-                cts.Cancel();
-                var result = finishedTask == waitTask;
-                if (result && waitTask.Exception != null)
-                {
-                    throw waitTask.Exception.InnerExceptions.Count == 1 ? waitTask.Exception.InnerException : waitTask.Exception;
-                }
-                return result;
-            }
+            return await WaitForAsyncCore(condition, exceptionsToIgnore, waitTimeout, checkInterval);
         }
 
         /// <summary>
@@ -208,6 +189,30 @@ namespace Aquality.Selenium.Core.Waitings
         private TimeSpan ResolvePollingInterval(TimeSpan? pollingInterval)
         {
             return pollingInterval ?? timeoutConfiguration.PollingInterval;
+        }
+
+        private async Task<bool> WaitForAsyncCore(Func<bool> condition, IList<Type> exceptionsToIgnore, TimeSpan waitTimeout, TimeSpan checkInterval)
+        {
+            using (CancellationTokenSource cts = new CancellationTokenSource())
+            {
+                var token = cts.Token;
+                var waitTask = Task.Run(async () =>
+                {
+                    while (!IsConditionSatisfied(condition, exceptionsToIgnore ?? new List<Type>()))
+                    {
+                        await Task.Delay(checkInterval);
+                    }
+                },
+                token);
+                var finishedTask = await Task.WhenAny(waitTask, Task.Delay(waitTimeout, token));
+                cts.Cancel();
+                var result = finishedTask == waitTask;
+                if (result && waitTask.Exception != null)
+                {
+                    throw waitTask.Exception.InnerExceptions.Count == 1 ? waitTask.Exception.InnerException : waitTask.Exception;
+                }
+                return result;
+            }
         }
     }
 }

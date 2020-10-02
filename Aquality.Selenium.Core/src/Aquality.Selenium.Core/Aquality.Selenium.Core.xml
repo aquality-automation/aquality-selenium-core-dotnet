@@ -1070,6 +1070,19 @@
             Utility used to wait for some condition.
             </summary>
         </member>
+        <member name="M:Aquality.Selenium.Core.Waitings.IConditionalWait.WaitFor``1(System.Func{OpenQA.Selenium.IWebDriver,``0},System.Nullable{System.TimeSpan},System.Nullable{System.TimeSpan},System.String,System.Collections.Generic.IList{System.Type})">
+            <summary>
+            Wait for some object from condition with timeout using Selenium WebDriver.
+            </summary>
+            <typeparam name="T">Type of object which is waiting for</typeparam>
+            <param name="condition">Function for waiting</param>
+            <param name="timeout">Condition timeout. Default value is <see cref="P:Aquality.Selenium.Core.Configurations.ITimeoutConfiguration.Condition"/></param>
+            <param name="pollingInterval">Condition check interval. Default value is <see cref="P:Aquality.Selenium.Core.Configurations.ITimeoutConfiguration.PollingInterval"/></param>
+            <param name="message">Part of error message in case of Timeout exception</param>
+            <param name="exceptionsToIgnore">Possible exceptions that have to be ignored. Handles <see cref="T:OpenQA.Selenium.StaleElementReferenceException"/> by default.</param>
+            <returns>Condition result which is waiting for.</returns>
+            <exception cref="T:OpenQA.Selenium.WebDriverTimeoutException">Throws when timeout exceeded and condition not satisfied.</exception>
+        </member>
         <member name="M:Aquality.Selenium.Core.Waitings.IConditionalWait.WaitFor(System.Func{System.Boolean},System.Nullable{System.TimeSpan},System.Nullable{System.TimeSpan},System.Collections.Generic.IList{System.Type})">
             <summary>
             Wait for some condition within timeout.
@@ -1089,19 +1102,6 @@
             <param name="pollingInterval">Condition check interval. Default value is <see cref="P:Aquality.Selenium.Core.Configurations.ITimeoutConfiguration.PollingInterval"/></param>
             <param name="exceptionsToIgnore">Possible exceptions that have to be ignored. </param>
             <returns>A task that returns true if condition satisfied and false otherwise.</returns>
-        </member>
-        <member name="M:Aquality.Selenium.Core.Waitings.IConditionalWait.WaitFor``1(System.Func{OpenQA.Selenium.IWebDriver,``0},System.Nullable{System.TimeSpan},System.Nullable{System.TimeSpan},System.String,System.Collections.Generic.IList{System.Type})">
-            <summary>
-            Wait for some object from condition with timeout using Selenium WebDriver.
-            </summary>
-            <typeparam name="T">Type of object which is waiting for</typeparam>
-            <param name="condition">Function for waiting</param>
-            <param name="timeout">Condition timeout. Default value is <see cref="P:Aquality.Selenium.Core.Configurations.ITimeoutConfiguration.Condition"/></param>
-            <param name="pollingInterval">Condition check interval. Default value is <see cref="P:Aquality.Selenium.Core.Configurations.ITimeoutConfiguration.PollingInterval"/></param>
-            <param name="message">Part of error message in case of Timeout exception</param>
-            <param name="exceptionsToIgnore">Possible exceptions that have to be ignored. Handles <see cref="T:OpenQA.Selenium.StaleElementReferenceException"/> by default.</param>
-            <returns>Condition result which is waiting for.</returns>
-            <exception cref="T:OpenQA.Selenium.WebDriverTimeoutException">Throws when timeout exceeded and condition not satisfied.</exception>
         </member>
         <member name="M:Aquality.Selenium.Core.Waitings.IConditionalWait.WaitForTrue(System.Func{System.Boolean},System.Nullable{System.TimeSpan},System.Nullable{System.TimeSpan},System.String,System.Collections.Generic.IList{System.Type})">
             <summary>
