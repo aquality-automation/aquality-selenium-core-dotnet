@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace Aquality.Selenium.Core.Waitings
 {
@@ -80,6 +81,58 @@ namespace Aquality.Selenium.Core.Waitings
         }
 
         /// <summary>
+        /// Wait for some condition asynchronously within timeout.
+        /// </summary>
+        /// <param name="condition">Predicate for waiting</param>
+        /// <param name="timeout">Condition timeout. Default value is <see cref="ITimeoutConfiguration.Condition"/></param>
+        /// <param name="pollingInterval">Condition check interval. Default value is <see cref="ITimeoutConfiguration.PollingInterval"/></param>
+        /// <param name="exceptionsToIgnore">Possible exceptions that have to be ignored. </param>
+        /// <returns>A task that returns true if condition satisfied and false otherwise.</returns>
+        public async Task<bool> WaitForAsync(Func<bool> condition, TimeSpan? timeout = null, TimeSpan? pollingInterval = null, IList<Type> exceptionsToIgnore = null)
+        {
+            if (condition == null)
+            {
+                throw new ArgumentNullException(nameof(condition), "condition cannot be null");
+            }
+            var waitTimeout = ResolveConditionTimeout(timeout);
+            var checkInterval = ResolvePollingInterval(pollingInterval);
+            using (CancellationTokenSource cts = new CancellationTokenSource())
+            {
+                var token = cts.Token;
+                var waitTask = Task.Run(async () =>
+                {
+                    while (!IsConditionSatisfied(condition, exceptionsToIgnore ?? new List<Type>()))
+                    {
+                        await Task.Delay(checkInterval);
+                    }
+                }, 
+                token);
+                await Task.WhenAny(waitTask, Task.Delay(waitTimeout, token));
+                cts.Cancel();
+                return condition();
+            }
+        }
+
+        /// <summary>
+        /// Wait for some condition asynchronously within timeout.
+        /// </summary>
+        /// <param name="condition">Predicate for waiting</param>
+        /// <param name="timeout">Condition timeout. Default value is <see cref="ITimeoutConfiguration.Condition"/></param>
+        /// <param name="pollingInterval">Condition check interval. Default value is <see cref="ITimeoutConfiguration.PollingInterval"/></param>
+        /// <param name="message">Part of error message in case of Timeout exception</param>
+        /// <param name="exceptionsToIgnore">Possible exceptions that have to be ignored. </param>
+        /// <exception cref="TimeoutException">Throws when timeout exceeded and condition not satisfied, if only the task is awaited.</exception>
+        /// <returns>A task that returns throws a <see cref="TimeoutException"/> if condition is not satisfied after the timeout.</returns>
+        public async Task WaitForTrueAsync(Func<bool> condition, TimeSpan? timeout = null, TimeSpan? pollingInterval = null, string message = null, IList<Type> exceptionsToIgnore = null)
+        {
+            var waitTimeout = ResolveConditionTimeout(timeout);
+            if (!await WaitForAsync(condition, waitTimeout, pollingInterval, exceptionsToIgnore))
+            {
+                throw GetTimeoutException(waitTimeout, message);
+            }
+        }
+
+        /// <summary>
         /// Wait for some condition within timeout.
         /// </summary>
         /// <param name="condition">Predicate for waiting</param>
@@ -107,17 +160,22 @@ namespace Aquality.Selenium.Core.Waitings
 
                 if (stopwatch.Elapsed > waitTimeout)
                 {
-                    var exceptionMessage = $"Timed out after {waitTimeout.TotalSeconds} seconds";
-                    if (!string.IsNullOrEmpty(message))
-                    {
-                        exceptionMessage += $": {message}";
-                    }
-
-                    throw new TimeoutException(exceptionMessage);
+                    throw GetTimeoutException(waitTimeout, message);
                 }
 
                 Thread.Sleep(checkInterval);
             }
+        }
+
+        private TimeoutException GetTimeoutException(TimeSpan waitTimeout, string message)
+        {
+            var exceptionMessage = $"Timed out after {waitTimeout.TotalSeconds} seconds";
+            if (!string.IsNullOrEmpty(message))
+            {
+                exceptionMessage += $": {message}";
+            }
+
+            return new TimeoutException(exceptionMessage);
         }
 
         private bool IsConditionSatisfied(Func<bool> condition, IList<Type> exceptionsToIgnore)
