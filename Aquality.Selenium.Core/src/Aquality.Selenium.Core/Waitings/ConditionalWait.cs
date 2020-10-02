@@ -88,7 +88,7 @@ namespace Aquality.Selenium.Core.Waitings
         /// <param name="pollingInterval">Condition check interval. Default value is <see cref="ITimeoutConfiguration.PollingInterval"/></param>
         /// <param name="exceptionsToIgnore">Possible exceptions that have to be ignored. </param>
         /// <returns>A task that returns true if condition satisfied and false otherwise.</returns>
-        public async Task<bool> WaitForAsync(Func<bool> condition, TimeSpan? timeout = null, TimeSpan? pollingInterval = null, IList<Type> exceptionsToIgnore = null)
+        public Task<bool> WaitForAsync(Func<bool> condition, TimeSpan? timeout = null, TimeSpan? pollingInterval = null, IList<Type> exceptionsToIgnore = null)
         {
             if (condition == null)
             {
@@ -96,7 +96,7 @@ namespace Aquality.Selenium.Core.Waitings
             }
             var waitTimeout = ResolveConditionTimeout(timeout);
             var checkInterval = ResolvePollingInterval(pollingInterval);
-            return await WaitForAsyncCore(condition, exceptionsToIgnore, waitTimeout, checkInterval);
+            return WaitForAsyncCore(condition, exceptionsToIgnore, waitTimeout, checkInterval);
         }
 
         /// <summary>
