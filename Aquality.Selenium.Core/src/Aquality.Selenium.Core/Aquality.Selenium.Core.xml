@@ -1051,7 +1051,8 @@
             <param name="pollingInterval">Condition check interval. Default value is <see cref="P:Aquality.Selenium.Core.Configurations.ITimeoutConfiguration.PollingInterval"/></param>
             <param name="message">Part of error message in case of Timeout exception</param>
             <param name="exceptionsToIgnore">Possible exceptions that have to be ignored. </param>
-            <exception cref="T:System.TimeoutException">Throws when timeout exceeded and condition not satisfied.</exception>
+            <exception cref="T:System.TimeoutException">Throws when timeout exceeded and condition not satisfied, if only the task is awaited.</exception>
+            <returns>A task that throws a <see cref="T:System.TimeoutException"/> if condition is not satisfied after the timeout.</returns>
         </member>
         <member name="M:Aquality.Selenium.Core.Waitings.ConditionalWait.WaitForTrue(System.Func{System.Boolean},System.Nullable{System.TimeSpan},System.Nullable{System.TimeSpan},System.String,System.Collections.Generic.IList{System.Type})">
             <summary>
@@ -1122,7 +1123,8 @@
             <param name="pollingInterval">Condition check interval. Default value is <see cref="P:Aquality.Selenium.Core.Configurations.ITimeoutConfiguration.PollingInterval"/></param>
             <param name="message">Part of error message in case of Timeout exception</param>
             <param name="exceptionsToIgnore">Possible exceptions that have to be ignored. </param>
-            <exception cref="T:System.TimeoutException">Throws when timeout exceeded and condition not satisfied.</exception>
+            <exception cref="T:System.TimeoutException">Throws when timeout exceeded and condition not satisfied, if only the task is awaited.</exception>
+            <returns>A task that throws a <see cref="T:System.TimeoutException"/> if condition is not satisfied after the timeout.</returns>
         </member>
     </members>
 </doc>

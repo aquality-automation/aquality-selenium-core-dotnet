@@ -64,7 +64,7 @@ namespace Aquality.Selenium.Core.Waitings
         /// <param name="message">Part of error message in case of Timeout exception</param>
         /// <param name="exceptionsToIgnore">Possible exceptions that have to be ignored. </param>
         /// <exception cref="TimeoutException">Throws when timeout exceeded and condition not satisfied, if only the task is awaited.</exception>
-        /// <returns>A task that returns throws a <see cref="TimeoutException"/> if condition is not satisfied after the timeout.</returns>
+        /// <returns>A task that throws a <see cref="TimeoutException"/> if condition is not satisfied after the timeout.</returns>
         Task WaitForTrueAsync(Func<bool> condition, TimeSpan? timeout = null, TimeSpan? pollingInterval = null, string message = null, IList<Type> exceptionsToIgnore = null);
     }
 }

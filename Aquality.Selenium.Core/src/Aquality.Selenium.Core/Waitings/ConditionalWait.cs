@@ -107,9 +107,14 @@ namespace Aquality.Selenium.Core.Waitings
                     }
                 }, 
                 token);
-                await Task.WhenAny(waitTask, Task.Delay(waitTimeout, token));
+                var finishedTask = await Task.WhenAny(waitTask, Task.Delay(waitTimeout, token));
                 cts.Cancel();
-                return condition();
+                var result = finishedTask == waitTask;
+                if (result && waitTask.Exception != null)
+                {
+                    throw waitTask.Exception.InnerExceptions.Count == 1 ? waitTask.Exception.InnerException : waitTask.Exception;
+                }
+                return result;
             }
         }
 
@@ -122,7 +127,7 @@ namespace Aquality.Selenium.Core.Waitings
         /// <param name="message">Part of error message in case of Timeout exception</param>
         /// <param name="exceptionsToIgnore">Possible exceptions that have to be ignored. </param>
         /// <exception cref="TimeoutException">Throws when timeout exceeded and condition not satisfied, if only the task is awaited.</exception>
-        /// <returns>A task that returns throws a <see cref="TimeoutException"/> if condition is not satisfied after the timeout.</returns>
+        /// <returns>A task that throws a <see cref="TimeoutException"/> if condition is not satisfied after the timeout.</returns>
         public async Task WaitForTrueAsync(Func<bool> condition, TimeSpan? timeout = null, TimeSpan? pollingInterval = null, string message = null, IList<Type> exceptionsToIgnore = null)
         {
             var waitTimeout = ResolveConditionTimeout(timeout);

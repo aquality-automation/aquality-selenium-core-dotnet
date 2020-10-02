@@ -7,7 +7,6 @@ using OpenQA.Selenium;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace Aquality.Selenium.Core.Tests.Applications.Browser
@@ -23,7 +22,12 @@ namespace Aquality.Selenium.Core.Tests.Applications.Browser
             {
                 (condition, handledExceptions) => ConditionalWait.WaitFor(condition, timeout: LittleTimeout, exceptionsToIgnore: handledExceptions),
                 (condition, handledExceptions) => ConditionalWait.WaitFor(driver => condition(), timeout: LittleTimeout, exceptionsToIgnore: handledExceptions),
-                (condition, handledExceptions) => ConditionalWait.WaitForTrue(condition, timeout: LittleTimeout, exceptionsToIgnore: handledExceptions),
+                (condition, handledExceptions) => ConditionalWait.WaitForTrue(condition, timeout: LittleTimeout, exceptionsToIgnore: handledExceptions)
+            };
+
+        private static readonly Func<Func<bool>, IList<Type>, Task>[] WaitWithHandledExceptionAsync
+            = new Func<Func<bool>, IList<Type>, Task>[]
+            {
                 (condition, handledExceptions) => ConditionalWait.WaitForAsync(condition, timeout: LittleTimeout, exceptionsToIgnore: handledExceptions),
                 (condition, handledExceptions) => ConditionalWait.WaitForTrueAsync(condition, timeout: LittleTimeout, exceptionsToIgnore: handledExceptions)
             };
@@ -50,6 +54,30 @@ namespace Aquality.Selenium.Core.Tests.Applications.Browser
                 return ++i == 2 ? true : throw exception;
             }, new[] { exception.GetType() }
             ), nameof(Should_NotThrow_OnWait_WithHandledException));
+        }
+
+        [Test]
+        public void Should_NotThrowAsync_OnWait_WithHandledException([ValueSource(nameof(WaitWithHandledExceptionAsync))] Func<Func<bool>, IList<Type>, Task> action)
+        {
+            var i = 0;
+            var exception = new AssertionException("Failure during conditional wait in handled exception");
+            Assert.DoesNotThrowAsync(() => action(() =>
+            {
+                return ++i == 2 ? true : throw exception;
+            }, new[] { exception.GetType() }
+            ), nameof(Should_NotThrow_OnWait_WithHandledException));
+        }
+
+        [Test]
+        public void Should_ThrowAsync_OnWait_WithUnhandledException([ValueSource(nameof(WaitWithHandledExceptionAsync))] Func<Func<bool>, IList<Type>, Task> action)
+        {
+            var i = 0;
+            var exception = new AssertionException("Failure during conditional wait in handled exception");
+            Assert.ThrowsAsync<AssertionException>(() => action(() =>
+            {
+                return ++i == 2 ? true : throw exception;
+            }, new[] { typeof(InvalidOperationException) }
+            ), nameof(Should_Throw_OnWait_WithUnhandledException));
         }
 
         [Test]
