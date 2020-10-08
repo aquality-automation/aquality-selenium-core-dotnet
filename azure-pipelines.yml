@@ -44,7 +44,7 @@ stages:
     displayName: Run tests
     
     variables:
-      webDriverVersion: '83.0.4103.39'
+      webDriverVersion: '85.0.4183.83'
       isRemote: true
 
     steps:

@@ -1032,6 +1032,28 @@
             <param name="exceptionsToIgnore">Possible exceptions that have to be ignored. </param>
             <returns>True if condition satisfied and false otherwise.</returns>
         </member>
+        <member name="M:Aquality.Selenium.Core.Waitings.ConditionalWait.WaitForAsync(System.Func{System.Boolean},System.Nullable{System.TimeSpan},System.Nullable{System.TimeSpan},System.Collections.Generic.IList{System.Type})">
+            <summary>
+            Wait for some condition asynchronously within timeout.
+            </summary>
+            <param name="condition">Predicate for waiting</param>
+            <param name="timeout">Condition timeout. Default value is <see cref="P:Aquality.Selenium.Core.Configurations.ITimeoutConfiguration.Condition"/></param>
+            <param name="pollingInterval">Condition check interval. Default value is <see cref="P:Aquality.Selenium.Core.Configurations.ITimeoutConfiguration.PollingInterval"/></param>
+            <param name="exceptionsToIgnore">Possible exceptions that have to be ignored. </param>
+            <returns>A task that returns true if condition satisfied and false otherwise.</returns>
+        </member>
+        <member name="M:Aquality.Selenium.Core.Waitings.ConditionalWait.WaitForTrueAsync(System.Func{System.Boolean},System.Nullable{System.TimeSpan},System.Nullable{System.TimeSpan},System.String,System.Collections.Generic.IList{System.Type})">
+            <summary>
+            Wait for some condition asynchronously within timeout.
+            </summary>
+            <param name="condition">Predicate for waiting</param>
+            <param name="timeout">Condition timeout. Default value is <see cref="P:Aquality.Selenium.Core.Configurations.ITimeoutConfiguration.Condition"/></param>
+            <param name="pollingInterval">Condition check interval. Default value is <see cref="P:Aquality.Selenium.Core.Configurations.ITimeoutConfiguration.PollingInterval"/></param>
+            <param name="message">Part of error message in case of Timeout exception</param>
+            <param name="exceptionsToIgnore">Possible exceptions that have to be ignored. </param>
+            <exception cref="T:System.TimeoutException">Throws when timeout exceeded and condition not satisfied, if only the task is awaited.</exception>
+            <returns>A task that throws a <see cref="T:System.TimeoutException"/> if condition is not satisfied after the timeout.</returns>
+        </member>
         <member name="M:Aquality.Selenium.Core.Waitings.ConditionalWait.WaitForTrue(System.Func{System.Boolean},System.Nullable{System.TimeSpan},System.Nullable{System.TimeSpan},System.String,System.Collections.Generic.IList{System.Type})">
             <summary>
             Wait for some condition within timeout.
@@ -1048,16 +1070,6 @@
             Utility used to wait for some condition.
             </summary>
         </member>
-        <member name="M:Aquality.Selenium.Core.Waitings.IConditionalWait.WaitFor(System.Func{System.Boolean},System.Nullable{System.TimeSpan},System.Nullable{System.TimeSpan},System.Collections.Generic.IList{System.Type})">
-            <summary>
-            Wait for some condition within timeout.
-            </summary>
-            <param name="condition">Predicate for waiting</param>
-            <param name="timeout">Condition timeout. Default value is <see cref="P:Aquality.Selenium.Core.Configurations.ITimeoutConfiguration.Condition"/></param>
-            <param name="pollingInterval">Condition check interval. Default value is <see cref="P:Aquality.Selenium.Core.Configurations.ITimeoutConfiguration.PollingInterval"/></param>
-            <param name="exceptionsToIgnore">Possible exceptions that have to be ignored. </param>
-            <returns>True if condition satisfied and false otherwise.</returns>
-        </member>
         <member name="M:Aquality.Selenium.Core.Waitings.IConditionalWait.WaitFor``1(System.Func{OpenQA.Selenium.IWebDriver,``0},System.Nullable{System.TimeSpan},System.Nullable{System.TimeSpan},System.String,System.Collections.Generic.IList{System.Type})">
             <summary>
             Wait for some object from condition with timeout using Selenium WebDriver.
@@ -1071,6 +1083,26 @@
             <returns>Condition result which is waiting for.</returns>
             <exception cref="T:OpenQA.Selenium.WebDriverTimeoutException">Throws when timeout exceeded and condition not satisfied.</exception>
         </member>
+        <member name="M:Aquality.Selenium.Core.Waitings.IConditionalWait.WaitFor(System.Func{System.Boolean},System.Nullable{System.TimeSpan},System.Nullable{System.TimeSpan},System.Collections.Generic.IList{System.Type})">
+            <summary>
+            Wait for some condition within timeout.
+            </summary>
+            <param name="condition">Predicate for waiting</param>
+            <param name="timeout">Condition timeout. Default value is <see cref="P:Aquality.Selenium.Core.Configurations.ITimeoutConfiguration.Condition"/></param>
+            <param name="pollingInterval">Condition check interval. Default value is <see cref="P:Aquality.Selenium.Core.Configurations.ITimeoutConfiguration.PollingInterval"/></param>
+            <param name="exceptionsToIgnore">Possible exceptions that have to be ignored. </param>
+            <returns>True if condition satisfied and false otherwise.</returns>
+        </member>
+        <member name="M:Aquality.Selenium.Core.Waitings.IConditionalWait.WaitForAsync(System.Func{System.Boolean},System.Nullable{System.TimeSpan},System.Nullable{System.TimeSpan},System.Collections.Generic.IList{System.Type})">
+            <summary>
+            Wait for some condition asynchronously within timeout.
+            </summary>
+            <param name="condition">Predicate for waiting</param>
+            <param name="timeout">Condition timeout. Default value is <see cref="P:Aquality.Selenium.Core.Configurations.ITimeoutConfiguration.Condition"/></param>
+            <param name="pollingInterval">Condition check interval. Default value is <see cref="P:Aquality.Selenium.Core.Configurations.ITimeoutConfiguration.PollingInterval"/></param>
+            <param name="exceptionsToIgnore">Possible exceptions that have to be ignored. </param>
+            <returns>A task that returns true if condition satisfied and false otherwise.</returns>
+        </member>
         <member name="M:Aquality.Selenium.Core.Waitings.IConditionalWait.WaitForTrue(System.Func{System.Boolean},System.Nullable{System.TimeSpan},System.Nullable{System.TimeSpan},System.String,System.Collections.Generic.IList{System.Type})">
             <summary>
             Wait for some condition within timeout.
@@ -1081,6 +1113,18 @@
             <param name="message">Part of error message in case of Timeout exception</param>
             <param name="exceptionsToIgnore">Possible exceptions that have to be ignored. </param>
             <exception cref="T:System.TimeoutException">Throws when timeout exceeded and condition not satisfied.</exception>
+        </member>
+        <member name="M:Aquality.Selenium.Core.Waitings.IConditionalWait.WaitForTrueAsync(System.Func{System.Boolean},System.Nullable{System.TimeSpan},System.Nullable{System.TimeSpan},System.String,System.Collections.Generic.IList{System.Type})">
+            <summary>
+            Wait for some condition asynchronously within timeout.
+            </summary>
+            <param name="condition">Predicate for waiting</param>
+            <param name="timeout">Condition timeout. Default value is <see cref="P:Aquality.Selenium.Core.Configurations.ITimeoutConfiguration.Condition"/></param>
+            <param name="pollingInterval">Condition check interval. Default value is <see cref="P:Aquality.Selenium.Core.Configurations.ITimeoutConfiguration.PollingInterval"/></param>
+            <param name="message">Part of error message in case of Timeout exception</param>
+            <param name="exceptionsToIgnore">Possible exceptions that have to be ignored. </param>
+            <exception cref="T:System.TimeoutException">Throws when timeout exceeded and condition not satisfied, if only the task is awaited.</exception>
+            <returns>A task that throws a <see cref="T:System.TimeoutException"/> if condition is not satisfied after the timeout.</returns>
         </member>
     </members>
 </doc>
