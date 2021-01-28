@@ -68,7 +68,13 @@ namespace Aquality.Selenium.Core.Utilities
             var envValue = GetEnvironmentValue(path);
             if (envValue != null)
             {
-                return ConvertEnvVar(() => (T) TypeDescriptor.GetConverter(typeof(T)).ConvertFrom(envValue),
+                return ConvertEnvVar(() =>
+                {
+                    var type = typeof(T);
+                    return type == typeof(object) 
+                    ? (T) Convert.ChangeType(envValue, type)
+                    : (T) TypeDescriptor.GetConverter(type).ConvertFrom(envValue);
+                },
                     envValue, path);
             }
 

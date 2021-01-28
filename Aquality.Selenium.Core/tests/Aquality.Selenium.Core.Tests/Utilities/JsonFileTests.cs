@@ -109,6 +109,19 @@ namespace Aquality.Selenium.Core.Tests.Utilities
         [NonParallelizable]
         public void Should_BePossibleTo_OverrideDictionaryOfValues_FromEnvVar()
         {
+            CheckOverrideDictionaryFromEnvVar<string>();
+        }
+
+        [Test]
+        [NonParallelizable]
+        public void Should_BePossibleTo_OverrideDictionaryOfObjects_FromEnvVar()
+        {
+            CheckOverrideDictionaryFromEnvVar<object>();
+        }
+
+        private void CheckOverrideDictionaryFromEnvVar<T>()
+        {
+
             var expectedDict = new Dictionary<string, object>
             {
                 {"intl.accept_languages", "1"},
@@ -120,7 +133,7 @@ namespace Aquality.Selenium.Core.Tests.Utilities
             Environment.SetEnvironmentVariable("driverSettings.chrome.options.disable-popup-blocking", "bla");
 
             Assert.AreEqual(expectedDict,
-                AddedParamsSettings.GetValueDictionary<string>(".driverSettings.chrome.options"),
+                AddedParamsSettings.GetValueDictionary<T>(".driverSettings.chrome.options"),
                 "Dictionary of keys and values was overriden successively");
         }
 
