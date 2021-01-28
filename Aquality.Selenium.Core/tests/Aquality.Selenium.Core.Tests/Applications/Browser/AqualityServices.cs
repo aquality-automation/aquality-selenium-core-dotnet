@@ -2,9 +2,12 @@
 using Aquality.Selenium.Core.Configurations;
 using Aquality.Selenium.Core.Utilities;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Win32;
 using System;
+using System.Diagnostics;
 using WebDriverManager;
 using WebDriverManager.DriverConfigs.Impl;
+using WebDriverManager.Helpers;
 
 namespace Aquality.Selenium.Core.Tests.Applications.Browser
 {
@@ -33,8 +36,7 @@ namespace Aquality.Selenium.Core.Tests.Applications.Browser
         {
             lock (downloadDriverLock)
             {
-                var version = EnvironmentConfiguration.GetVariable("webDriverVersion") ?? "Latest";
-                new DriverManager().SetUpDriver(new ChromeConfig(), version: version);
+                new DriverManager().SetUpDriver(new ChromeConfig(), VersionResolveStrategy.MatchingBrowser);
             }
 
             return new ChromeApplication(services.GetRequiredService<ITimeoutConfiguration>());
