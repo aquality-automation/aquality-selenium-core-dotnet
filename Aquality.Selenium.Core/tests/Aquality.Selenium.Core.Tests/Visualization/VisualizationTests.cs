@@ -34,12 +34,29 @@ namespace Aquality.Selenium.Core.Tests.Localization
         }
 
         [Test]
+        public void Should_BePossibleTo_GetPercentageDifference_ForSameElement_WithZeroThreshold()
+        {
+            var firstImage = StartLabel.GetElement().GetScreenshot().AsImage();
+            var secondImage = StartLabel.GetElement().GetScreenshot().AsImage();
+            Assert.That(firstImage.PercentageDifference(secondImage, threshold: 0), Is.EqualTo(0));
+        }
+
+        [Test]
         public void Should_BePossibleTo_GetPercentageDifference_ForDifferentElements()
         {
             var firstImage = StartLabel.GetElement().GetScreenshot().AsImage();
             StartLoading();
             var secondImage = LoadingLabel.GetElement().GetScreenshot().AsImage();
             Assert.That(firstImage.PercentageDifference(secondImage), Is.Not.EqualTo(0));
+        }
+
+        [Test]
+        public void Should_BePossibleTo_GetPercentageDifference_ForDifferentElements_WithFullThreshold()
+        {
+            var firstImage = StartLabel.GetElement().GetScreenshot().AsImage();
+            StartLoading();
+            var secondImage = LoadingLabel.GetElement().GetScreenshot().AsImage();
+            Assert.That(firstImage.PercentageDifference(secondImage, threshold: 1), Is.EqualTo(0));
         }
 
         [Test]
