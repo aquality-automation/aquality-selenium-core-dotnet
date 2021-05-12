@@ -51,9 +51,9 @@ namespace Aquality.Selenium.Core.Tests.Localization
             Assert.Multiple(() =>
             {
                 Assert.That(firstImage.PercentageDifference(secondImage, threshold: 0), Is.Not.EqualTo(0));
-                Assert.That(firstImage.PercentageDifference(secondImage, threshold: 50), Is.AtMost(0.2));
-                Assert.That(firstImage.PercentageDifference(secondImage, threshold: 100), Is.AtMost(0.1));
-                Assert.That(firstImage.PercentageDifference(secondImage, threshold: 200), Is.EqualTo(0));
+                Assert.That(firstImage.PercentageDifference(secondImage, threshold: 0.2f), Is.AtMost(0.2));
+                Assert.That(firstImage.PercentageDifference(secondImage, threshold: 0.4f), Is.AtMost(0.1));
+                Assert.That(firstImage.PercentageDifference(secondImage, threshold: 0.8f), Is.EqualTo(0));
             });
         }
     }

@@ -999,15 +999,26 @@
         </member>
         <member name="T:Aquality.Selenium.Core.Visualization.ImageExtensions">
             <summary>
+            Image resizing, gray-scaling and comparison extensions
             Special thanks to https://www.codeproject.com/Articles/374386/Simple-image-comparison-in-NET
             </summary>
+        </member>
+        <member name="M:Aquality.Selenium.Core.Visualization.ImageExtensions.PercentageDifference(System.Drawing.Image,System.Drawing.Image,System.Single)">
+            <summary>
+            Gets the difference between two images as a percentage
+            </summary>
+            <param name="thisOne">The first image</param>
+            <param name="theOtherOne">The image to compare with</param>
+            <param name="threshold">How big a difference will be ignored as a percentage - value between 0 and 1, the default is 3/256.</param>
+            <returns>The difference between the two images as a percentage  - value between 0 and 1.</returns>
+            <remarks>See http://www.switchonthecode.com/tutorials/csharp-tutorial-convert-a-color-image-to-grayscale for more details</remarks>
         </member>
         <member name="M:Aquality.Selenium.Core.Visualization.ImageExtensions.PercentageDifference(System.Drawing.Image,System.Drawing.Image,System.Byte)">
             <summary>
             Gets the difference between two images as a percentage
             </summary>
-            <param name="img1">The first image</param>
-            <param name="img2">The image to compare to</param>
+            <param name="thisOne">The first image</param>
+            <param name="theOtherOne">The image to compare with</param>
             <param name="threshold">How big a difference (out of 255) will be ignored - the default is 3.</param>
             <returns>The difference between the two images as a percentage</returns>
             <remarks>See http://www.switchonthecode.com/tutorials/csharp-tutorial-convert-a-color-image-to-grayscale for more details</remarks>
@@ -1043,6 +1054,18 @@
             </summary>
             <param name="img">The image to get the lightness for</param>
             <returns>A double-array (16x16) containing the lightness of the 256 sections</returns>
+        </member>
+        <member name="T:Aquality.Selenium.Core.Visualization.ScreenshotExtensions">
+            <summary>
+            Selenium screenshot extensions.
+            </summary>
+        </member>
+        <member name="M:Aquality.Selenium.Core.Visualization.ScreenshotExtensions.AsImage(OpenQA.Selenium.Screenshot)">
+            <summary>
+            Represents given screenshot as an image.
+            </summary>
+            <param name="screenshot">Given screenshot.</param>
+            <returns>Image.</returns>
         </member>
         <member name="T:Aquality.Selenium.Core.Waitings.ConditionalWait">
             <summary>

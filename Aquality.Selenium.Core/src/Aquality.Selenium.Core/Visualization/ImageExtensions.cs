@@ -6,12 +6,15 @@ using System.Drawing.Imaging;
 namespace Aquality.Selenium.Core.Visualization
 {
     /// <summary>
+    /// Image resizing, gray-scaling and comparison extensions
     /// Special thanks to https://www.codeproject.com/Articles/374386/Simple-image-comparison-in-NET
     /// </summary>
     public static class ImageExtensions
     {
         private const int ComparisonWidth = 16;
         private const int ComparisonHeight = ComparisonWidth;
+        private const int ThresholdDivisor = ComparisonHeight * ComparisonWidth - 1;
+        private const float DefaultThreshold = 3f / ThresholdDivisor;
         private static readonly ColorMatrix ColorMatrix = new ColorMatrix(new float[][]
         {
             new float[] {.3f, .3f, .3f, 0, 0},
@@ -24,14 +27,33 @@ namespace Aquality.Selenium.Core.Visualization
         /// <summary>
         /// Gets the difference between two images as a percentage
         /// </summary>
-        /// <param name="img1">The first image</param>
-        /// <param name="img2">The image to compare to</param>
+        /// <param name="thisOne">The first image</param>
+        /// <param name="theOtherOne">The image to compare with</param>
+        /// <param name="threshold">How big a difference will be ignored as a percentage - value between 0 and 1, the default is 3/256.</param>
+        /// <returns>The difference between the two images as a percentage  - value between 0 and 1.</returns>
+        /// <remarks>See http://www.switchonthecode.com/tutorials/csharp-tutorial-convert-a-color-image-to-grayscale for more details</remarks>
+        public static float PercentageDifference(this Image thisOne, Image theOtherOne, float threshold = DefaultThreshold)
+        {
+            if (threshold < 0 || threshold > 1)
+            {
+                throw new ArgumentOutOfRangeException(nameof(threshold), threshold, "Threshold should be between 0 and 1");
+            }
+
+            var byteThreshold = Convert.ToByte(threshold * ThresholdDivisor);
+            return thisOne.PercentageDifference(theOtherOne, byteThreshold);
+        }
+
+        /// <summary>
+        /// Gets the difference between two images as a percentage
+        /// </summary>
+        /// <param name="thisOne">The first image</param>
+        /// <param name="theOtherOne">The image to compare with</param>
         /// <param name="threshold">How big a difference (out of 255) will be ignored - the default is 3.</param>
         /// <returns>The difference between the two images as a percentage</returns>
         /// <remarks>See http://www.switchonthecode.com/tutorials/csharp-tutorial-convert-a-color-image-to-grayscale for more details</remarks>
-        public static float PercentageDifference(this Image img1, Image img2, byte threshold = 3)
+        private static float PercentageDifference(this Image thisOne, Image theOtherOne, byte threshold = 3)
         {
-            var differences = img1.GetDifferences(img2);
+            var differences = thisOne.GetDifferences(theOtherOne);
 
             int diffPixels = 0;
 
