@@ -11,9 +11,9 @@ namespace Aquality.Selenium.Core.Visualization
     /// </summary>
     public static class ImageExtensions
     {
-        private const int ComparisonWidth = 16;
-        private const int ComparisonHeight = ComparisonWidth;
-        private const int ThresholdDivisor = ComparisonHeight * ComparisonWidth - 1;
+        private const int ComparisonWidth = 16; //todo: to be got from configuration
+        private const int ComparisonHeight = 16;
+        private const int ThresholdDivisor = 255;
         private const float DefaultThreshold = 3f / ThresholdDivisor;
         private static readonly ColorMatrix ColorMatrix = new ColorMatrix(new float[][]
         {
@@ -29,7 +29,7 @@ namespace Aquality.Selenium.Core.Visualization
         /// </summary>
         /// <param name="thisOne">The first image</param>
         /// <param name="theOtherOne">The image to compare with</param>
-        /// <param name="threshold">How big a difference will be ignored as a percentage - value between 0 and 1, the default is 3/256.</param>
+        /// <param name="threshold">How big a difference will be ignored as a percentage - value between 0 and 1, the default is 3/255.</param>
         /// <returns>The difference between the two images as a percentage  - value between 0 and 1.</returns>
         /// <remarks>See http://www.switchonthecode.com/tutorials/csharp-tutorial-convert-a-color-image-to-grayscale for more details</remarks>
         public static float PercentageDifference(this Image thisOne, Image theOtherOne, float threshold = DefaultThreshold)
@@ -139,19 +139,19 @@ namespace Aquality.Selenium.Core.Visualization
         }
 
         /// <summary>
-        /// Gets the lightness of the image in 256 sections (16x16)
+        /// Gets the lightness of the image in sections (by default 256 sections, 16x16)
         /// </summary>
         /// <param name="img">The image to get the lightness for</param>
-        /// <returns>A double-array (16x16) containing the lightness of the 256 sections</returns>
+        /// <returns>A double-array (16x16 by default) containing the lightness of the sections(256 by default)</returns>
         private static byte[,] GetResizedGrayScaleValues(this Image img)
         {
             using (var thisOne = (Bitmap)img.Resize(ComparisonWidth, ComparisonHeight).GetGrayScaleVersion())
             {
                 byte[,] grayScale = new byte[thisOne.Width, thisOne.Height];
 
-                for (int y = 0; y < thisOne.Width; y++)
+                for (int y = 0; y < thisOne.Height; y++)
                 {
-                    for (int x = 0; x < thisOne.Height; x++)
+                    for (int x = 0; x < thisOne.Width; x++)
                     {
                         grayScale[x, y] = (byte)Math.Abs(thisOne.GetPixel(x, y).R);
                     }
