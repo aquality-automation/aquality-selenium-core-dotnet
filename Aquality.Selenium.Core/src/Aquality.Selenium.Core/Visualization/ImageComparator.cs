@@ -38,7 +38,7 @@ namespace Aquality.Selenium.Core.Visualization
             var thresholdValue = threshold ?? DefaultThreshold;
             if (thresholdValue < 0 || thresholdValue > 1)
             {
-                throw new ArgumentOutOfRangeException(nameof(thresholdValue), thresholdValue, "Threshold should be between 0 and 1");
+                throw new ArgumentOutOfRangeException(nameof(threshold), thresholdValue, "Threshold should be between 0 and 1");
             }
 
             var byteThreshold = Convert.ToByte(thresholdValue * ThresholdDivisor);
