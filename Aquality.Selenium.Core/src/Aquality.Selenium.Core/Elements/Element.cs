@@ -6,6 +6,7 @@ using Aquality.Selenium.Core.Elements.Interfaces;
 using Aquality.Selenium.Core.Localization;
 using Aquality.Selenium.Core.Logging;
 using Aquality.Selenium.Core.Utilities;
+using Aquality.Selenium.Core.Visualization;
 using Aquality.Selenium.Core.Waitings;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Remote;
@@ -35,6 +36,9 @@ namespace Aquality.Selenium.Core.Elements
             ? (IElementStateProvider) new CachedElementStateProvider(Locator, ConditionalWait, Cache, LogElementState)
             : new ElementStateProvider(Locator, ConditionalWait, Finder, LogElementState);
 
+        public virtual IVisualStateProvider Visual 
+            => new VisualStateProvider(ImageComparator, ActionRetrier, () => GetElement(), LogVisualState);
+
         protected virtual IElementCacheHandler Cache
         {
             get
@@ -62,6 +66,8 @@ namespace Aquality.Selenium.Core.Elements
 
         protected abstract IElementFinder Finder { get; }
 
+        protected abstract IImageComparator ImageComparator { get; }
+
         protected abstract ILocalizedLogger LocalizedLogger { get; }
 
         protected abstract ILocalizationManager LocalizationManager { get; }
@@ -73,6 +79,19 @@ namespace Aquality.Selenium.Core.Elements
         protected virtual LogElementState LogElementState =>
             (string messageKey, string stateKey)
             => LocalizedLogger.InfoElementAction(ElementType, Name, messageKey, LocalizationManager.GetLocalizedMessage(stateKey));
+
+        protected virtual LogVisualState LogVisualState =>
+            (string messageKey, object[] values) =>
+            {
+                if (values == null || values.Length == 0)
+                {
+                    LogElementAction(messageKey);
+                }
+                else
+                {
+                    LogElementAction(messageKey, values);
+                }
+            };
 
         public void Click()
         {
@@ -123,7 +142,7 @@ namespace Aquality.Selenium.Core.Elements
             catch (WebDriverException e)
             {
                 Logger.Error(exception.Message);
-                Logger.Fatal("An exception occured while tried to save the page source", e);
+                Logger.Fatal("An exception occurred while tried to save the page source", e);
             }
         }
 

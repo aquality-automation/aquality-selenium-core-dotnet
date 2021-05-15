@@ -18,5 +18,14 @@
   "loc.el.state.not.exist": "absent",
   "loc.el.state.enabled": "enabled",
   "loc.el.state.not.enabled": "disabled",
-  "loc.el.state.clickable": "clickable"
+  "loc.el.state.clickable": "clickable",
+  "loc.el.visual.getimage": "Getting image of element",
+  "loc.el.visual.image.value": "Element's image size: [{0}]",
+  "loc.el.visual.getlocation": "Getting element location on the page",
+  "loc.el.visual.location.value": "Element location on the page: [{0}]",
+  "loc.el.visual.getsize": "Getting element size",
+  "loc.el.visual.size.value": "Element size: [{0}]",
+  "loc.el.visual.getdifference": "Comparing element's image to image of size [{0}]",
+  "loc.el.visual.getdifference.withthreshold": "Comparing element's image to image of size [{0}] with threshold [{1}]",
+  "loc.el.visual.difference.value": "The difference between the current and the given images is [{0}]"
 }

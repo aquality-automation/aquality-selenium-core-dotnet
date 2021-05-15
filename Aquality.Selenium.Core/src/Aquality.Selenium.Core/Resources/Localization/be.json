@@ -18,5 +18,14 @@
   "loc.el.state.not.exist": "адсутны",
   "loc.el.state.enabled": "даступны",
   "loc.el.state.not.enabled": "недаступны",
-  "loc.el.state.clickable": "даступны для націску"
+  "loc.el.state.clickable": "даступны для націску",
+  "loc.el.visual.getimage": "Атрымліваем малюнак элемента",
+  "loc.el.visual.image.value": "Памер малюнка элемента: [{0}]",
+  "loc.el.visual.getlocation": "Атрымліваем месцазнаходжанне элемента на старонцы",
+  "loc.el.visual.location.value": "Месцазнаходжанне элемента на старонцы: [{0}]",
+  "loc.el.visual.getsize": "Атрымліваем памер элемента",
+  "loc.el.visual.size.value": "Памер элемента: [{0}]",
+  "loc.el.visual.getdifference": "Параўноўваем малюнак элемента з малюнкам памеру [{0}]",
+  "loc.el.visual.getdifference.withthreshold": "Параўноўваем малюнак элемента з малюнкам памеру [{0}] з парогам адчувальнасці [{1}]",
+  "loc.el.visual.difference.value": "Адрозненне паміж цяперашнім і пададзеным малюнкамі складае [{0}]"
 }

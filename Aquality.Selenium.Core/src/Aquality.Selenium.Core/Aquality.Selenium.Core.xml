@@ -614,12 +614,50 @@
             <param name="state">Child elements state.</param>
             <returns>List of child elements.</returns>
         </member>
+        <member name="T:Aquality.Selenium.Core.Elements.Interfaces.IVisualStateProvider">
+            <summary>
+            Provides visual state of the element.
+            </summary>
+        </member>
+        <member name="P:Aquality.Selenium.Core.Elements.Interfaces.IVisualStateProvider.Size">
+            <summary>
+            Gets a size object containing the height and width of this element.
+            </summary>
+        </member>
+        <member name="P:Aquality.Selenium.Core.Elements.Interfaces.IVisualStateProvider.Location">
+            <summary>
+            Gets a point object containing the coordinates of the upper-left 
+            corner of this element relative to the upper-left corner of the page.
+            </summary>
+        </member>
+        <member name="P:Aquality.Selenium.Core.Elements.Interfaces.IVisualStateProvider.Image">
+            <summary>
+            Gets an image containing the screenshot of the element.
+            </summary>
+        </member>
+        <member name="M:Aquality.Selenium.Core.Elements.Interfaces.IVisualStateProvider.GetDifference(System.Drawing.Image,System.Nullable{System.Single})">
+            <summary>
+            Gets the difference between the image of the element and the provided image
+            using <see cref="T:Aquality.Selenium.Core.Visualization.IImageComparator"/>
+            </summary>
+            <param name="theOtherOne">The image to compare the element with.</param>
+            <param name="threshold">How big a difference will be ignored as a percentage - value between 0 and 1.
+            If the value is null, the default value is got from <see cref="T:Aquality.Selenium.Core.Configurations.IVisualizationConfiguration"/>.</param>
+            <returns>The difference between the two images as a percentage  - value between 0 and 1.</returns>
+        </member>
         <member name="T:Aquality.Selenium.Core.Elements.LogElementState">
             <summary>
             Logs element state.
             </summary>
             <param name="messageKey">Key of localized message to log.</param>
             <param name="stateKey">Key of localized state to log.</param>
+        </member>
+        <member name="T:Aquality.Selenium.Core.Elements.LogVisualState">
+            <summary>
+            Logs element visual state.
+            </summary>
+            <param name="messageKey">Key of localized message to log.</param>
+            <param name="values">Values to put into localized message (if any).</param>
         </member>
         <member name="T:Aquality.Selenium.Core.Elements.RelativeElementFinder">
             <summary>

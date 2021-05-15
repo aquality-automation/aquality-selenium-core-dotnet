@@ -18,5 +18,14 @@
   "loc.el.state.not.exist": "отсутствующим",
   "loc.el.state.enabled": "доступным",
   "loc.el.state.not.enabled": "недоступным",
-  "loc.el.state.clickable": "кликабельным"
+  "loc.el.state.clickable": "кликабельным",
+  "loc.el.visual.getimage": "Получаем изображение элемента",
+  "loc.el.visual.image.value": "Размеры изображения элемента : [{0}]",
+  "loc.el.visual.getlocation": "Получаем положение элемента на странице",
+  "loc.el.visual.location.value": "Положение элемента на странице: [{0}]",
+  "loc.el.visual.getsize": "Получаем размер элемента",
+  "loc.el.visual.size.value": "Размер элемента: [{0}]",
+  "loc.el.visual.getdifference": "Сравниваем изображение элемента с изображением размера [{0}]",
+  "loc.el.visual.getdifference.withthreshold": "Сравниваем изображение элемента с изображением размера [{0}] с уровнем шума [{1}]",
+  "loc.el.visual.difference.value": "Отличие текущего изображения от предоставленного составляет [{0}]"
 }
