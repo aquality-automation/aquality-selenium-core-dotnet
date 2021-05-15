@@ -129,9 +129,9 @@ namespace Aquality.Selenium.Core.Tests.Applications.Browser
             stopWatch.Start();
             Assert.DoesNotThrow(() => awaitableResult = ConditionalWait.WaitForTrueAsync(() => result = false, LittleTimeout),
                         $"{nameof(ConditionalWait.WaitForTrueAsync)} should not fail after the calling");
-            Assert.IsFalse(result, $"{nameof(ConditionalWait.WaitForTrueAsync)} should work");
             Assume.That(awaitableResult, Is.Not.Null);
             Assert.ThrowsAsync<TimeoutException>(async () => await awaitableResult, $"{nameof(ConditionalWait.WaitForTrueAsync)} should throw when awaited");
+            Assert.IsFalse(result, $"{nameof(ConditionalWait.WaitForTrueAsync)} should work");
             stopWatch.Stop();
             Assert.AreEqual(LittleTimeout.TotalSeconds, stopWatch.Elapsed.TotalSeconds, PollingInterval.TotalSeconds * 2, 
                 $"{nameof(ConditionalWait.WaitForTrueAsync)} should wait correct time");
