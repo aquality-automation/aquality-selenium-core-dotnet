@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Aquality.Selenium.Core", "s
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{020FB8C3-77FD-48AE-BDD4-69B5186C0A2E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Aquality.Selenium.Core.Tests", "tests\Aquality.Selenium.Core.Tests\Aquality.Selenium.Core.Tests.csproj", "{BE6E2E8F-597C-46C4-BC3B-259A74FBA5C7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Aquality.Selenium.Core.Tests", "tests\Aquality.Selenium.Core.Tests\Aquality.Selenium.Core.Tests.csproj", "{BE6E2E8F-597C-46C4-BC3B-259A74FBA5C7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
