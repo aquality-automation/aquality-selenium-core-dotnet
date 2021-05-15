@@ -4,6 +4,7 @@ using Aquality.Selenium.Core.Elements.Interfaces;
 using Aquality.Selenium.Core.Localization;
 using Aquality.Selenium.Core.Logging;
 using Aquality.Selenium.Core.Utilities;
+using Aquality.Selenium.Core.Visualization;
 using Aquality.Selenium.Core.Waitings;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -36,6 +37,8 @@ namespace Aquality.Selenium.Core.Applications
             services.AddSingleton<ILoggerConfiguration, LoggerConfiguration>();
             services.AddSingleton<ITimeoutConfiguration, TimeoutConfiguration>();
             services.AddSingleton<IRetryConfiguration, RetryConfiguration>();
+            services.AddSingleton<IVisualizationConfiguration, VisualizationConfiguration>();
+            services.AddSingleton<IImageComparator, ImageComparator>();
             services.AddSingleton<ILocalizationManager, LocalizationManager>();
             services.AddSingleton<ILocalizedLogger, LocalizedLogger>();
             services.AddSingleton<IActionRetrier, ActionRetrier>();
