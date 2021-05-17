@@ -49,7 +49,7 @@ namespace Aquality.Selenium.Core.Elements
             {
                 logVisualState("loc.el.visual.getdifference.withthreshold", theOtherOne.Size.ToString(), threshold?.ToString("P", CultureInfo.InvariantCulture));
             }
-            var value = imageComparator.PercentageDifference(Image, theOtherOne, threshold);
+            var value = imageComparator.PercentageDifference(currentImage, theOtherOne, threshold);
             logVisualState("loc.el.visual.difference.value", value.ToString("P", CultureInfo.InvariantCulture));
             return value;
         }
