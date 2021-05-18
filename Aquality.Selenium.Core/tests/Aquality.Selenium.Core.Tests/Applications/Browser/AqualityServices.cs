@@ -1,10 +1,7 @@
 ﻿using Aquality.Selenium.Core.Applications;
 using Aquality.Selenium.Core.Configurations;
-using Aquality.Selenium.Core.Utilities;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Win32;
 using System;
-using System.Diagnostics;
 using WebDriverManager;
 using WebDriverManager.DriverConfigs.Impl;
 using WebDriverManager.Helpers;
@@ -29,8 +26,7 @@ namespace Aquality.Selenium.Core.Tests.Applications.Browser
             {
                 SetServiceProvider(value);
             }
-        }
-            
+        }            
 
         private static ChromeApplication StartChrome(IServiceProvider services)
         {

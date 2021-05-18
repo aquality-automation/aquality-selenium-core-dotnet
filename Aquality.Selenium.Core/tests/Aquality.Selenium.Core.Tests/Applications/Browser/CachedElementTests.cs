@@ -1,6 +1,6 @@
 ﻿using Aquality.Selenium.Core.Elements;
 using Aquality.Selenium.Core.Elements.Interfaces;
-using Aquality.Selenium.Core.Tests.Applications.WindowsApp.Elements;
+using Aquality.Selenium.Core.Tests.Applications.Browser.Elements;
 using Aquality.Selenium.Core.Utilities;
 using Aquality.Selenium.Core.Waitings;
 using Microsoft.Extensions.DependencyInjection;

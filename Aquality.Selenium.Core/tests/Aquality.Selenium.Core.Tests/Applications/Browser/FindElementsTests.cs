@@ -2,11 +2,11 @@
 using System;
 using Aquality.Selenium.Core.Elements;
 using Aquality.Selenium.Core.Elements.Interfaces;
-using Aquality.Selenium.Core.Tests.Applications.WindowsApp.Elements;
 using Microsoft.Extensions.DependencyInjection;
 using OpenQA.Selenium;
 using System.Collections.Generic;
 using System.Linq;
+using Aquality.Selenium.Core.Tests.Applications.Browser.Elements;
 
 namespace Aquality.Selenium.Core.Tests.Applications.Browser
 {

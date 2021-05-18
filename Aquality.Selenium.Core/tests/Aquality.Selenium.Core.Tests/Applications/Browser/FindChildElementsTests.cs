@@ -1,5 +1,5 @@
 ﻿using Aquality.Selenium.Core.Elements;
-using Aquality.Selenium.Core.Tests.Applications.WindowsApp.Elements;
+using Aquality.Selenium.Core.Tests.Applications.Browser.Elements;
 using NUnit.Framework;
 using OpenQA.Selenium;
 using System.Collections.Generic;
