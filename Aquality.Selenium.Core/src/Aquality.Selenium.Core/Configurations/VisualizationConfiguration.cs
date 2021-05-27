@@ -1,4 +1,5 @@
 ﻿using Aquality.Selenium.Core.Utilities;
+using System.IO;
 
 namespace Aquality.Selenium.Core.Configurations
 {
@@ -24,5 +25,14 @@ namespace Aquality.Selenium.Core.Configurations
         public int ComparisonWidth => settingsFile.GetValueOrDefault(".visualization.comparisonWidth", 16);
 
         public int ComparisonHeight => settingsFile.GetValueOrDefault(".visualization.comparisonHeight", 16);
+
+        public string PathToDumps
+        {
+            get
+            {
+                var pathInConfiguration = settingsFile.GetValueOrDefault(".visualization.pathToDumps", "./Resources/Dumps/");
+                return pathInConfiguration.Contains(".") ? Path.GetFullPath(pathInConfiguration) : pathInConfiguration;
+            }
+        }
     }
 }

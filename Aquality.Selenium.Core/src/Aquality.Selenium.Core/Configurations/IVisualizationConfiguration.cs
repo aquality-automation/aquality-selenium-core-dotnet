@@ -19,5 +19,10 @@
         /// Height of the image resized for comparison.
         /// </summary>
         int ComparisonHeight { get; }
+
+        /// <summary>
+        /// Path used to save and load page dumps.
+        /// </summary>
+        string PathToDumps { get; }
     }
 }

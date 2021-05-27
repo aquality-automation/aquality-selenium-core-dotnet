@@ -1,12 +1,11 @@
-﻿using Aquality.Selenium.Core.Elements.Interfaces;
+﻿using Aquality.Selenium.Core.Logging;
 using Aquality.Selenium.Core.Utilities;
-using Aquality.Selenium.Core.Visualization;
 using OpenQA.Selenium.Remote;
 using System;
 using System.Drawing;
 using System.Globalization;
 
-namespace Aquality.Selenium.Core.Elements
+namespace Aquality.Selenium.Core.Visualization
 {
     public class VisualStateProvider : IVisualStateProvider
     {

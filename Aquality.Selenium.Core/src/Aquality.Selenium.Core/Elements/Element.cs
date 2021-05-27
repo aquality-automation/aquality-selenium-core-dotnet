@@ -18,7 +18,7 @@ namespace Aquality.Selenium.Core.Elements
     /// </summary>
     public abstract class Element : IElement
     {
-        private readonly ElementState elementState;
+        internal readonly ElementState elementState;
         private IElementCacheHandler elementCacheHandler;
 
         protected Element(By locator, string name, ElementState state)
