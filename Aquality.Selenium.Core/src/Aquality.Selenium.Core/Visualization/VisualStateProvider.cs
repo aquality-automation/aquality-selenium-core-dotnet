@@ -1,7 +1,9 @@
 ﻿using Aquality.Selenium.Core.Logging;
 using Aquality.Selenium.Core.Utilities;
+using OpenQA.Selenium;
 using OpenQA.Selenium.Remote;
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Globalization;
 
@@ -27,12 +29,12 @@ namespace Aquality.Selenium.Core.Visualization
         public Point Location => GetLoggedValue(nameof(Location), element => element.Location);
 
         public Image Image 
-            => GetLoggedValue(nameof(Image), element => element.GetScreenshot().AsImage(), image => image.Size.ToString());
+            => GetLoggedValue(nameof(Image), element => element.GetScreenshot().AsImage(), image => image.Size.ToString(), new[] { typeof(WebDriverException) });
 
-        private T GetLoggedValue<T>(string name, Func<RemoteWebElement, T> getValue, Func<T, string> toString = null)
+        private T GetLoggedValue<T>(string name, Func<RemoteWebElement, T> getValue, Func<T, string> toString = null, IEnumerable<Type> handledExceptions = null)
         {
             logVisualState($"loc.el.visual.get{name.ToLower()}");
-            var value = actionRetrier.DoWithRetry(() => getValue(getElement()));
+            var value = actionRetrier.DoWithRetry(() => getValue(getElement()), handledExceptions);
             logVisualState($"loc.el.visual.{name.ToLower()}.value", toString == null ? value.ToString() : toString(value));
             return value;
         }

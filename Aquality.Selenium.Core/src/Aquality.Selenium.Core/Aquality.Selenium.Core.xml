@@ -150,6 +150,11 @@
             Height of the image resized for comparison.
             </summary>
         </member>
+        <member name="P:Aquality.Selenium.Core.Configurations.IVisualizationConfiguration.PathToDumps">
+            <summary>
+            Path used to save and load page dumps.
+            </summary>
+        </member>
         <member name="T:Aquality.Selenium.Core.Configurations.LoggerConfiguration">
             <summary>
             Provides logger configuration
@@ -344,6 +349,11 @@
             </summary>
             <value>Instance of <see cref="T:Aquality.Selenium.Core.Elements.Interfaces.IElementStateProvider"/></value>
         </member>
+        <member name="P:Aquality.Selenium.Core.Elements.Interfaces.IElement.Visual">
+            <summary>
+            Gets element visual state.
+            </summary>
+        </member>
         <member name="M:Aquality.Selenium.Core.Elements.Interfaces.IElement.GetElement(System.Nullable{System.TimeSpan})">
             <summary>
             Finds current element by specified <see cref="P:Aquality.Selenium.Core.Elements.Interfaces.IElement.Locator"/>
@@ -361,7 +371,7 @@
             <summary>
             Gets element attribute value by its name.
             </summary>
-            <param name="attr">Name of attrbiute</param>
+            <param name="attr">Name of attribute</param>
             <returns>Value of element attribute.</returns>
         </member>
         <member name="M:Aquality.Selenium.Core.Elements.Interfaces.IElement.SendKeys(System.String)">
@@ -614,54 +624,77 @@
             <param name="state">Child elements state.</param>
             <returns>List of child elements.</returns>
         </member>
-        <member name="T:Aquality.Selenium.Core.Elements.Interfaces.IVisualStateProvider">
-            <summary>
-            Provides visual state of the element.
-            </summary>
-        </member>
-        <member name="P:Aquality.Selenium.Core.Elements.Interfaces.IVisualStateProvider.Size">
-            <summary>
-            Gets a size object containing the height and width of this element.
-            </summary>
-        </member>
-        <member name="P:Aquality.Selenium.Core.Elements.Interfaces.IVisualStateProvider.Location">
-            <summary>
-            Gets a point object containing the coordinates of the upper-left 
-            corner of this element relative to the upper-left corner of the page.
-            </summary>
-        </member>
-        <member name="P:Aquality.Selenium.Core.Elements.Interfaces.IVisualStateProvider.Image">
-            <summary>
-            Gets an image containing the screenshot of the element.
-            </summary>
-        </member>
-        <member name="M:Aquality.Selenium.Core.Elements.Interfaces.IVisualStateProvider.GetDifference(System.Drawing.Image,System.Nullable{System.Single})">
-            <summary>
-            Gets the difference between the image of the element and the provided image
-            using <see cref="T:Aquality.Selenium.Core.Visualization.IImageComparator"/>
-            </summary>
-            <param name="theOtherOne">The image to compare the element with.</param>
-            <param name="threshold">How big a difference will be ignored as a percentage - value between 0 and 1.
-            If the value is null, the default value is got from <see cref="T:Aquality.Selenium.Core.Configurations.IVisualizationConfiguration"/>.</param>
-            <returns>The difference between the two images as a percentage  - value between 0 and 1.</returns>
-        </member>
-        <member name="T:Aquality.Selenium.Core.Elements.LogElementState">
-            <summary>
-            Logs element state.
-            </summary>
-            <param name="messageKey">Key of localized message to log.</param>
-            <param name="stateKey">Key of localized state to log.</param>
-        </member>
-        <member name="T:Aquality.Selenium.Core.Elements.LogVisualState">
-            <summary>
-            Logs element visual state.
-            </summary>
-            <param name="messageKey">Key of localized message to log.</param>
-            <param name="values">Values to put into localized message (if any).</param>
-        </member>
         <member name="T:Aquality.Selenium.Core.Elements.RelativeElementFinder">
             <summary>
             Implementation of <see cref="T:Aquality.Selenium.Core.Elements.Interfaces.IElementFinder"/> for a relative <see cref="T:OpenQA.Selenium.ISearchContext"/> supplier
+            </summary>
+        </member>
+        <member name="T:Aquality.Selenium.Core.Forms.Form`1">
+            <summary>
+            Describes form that could be used for visualization purposes (see <see cref="P:Aquality.Selenium.Core.Forms.Form`1.Dump"/>).
+            </summary>
+            <typeparam name="T">Base type(class or interface) of elements of this form.</typeparam>
+        </member>
+        <member name="P:Aquality.Selenium.Core.Forms.Form`1.Name">
+            <summary>
+            Name of the current form.
+            </summary>
+        </member>
+        <member name="P:Aquality.Selenium.Core.Forms.Form`1.VisualizationConfiguration">
+            <summary>
+            Visualization configuration used by <see cref="P:Aquality.Selenium.Core.Forms.Form`1.Dump"/>.
+            Could be get from AqualityServices.
+            </summary>
+        </member>
+        <member name="P:Aquality.Selenium.Core.Forms.Form`1.LocalizedLogger">
+            <summary>
+            Localizer logger used by <see cref="P:Aquality.Selenium.Core.Forms.Form`1.Dump"/>.
+            Could be get from AqualityServices.
+            </summary>
+        </member>
+        <member name="P:Aquality.Selenium.Core.Forms.Form`1.Dump">
+            <summary>
+            Gets dump manager for the current form that could be used for visualization purposes, such as saving and comparing dumps.
+            Uses <see cref="P:Aquality.Selenium.Core.Forms.Form`1.ElementsForVisualization"/> as basis for dump creation and comparison.
+            </summary>
+        </member>
+        <member name="P:Aquality.Selenium.Core.Forms.Form`1.ElementsForVisualization">
+            <summary>
+            List of pairs uniqueName-element to be used for dump saving and comparing.
+            By default, only currently displayed elements to be used (<see cref="P:Aquality.Selenium.Core.Forms.Form`1.ElementsInitializedAsDisplayed"/>).
+            You can override this property with defined <see cref="P:Aquality.Selenium.Core.Forms.Form`1.AllElements"/>, <see cref="P:Aquality.Selenium.Core.Forms.Form`1.DisplayedElements"/> or your own element set.
+            </summary>
+        </member>
+        <member name="P:Aquality.Selenium.Core.Forms.Form`1.AllElements">
+            <summary>
+            List of pairs uniqueName-element from all fields and properties of type <typeparamref name="T"/>.
+            </summary>
+        </member>
+        <member name="P:Aquality.Selenium.Core.Forms.Form`1.ElementsInitializedAsDisplayed">
+            <summary>
+            List of pairs uniqueName-element from all fields and properties of type <typeparamref name="T"/>,
+            which were initialized as <see cref="F:Aquality.Selenium.Core.Elements.ElementState.Displayed"/>.
+            </summary>
+        </member>
+        <member name="P:Aquality.Selenium.Core.Forms.Form`1.DisplayedElements">
+            <summary>
+            List of pairs uniqueName-element from all fields and properties of type <typeparamref name="T"/>,
+            which are currently displayed (using <see cref="P:Aquality.Selenium.Core.Elements.Interfaces.IElementStateProvider.IsDisplayed"/>).
+            </summary>
+        </member>
+        <member name="T:Aquality.Selenium.Core.Forms.IForm">
+            <summary>
+            Describes form that could be used for visualization purposes, such as saving and comparing dumps.
+            </summary>
+        </member>
+        <member name="P:Aquality.Selenium.Core.Forms.IForm.Name">
+            <summary>
+            Name of the current form.
+            </summary>
+        </member>
+        <member name="P:Aquality.Selenium.Core.Forms.IForm.Dump">
+            <summary>
+            Gets dump manager for the current form that could be used for visualization purposes, such as saving and comparing dumps.
             </summary>
         </member>
         <member name="T:Aquality.Selenium.Core.Localization.ILocalizationManager">
@@ -732,6 +765,20 @@
             <param name="messageKey">Key in resource file.</param>
             <param name="exception">Exception, gets null value by default.</param>
             <param name="args">Arguments, which will be provided to template of localized message.</param>
+        </member>
+        <member name="T:Aquality.Selenium.Core.Logging.LogElementState">
+            <summary>
+            Logs element state.
+            </summary>
+            <param name="messageKey">Key of localized message to log.</param>
+            <param name="stateKey">Key of localized state to log.</param>
+        </member>
+        <member name="T:Aquality.Selenium.Core.Logging.LogVisualState">
+            <summary>
+            Logs element visual state.
+            </summary>
+            <param name="messageKey">Key of localized message to log.</param>
+            <param name="values">Values to put into localized message (if any).</param>
         </member>
         <member name="T:Aquality.Selenium.Core.Logging.Logger">
             <summary>
@@ -1067,6 +1114,29 @@
             <param name="defaultValue">Default value. default(T) if not specified.</param>
             <returns>Value or defaultValue or default(T)</returns>
         </member>
+        <member name="T:Aquality.Selenium.Core.Visualization.IDumpManager">
+            <summary>
+            Describes dump manager for the form that could be used for visualization purposes, such as saving and comparing dumps.
+            </summary>
+        </member>
+        <member name="M:Aquality.Selenium.Core.Visualization.IDumpManager.CompareWithDump(System.String)">
+            <summary>
+            Compares current form with the dump saved previously.
+            </summary>
+            <param name="dumpName">Custom name of the sub-folder where the dump was saved. 
+            Form name <see cref="P:Aquality.Selenium.Core.Forms.IForm.Name"/> is used by default.</param>
+            <returns>The difference of comparing the page to the dump as a percentage (no difference is 0%).
+            Calculated as sum of element differences divided by elements count.</returns>
+        </member>
+        <member name="M:Aquality.Selenium.Core.Visualization.IDumpManager.SaveDump(System.String)">
+            <summary>
+            Saves the dump of the current form 
+            (a set of screenshots of selected form elements)
+            into dump folder under the path <see cref="P:Aquality.Selenium.Core.Configurations.IVisualizationConfiguration.PathToDumps"/>.
+            </summary>
+            <param name="dumpName">Name of the sub-folder where to save the dump. 
+            Form name <see cref="P:Aquality.Selenium.Core.Forms.IForm.Name"/> is used by default.</param>
+        </member>
         <member name="T:Aquality.Selenium.Core.Visualization.IImageComparator">
             <summary>
             Compares images with defined threshold.
@@ -1149,6 +1219,37 @@
             <param name="original">The image to gray scale</param>
             <returns>A gray scale version of the image</returns>
             <remarks>See http://www.switchonthecode.com/tutorials/csharp-tutorial-convert-a-color-image-to-grayscale for more details</remarks>
+        </member>
+        <member name="T:Aquality.Selenium.Core.Visualization.IVisualStateProvider">
+            <summary>
+            Provides visual state of the element.
+            </summary>
+        </member>
+        <member name="P:Aquality.Selenium.Core.Visualization.IVisualStateProvider.Size">
+            <summary>
+            Gets a size object containing the height and width of this element.
+            </summary>
+        </member>
+        <member name="P:Aquality.Selenium.Core.Visualization.IVisualStateProvider.Location">
+            <summary>
+            Gets a point object containing the coordinates of the upper-left 
+            corner of this element relative to the upper-left corner of the page.
+            </summary>
+        </member>
+        <member name="P:Aquality.Selenium.Core.Visualization.IVisualStateProvider.Image">
+            <summary>
+            Gets an image containing the screenshot of the element.
+            </summary>
+        </member>
+        <member name="M:Aquality.Selenium.Core.Visualization.IVisualStateProvider.GetDifference(System.Drawing.Image,System.Nullable{System.Single})">
+            <summary>
+            Gets the difference between the image of the element and the provided image
+            using <see cref="T:Aquality.Selenium.Core.Visualization.IImageComparator"/>
+            </summary>
+            <param name="theOtherOne">The image to compare the element with.</param>
+            <param name="threshold">How big a difference will be ignored as a percentage - value between 0 and 1.
+            If the value is null, the default value is got from <see cref="T:Aquality.Selenium.Core.Configurations.IVisualizationConfiguration"/>.</param>
+            <returns>The difference between the two images as a percentage  - value between 0 and 1.</returns>
         </member>
         <member name="T:Aquality.Selenium.Core.Visualization.ScreenshotExtensions">
             <summary>

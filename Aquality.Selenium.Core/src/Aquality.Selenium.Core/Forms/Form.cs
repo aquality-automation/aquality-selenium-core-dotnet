@@ -36,7 +36,7 @@ namespace Aquality.Selenium.Core.Forms
         /// Gets dump manager for the current form that could be used for visualization purposes, such as saving and comparing dumps.
         /// Uses <see cref="ElementsForVisualization"/> as basis for dump creation and comparison.
         /// </summary>
-        public virtual IDumpManager Dump => new DumpManager<T>(ElementsForVisualization, VisualizationConfiguration, LocalizedLogger);
+        public virtual IDumpManager Dump => new DumpManager<T>(ElementsForVisualization, Name, VisualizationConfiguration, LocalizedLogger);
 
         /// <summary>
         /// List of pairs uniqueName-element to be used for dump saving and comparing.

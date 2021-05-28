@@ -12,14 +12,17 @@ namespace Aquality.Selenium.Core.Visualization
     public class DumpManager<T> : IDumpManager where T : IElement
     {
         private const string ImageFormat = ".png";
-        public DumpManager(IDictionary<string, T> elementsForVisualization, IVisualizationConfiguration visualizationConfiguration, ILocalizedLogger localizedLogger)
+        public DumpManager(IDictionary<string, T> elementsForVisualization, string formName, IVisualizationConfiguration visualizationConfiguration, ILocalizedLogger localizedLogger)
         {
             ElementsForVisualization = elementsForVisualization;
+            FormName = formName;
             VisualizationConfiguration = visualizationConfiguration;
             LocalizedLogger = localizedLogger;
         }
 
         protected IDictionary<string, T> ElementsForVisualization { get; }
+
+        protected string FormName { get; }
 
         protected IVisualizationConfiguration VisualizationConfiguration { get; }
 
@@ -27,10 +30,10 @@ namespace Aquality.Selenium.Core.Visualization
 
         protected string DumpsDirectory => VisualizationConfiguration.PathToDumps;
 
-        public virtual float CompareWithDump(string dumpName)
+        public virtual float CompareWithDump(string dumpName = null)
         {
             var directory = GetDumpDirectory(dumpName);
-            LocalizedLogger.Info("loc.visualization.dump.compare", dumpName);
+            LocalizedLogger.Info("loc.visualization.dump.compare", directory.Name);
             if (!directory.Exists)
             {
                 throw new InvalidOperationException($"Dump directory [{directory.FullName}] does not exist.");
@@ -64,14 +67,14 @@ namespace Aquality.Selenium.Core.Visualization
             return (comparisonResult + countOfUnproceededElements) / (countOfProceededElements + countOfUnproceededElements);
         }
 
-        public virtual void SaveDump(string dumpName)
+        public virtual void SaveDump(string dumpName = null)
         {
             var directory = CleanUpAndGetDumpDirectory(dumpName);
             ElementsForVisualization.Where(element => element.Value.State.IsExist).ToList()
                 .ForEach(element => element.Value.Visual.Image.Save(Path.Combine(directory.FullName, $"{element.Key}.png")));
         }
 
-        protected virtual DirectoryInfo CleanUpAndGetDumpDirectory(string dumpName)
+        protected virtual DirectoryInfo CleanUpAndGetDumpDirectory(string dumpName = null)
         {
             var dirInfo = GetDumpDirectory(dumpName);
             if (dirInfo.Exists)
@@ -93,6 +96,18 @@ namespace Aquality.Selenium.Core.Visualization
             return dirInfo;
         }
 
-        private DirectoryInfo GetDumpDirectory(string dumpName) => new DirectoryInfo(Path.Combine(DumpsDirectory, dumpName));
+        protected virtual DirectoryInfo GetDumpDirectory(string dumpName = null)
+        {
+            const int maxNameLenght = 40;
+            var invalid = new string(Path.GetInvalidFileNameChars()) + new string(Path.GetInvalidPathChars());
+            var name = dumpName ?? FormName;
+            foreach (var character in invalid)
+            {
+                name = name.Replace(character, ' ');
+            }
+            name = name.Length > maxNameLenght ? name.Substring(0, maxNameLenght) : name;
+
+            return new DirectoryInfo(Path.Combine(DumpsDirectory, name));
+        }
     }
 }
