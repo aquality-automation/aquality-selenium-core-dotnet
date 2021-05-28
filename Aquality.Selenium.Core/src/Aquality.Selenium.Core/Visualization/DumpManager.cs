@@ -42,7 +42,7 @@ namespace Aquality.Selenium.Core.Visualization
             }
             var existingElements = ElementsForVisualization.Where(element => element.Value.State.IsExist)
                 .ToDictionary(el => el.Key, el => el.Value);
-            var countOfUnproceededElements = existingElements.Count();
+            var countOfUnproceededElements = existingElements.Count;
             var countOfProceededElements = 0;
             var comparisonResult = 0f;
             foreach (var imageFile in imageFiles)
@@ -68,7 +68,7 @@ namespace Aquality.Selenium.Core.Visualization
         {
             var directory = CleanUpAndGetDumpDirectory(dumpName);
             ElementsForVisualization.Where(element => element.Value.State.IsExist).ToList()
-                .ForEach(element => element.Value.Visual.Image.Save($"{element.Key}.png"));
+                .ForEach(element => element.Value.Visual.Image.Save(Path.Combine(directory.FullName, $"{element.Key}.png")));
         }
 
         protected virtual DirectoryInfo CleanUpAndGetDumpDirectory(string dumpName)
