@@ -30,7 +30,7 @@ namespace Aquality.Selenium.Core.Configurations
         {
             get
             {
-                var pathInConfiguration = settingsFile.GetValueOrDefault(".visualization.pathToDumps", "./Resources/Dumps/");
+                var pathInConfiguration = settingsFile.GetValueOrDefault(".visualization.pathToDumps", "../../../Resources/Dumps/");
                 return pathInConfiguration.Contains(".") ? Path.GetFullPath(pathInConfiguration) : pathInConfiguration;
             }
         }

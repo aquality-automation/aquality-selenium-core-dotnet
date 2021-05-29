@@ -1,5 +1,4 @@
 ﻿using Aquality.Selenium.Core.Configurations;
-using Aquality.Selenium.Core.Visualization;
 using System.Drawing;
 
 namespace Aquality.Selenium.Core.Visualization

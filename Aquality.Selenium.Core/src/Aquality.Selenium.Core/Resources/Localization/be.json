@@ -5,9 +5,9 @@
   "loc.get.text": "Атрымліваем тэкст элемента",
   "loc.text.value": "Тэкст элемента: [{0}]",
   "loc.text.sending.keys": "Націскаем клавішы '{0}'",
-  "loc.no.elements.found.in.state": "Не знайшлі элементаў па лакатару '{0}' у {1} стане",
-  "loc.no.elements.found.by.locator": "Не знайшлі элементаў па лакатару '{0}'",
-  "loc.elements.were.found.but.not.in.state": "Знайшлі элементы па лакатару '{0}', але яны не ў жаданым стане {1}",
+  "loc.no.elements.found.in.state": "Не знайшлі элементаў па лакатары '{0}' у {1} стане",
+  "loc.no.elements.found.by.locator": "Не знайшлі элементаў па лакатары '{0}'",
+  "loc.elements.were.found.but.not.in.state": "Знайшлі элементы па лакатары '{0}', але яны не ў жаданым стане {1}",
   "loc.elements.found.but.should.not": "Не павінна быць знойдзена элементаў па лакатару '{0}' у {1} стане",
   "loc.search.of.elements.failed": "Пошук элемента па лакатару '{0}' прайшоў няўдала",
   "loc.wait.for.state": "Чакаем, пакуль элемент будзе {0}",
@@ -27,5 +27,11 @@
   "loc.el.visual.size.value": "Памер элемента: [{0}]",
   "loc.el.visual.getdifference": "Параўноўваем малюнак элемента з малюнкам памеру [{0}]",
   "loc.el.visual.getdifference.withthreshold": "Параўноўваем малюнак элемента з малюнкам памеру [{0}] з парогам адчувальнасці [{1}]",
-  "loc.el.visual.difference.value": "Адрозненне паміж цяперашнім і пададзеным малюнкамі складае [{0}]"
+  "loc.el.visual.difference.value": "Адрозненне паміж цяперашнім і пададзеным малюнкамі складае [{0}]",
+  "loc.form.dump.save": "Захоўваем дамп формы з іменем [{0}]",
+  "loc.form.dump.imagenotsaved": "Не ўдалося захаваць малюнак элемента [{0}]: {1}",
+  "loc.form.dump.compare": "Параўноўваем элементы формы з дампам [{0}]",
+  "loc.form.dump.elementnotfound": "Элемент [{0}], знойдзены ў дампе, не быў знойдзены на форме",
+  "loc.form.dump.unprocessedelements": "Колькасць неапрацаваных элементаў(не знойдзеных у дампе ці ў форме) складае [{0}]. Для іх адрозненне прынята за 100%",
+  "loc.form.dump.compare.result": "Адрозненне формы ад пададзенага дампа складае [{0}]"
 }

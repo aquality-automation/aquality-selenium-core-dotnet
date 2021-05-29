@@ -5,10 +5,10 @@ using Aquality.Selenium.Core.Forms;
 using Aquality.Selenium.Core.Localization;
 using Aquality.Selenium.Core.Tests.Applications.Browser;
 using Aquality.Selenium.Core.Tests.Applications.Browser.Elements;
-using Aquality.Selenium.Core.Visualization;
 using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
 using OpenQA.Selenium;
+using OpenQA.Selenium.Interactions;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -17,7 +17,6 @@ namespace Aquality.Selenium.Core.Tests.Visualization
 {
     public class FormDumpTests : TestWithBrowser
     {
-
         private static readonly Uri HoversURL = new Uri($"{TestSite}/hovers");
 
         private readonly WebForm form = new WebForm();
@@ -28,35 +27,72 @@ namespace Aquality.Selenium.Core.Tests.Visualization
         public new void SetUp()
         {
             AqualityServices.Application.Driver.Navigate().GoToUrl(HoversURL);
+            form.WaitUntilPresent();
         }
 
         [Test]
-        public void Should_BePossibleTo_SaveFormDump_WithCustomName()
+        public void Should_BePossibleTo_SaveFormDump_WithDefaultName()
         {
             var pathToDump = 
                 new DirectoryInfo(Path.Combine(PathToDumps, form.Name.Replace("/", " ")));
-            pathToDump.Delete(true);
-            form.WaitUntilPresent();
+            if (pathToDump.Exists)
+            {
+                pathToDump.Delete(true);
+                pathToDump.Refresh();
+            }
             Assert.AreEqual(0, pathToDump.Exists ? pathToDump.GetFiles().Length : 0, "Dump directory should not contain any files before saving");
-            Assert.DoesNotThrow(() => form.Dump.SaveDump());
+            Assert.DoesNotThrow(() => form.Dump.Save());
             pathToDump.Refresh();
             DirectoryAssert.Exists(pathToDump);
             Assert.Greater(pathToDump.GetFiles().Length, 0, "Dump should contain some files");
+        }
+
+        [Test]
+        public void Should_BePossibleTo_CompareWithDump_WithCustomName_WhenDifferenceIsZero()
+        {
+            form.Dump.Save("Zero diff");
+            Assert.That(form.Dump.Compare("Zero diff"), Is.EqualTo(0), "Difference with current page should be around zero");
+        }
+
+        [Test]
+        public void Should_BePossibleTo_CompareWithDump_WithCustomName_WhenDifferenceIsNotZero()
+        {
+            form.Dump.Save("Non-zero diff");
+            form.HoverAvatar();
+            Assert.That(form.Dump.Compare("Non-zero diff"), Is.GreaterThan(0), "Difference with current page should be greater than zero");
+        }
+
+        [Test]
+        public void Should_BePossibleTo_CompareWithDump_WithCustomName_WhenElementSetDiffers()
+        {
+            var customForm = new WebForm();
+            customForm.Dump.Save("Set differs");
+            customForm.SetElementsForDump(WebForm.ElementsFilter.ElementsInitializedAsDisplayed);
+            Assert.That(customForm.Dump.Compare("Set differs"), Is.GreaterThan(0), "Difference with current page should be greater than zero if element set differs");
+        }
+
+        [Test]
+        public void Should_BePossibleTo_SaveAndCompareWithDump_WithCustomName_WhenAllElementsSelected()
+        {
+            var customForm = new WebForm();
+            customForm.SetElementsForDump(WebForm.ElementsFilter.AllElements);
+            Assert.DoesNotThrow(() => customForm.Dump.Save("All elements"));
+            Assert.That(customForm.Dump.Compare("All elements"), Is.GreaterThan(0), "Some elements should be failed to take image, so count of elements would not match");
         }
 
         private class WebForm : Form<WebElement>
         {
             private static readonly By ContentLoc = By.XPath("//div[contains(@class,'example')]");
             private static readonly By HiddenElementsLoc = By.XPath("//h5");
-            private static readonly By DisplayedElementsLoc = By.XPath("//img[@alt='User Avatar']");
+            private static readonly By DisplayedElementsLoc = By.XPath("//div[contains(@class,'figure')]");
 
             private readonly Label displayedLabel = ElementFactory.GetCustomElement(
                 (loc, name, state) => new Label(loc, name, state),
-                DisplayedElementsLoc, "I'm displayed");
+                DisplayedElementsLoc, "I'm displayed field");
             private readonly Label displayedButInitializedAsExist
                 = new Label(DisplayedElementsLoc, "I'm displayed but initialized as existing", ElementState.ExistsInAnyState);
             private Label DisplayedLabel
-                => new Label(DisplayedElementsLoc, "I'm displayed", ElementState.Displayed);
+                => new Label(DisplayedElementsLoc, "I'm displayed property", ElementState.Displayed);
             private Label HiddenLabel 
                 => new Label(HiddenElementsLoc, "I'm hidden", ElementState.ExistsInAnyState);
             private Label HiddenLabelInitializedAsDisplayed 
@@ -70,11 +106,19 @@ namespace Aquality.Selenium.Core.Tests.Visualization
             public override string Name => "Web page/form";
             private static IElementFactory ElementFactory => AqualityServices.ServiceProvider.GetRequiredService<IElementFactory>();
 
-            public WebForm()
+            public void WaitUntilPresent()
             {
+                ContentLabel.Click();
+                DisplayedLabel.State.WaitForClickable();
             }
 
-            public void WaitUntilPresent() => DisplayedLabel.State.WaitForClickable();
+            public void HoverAvatar()
+            {
+                new Actions(AqualityServices.Application.Driver)
+                    .MoveToElement(DisplayedLabel.GetElement())
+                    .Build().Perform();
+                HiddenLabel.State.WaitForDisplayed();
+            }
 
             public void SetElementsForDump(ElementsFilter filter)
             {

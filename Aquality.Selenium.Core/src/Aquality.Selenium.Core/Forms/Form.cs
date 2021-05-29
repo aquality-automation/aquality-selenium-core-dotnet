@@ -3,6 +3,7 @@ using Aquality.Selenium.Core.Elements;
 using Aquality.Selenium.Core.Elements.Interfaces;
 using Aquality.Selenium.Core.Localization;
 using Aquality.Selenium.Core.Visualization;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -53,10 +54,12 @@ namespace Aquality.Selenium.Core.Forms
             get
             {
                 const BindingFlags bindingFlags = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance;
-                var elementFields = GetType().GetFields(bindingFlags).Where(field => typeof(T).IsAssignableFrom(field.FieldType))
-                    .ToDictionary(field => field.Name, field => (T) field.GetValue(this));
                 var elementProperties = GetType().GetProperties(bindingFlags).Where(property => typeof(T).IsAssignableFrom(property.PropertyType))
-                    .ToDictionary(property => property.Name, property => (T) property.GetValue(this));
+                    .ToDictionary(property => property.Name, property => (T)property.GetValue(this));
+                var elementFields = GetType().GetFields(bindingFlags).Where(field => typeof(T).IsAssignableFrom(field.FieldType))
+                    .ToDictionary(field => elementProperties.Keys.Any(
+                        key => key.Equals(field.Name, StringComparison.InvariantCultureIgnoreCase)) ? $"_{field.Name}" : field.Name,
+                    field => (T)field.GetValue(this));
                 return elementFields.Concat(elementProperties)
                     .ToDictionary(el => el.Key, el => el.Value);
             }

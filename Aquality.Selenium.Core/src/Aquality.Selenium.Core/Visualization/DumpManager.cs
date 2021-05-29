@@ -4,6 +4,7 @@ using Aquality.Selenium.Core.Localization;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 
@@ -30,10 +31,10 @@ namespace Aquality.Selenium.Core.Visualization
 
         protected string DumpsDirectory => VisualizationConfiguration.PathToDumps;
 
-        public virtual float CompareWithDump(string dumpName = null)
+        public virtual float Compare(string dumpName = null)
         {
             var directory = GetDumpDirectory(dumpName);
-            LocalizedLogger.Info("loc.visualization.dump.compare", directory.Name);
+            LocalizedLogger.Info("loc.form.dump.compare", directory.Name);
             if (!directory.Exists)
             {
                 throw new InvalidOperationException($"Dump directory [{directory.FullName}] does not exist.");
@@ -53,7 +54,7 @@ namespace Aquality.Selenium.Core.Visualization
                 var key = imageFile.Name.Replace(ImageFormat, string.Empty);
                 if (!existingElements.ContainsKey(key))
                 {
-                    LocalizedLogger.Warn("loc.visualization.dump.keynotfound", key);
+                    LocalizedLogger.Warn("loc.form.dump.elementnotfound", key);
                     countOfUnproceededElements++;
                 }
                 else
@@ -63,15 +64,32 @@ namespace Aquality.Selenium.Core.Visualization
                     countOfProceededElements++;
                 }
             }
+            if (countOfUnproceededElements > 0)
+            {
+                LocalizedLogger.Warn("loc.form.dump.unprocessedelements", countOfUnproceededElements);
+            }
             // adding of countOfUnproceededElements means 100% difference for each element absent in dump or on page
-            return (comparisonResult + countOfUnproceededElements) / (countOfProceededElements + countOfUnproceededElements);
+            var result = (comparisonResult + countOfUnproceededElements) / (countOfProceededElements + countOfUnproceededElements);
+            LocalizedLogger.Info("loc.form.dump.compare.result", result.ToString("P", CultureInfo.InvariantCulture));
+            return result;
         }
 
-        public virtual void SaveDump(string dumpName = null)
+        public virtual void Save(string dumpName = null)
         {
             var directory = CleanUpAndGetDumpDirectory(dumpName);
+            LocalizedLogger.Info("loc.form.dump.save", directory.Name);
             ElementsForVisualization.Where(element => element.Value.State.IsExist).ToList()
-                .ForEach(element => element.Value.Visual.Image.Save(Path.Combine(directory.FullName, $"{element.Key}.png")));
+                .ForEach(element =>
+                {
+                    try
+                    {
+                        element.Value.Visual.Image.Save(Path.Combine(directory.FullName, $"{element.Key}.png"));
+                    }
+                    catch (Exception e)
+                    {
+                        LocalizedLogger.Fatal("loc.form.dump.imagenotsaved", e, element.Key, e.Message);
+                    }
+                });
         }
 
         protected virtual DirectoryInfo CleanUpAndGetDumpDirectory(string dumpName = null)
@@ -90,6 +108,10 @@ namespace Aquality.Selenium.Core.Visualization
             }
             else
             {
+                if (!Directory.Exists(DumpsDirectory))
+                {
+                    Directory.CreateDirectory(DumpsDirectory);
+                }
                 dirInfo.Create();
             }
 

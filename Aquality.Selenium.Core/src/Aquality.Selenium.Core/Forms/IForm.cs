@@ -1,6 +1,4 @@
-﻿using Aquality.Selenium.Core.Configurations;
-using Aquality.Selenium.Core.Elements.Interfaces;
-using Aquality.Selenium.Core.Visualization;
+﻿using Aquality.Selenium.Core.Visualization;
 
 namespace Aquality.Selenium.Core.Forms
 {

@@ -1119,7 +1119,7 @@
             Describes dump manager for the form that could be used for visualization purposes, such as saving and comparing dumps.
             </summary>
         </member>
-        <member name="M:Aquality.Selenium.Core.Visualization.IDumpManager.CompareWithDump(System.String)">
+        <member name="M:Aquality.Selenium.Core.Visualization.IDumpManager.Compare(System.String)">
             <summary>
             Compares current form with the dump saved previously.
             </summary>
@@ -1128,7 +1128,7 @@
             <returns>The difference of comparing the page to the dump as a percentage (no difference is 0%).
             Calculated as sum of element differences divided by elements count.</returns>
         </member>
-        <member name="M:Aquality.Selenium.Core.Visualization.IDumpManager.SaveDump(System.String)">
+        <member name="M:Aquality.Selenium.Core.Visualization.IDumpManager.Save(System.String)">
             <summary>
             Saves the dump of the current form 
             (a set of screenshots of selected form elements)
