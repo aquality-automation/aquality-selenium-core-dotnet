@@ -3,8 +3,10 @@ using Aquality.Selenium.Core.Elements;
 using Aquality.Selenium.Core.Elements.Interfaces;
 using Aquality.Selenium.Core.Forms;
 using Aquality.Selenium.Core.Localization;
+using Aquality.Selenium.Core.Logging;
 using Aquality.Selenium.Core.Tests.Applications.Browser;
 using Aquality.Selenium.Core.Tests.Applications.Browser.Elements;
+using Aquality.Selenium.Core.Waitings;
 using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
 using OpenQA.Selenium;
@@ -58,8 +60,14 @@ namespace Aquality.Selenium.Core.Tests.Visualization
         public void Should_BePossibleTo_CompareWithDump_WithCustomName_WhenDifferenceIsNotZero()
         {
             form.Dump.Save("Non-zero diff");
-            form.HoverAvatar();
-            Assert.That(form.Dump.Compare("Non-zero diff"), Is.GreaterThan(0), "Difference with current page should be greater than zero");
+            var result = AqualityServices.ServiceProvider.GetRequiredService<IConditionalWait>()
+                .WaitFor(() =>
+                {
+                    form.HoverAvatar();
+                    return form.Dump.Compare("Non-zero diff") > 0;
+                });
+            
+            Assert.That(result, "Difference with current page should be greater than zero");
         }
 
         [Test]
@@ -114,6 +122,7 @@ namespace Aquality.Selenium.Core.Tests.Visualization
 
             public void HoverAvatar()
             {
+                AqualityServices.ServiceProvider.GetRequiredService<Logger>().Info("Hovering avatar");
                 new Actions(AqualityServices.Application.Driver)
                     .MoveToElement(DisplayedLabel.GetElement())
                     .Build().Perform();
