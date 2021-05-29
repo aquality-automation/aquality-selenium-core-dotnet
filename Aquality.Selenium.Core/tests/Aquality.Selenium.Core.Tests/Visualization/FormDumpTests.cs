@@ -59,10 +59,11 @@ namespace Aquality.Selenium.Core.Tests.Visualization
         [Test]
         public void Should_BePossibleTo_CompareWithDump_WithCustomName_WhenDifferenceIsNotZero()
         {
-            form.Dump.Save("Non-zero diff");
             var result = AqualityServices.ServiceProvider.GetRequiredService<IConditionalWait>()
                 .WaitFor(() =>
                 {
+                    AqualityServices.Application.Driver.Navigate().Refresh();
+                    form.Dump.Save("Non-zero diff");
                     form.HoverAvatar();
                     return form.Dump.Compare("Non-zero diff") > 0;
                 });
