@@ -59,16 +59,10 @@ namespace Aquality.Selenium.Core.Tests.Visualization
         [Test]
         public void Should_BePossibleTo_CompareWithDump_WithCustomName_WhenDifferenceIsNotZero()
         {
-            var result = AqualityServices.ServiceProvider.GetRequiredService<IConditionalWait>()
-                .WaitFor(() =>
-                {
-                    AqualityServices.Application.Driver.Navigate().Refresh();
-                    form.Dump.Save("Non-zero diff");
-                    form.HoverAvatar();
-                    return form.Dump.Compare("Non-zero diff") > 0;
-                });
-            
-            Assert.That(result, "Difference with current page should be greater than zero");
+            form.Dump.Save("Non-zero diff");
+            form.HoverAvatar();
+
+            Assert.That(form.Dump.Compare("Non-zero diff"), Is.GreaterThan(0), "Difference with current page should be greater than zero");
         }
 
         [Test]
@@ -126,6 +120,7 @@ namespace Aquality.Selenium.Core.Tests.Visualization
                 AqualityServices.ServiceProvider.GetRequiredService<Logger>().Info("Hovering avatar");
                 new Actions(AqualityServices.Application.Driver)
                     .MoveToElement(DisplayedLabel.GetElement())
+                    .ClickAndHold()
                     .Build().Perform();
                 HiddenLabel.State.WaitForDisplayed();
             }
