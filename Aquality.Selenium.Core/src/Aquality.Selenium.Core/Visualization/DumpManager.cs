@@ -49,6 +49,7 @@ namespace Aquality.Selenium.Core.Visualization
             var countOfUnproceededElements = existingElements.Count;
             var countOfProceededElements = 0;
             var comparisonResult = 0f;
+            var absentOnFormElementNames = new List<string>();
             foreach (var imageFile in imageFiles)
             {
                 var key = imageFile.Name.Replace(ImageFormat, string.Empty);
@@ -56,16 +57,26 @@ namespace Aquality.Selenium.Core.Visualization
                 {
                     LocalizedLogger.Warn("loc.form.dump.elementnotfound", key);
                     countOfUnproceededElements++;
+                    absentOnFormElementNames.Add(key);
                 }
                 else
                 {
                     comparisonResult += existingElements[key].Visual.GetDifference(Image.FromFile(imageFile.FullName));
                     countOfUnproceededElements--;
                     countOfProceededElements++;
+                    existingElements.Remove(key);
                 }
             }
             if (countOfUnproceededElements > 0)
             {
+                if (existingElements.Any())
+                {
+                    LocalizedLogger.Warn("loc.form.dump.elementsmissedindump", string.Join(", ", existingElements.Keys));
+                }
+                if (absentOnFormElementNames.Any())
+                {
+                    LocalizedLogger.Warn("loc.form.dump.elementsmissedonform", string.Join(", ", absentOnFormElementNames));
+                }
                 LocalizedLogger.Warn("loc.form.dump.unprocessedelements", countOfUnproceededElements);
             }
             // adding of countOfUnproceededElements means 100% difference for each element absent in dump or on page

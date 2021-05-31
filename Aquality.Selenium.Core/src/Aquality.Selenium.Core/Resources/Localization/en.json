@@ -31,7 +31,9 @@
   "loc.form.dump.save": "Saving dump of the form with name [{0}]",
   "loc.form.dump.imagenotsaved": "Failed to save image of the element [{0}]: {1}",
   "loc.form.dump.compare": "Comparing elements of the form to dump [{0}]",
-  "loc.form.dump.elementnotfound": "Element [{0}] found in the dump but was not found on the form",
-  "loc.form.dump.unprocessedelements": "Count of unprocessed (no match between form and dump) elements is [{0}]. For them difference count as 100%",
+  "loc.form.dump.elementnotfound": "Element [{0}] found in the dump but was not found on form",
+  "loc.form.dump.elementsmissedindump": "Elements that were found on form but missed in the dump: [{0}].",
+  "loc.form.dump.elementsmissedonform": "Elements that were found in the dump but missed on form: [{0}].",
+  "loc.form.dump.unprocessedelements": "Count of unprocessed (no match between form and dump) elements is [{0}]. For them difference counts as 100%",
   "loc.form.dump.compare.result": "The difference between the current form and the given dump is [{0}]"
 }
