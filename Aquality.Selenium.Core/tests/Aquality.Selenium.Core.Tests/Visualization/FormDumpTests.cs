@@ -20,13 +20,12 @@ namespace Aquality.Selenium.Core.Tests.Visualization
     {
         private static readonly Uri HoversURL = new Uri($"{TestSite}/hovers");
 
-        private readonly WebForm form = new WebForm();
-
         private string PathToDumps => AqualityServices.ServiceProvider.GetRequiredService<IVisualizationConfiguration>().PathToDumps;
 
         [SetUp]
         public new void SetUp()
         {
+            var form = new WebForm();
             AqualityServices.Application.Driver.Navigate().GoToUrl(HoversURL);
             form.ClickOnContent();
             form.WaitUntilPresent();
@@ -35,6 +34,7 @@ namespace Aquality.Selenium.Core.Tests.Visualization
         [Test]
         public void Should_BePossibleTo_SaveFormDump_WithDefaultName()
         {
+            var form = new WebForm();
             var pathToDump = 
                 new DirectoryInfo(Path.Combine(PathToDumps, form.Name.Replace("/", " ")));
             if (pathToDump.Exists)
@@ -52,6 +52,7 @@ namespace Aquality.Selenium.Core.Tests.Visualization
         [Test]
         public void Should_BePossibleTo_CompareWithDump_WithCustomName_WhenDifferenceIsZero()
         {
+            var form = new WebForm();
             form.Dump.Save("Zero diff");
             Assert.That(form.Dump.Compare("Zero diff"), Is.EqualTo(0), "Difference with current page should be around zero");
         }
@@ -59,6 +60,7 @@ namespace Aquality.Selenium.Core.Tests.Visualization
         [Test]
         public void Should_BePossibleTo_CompareWithDump_WithCustomName_WhenDifferenceIsNotZero()
         {
+            var form = new WebForm();
             form.HoverAvatar();
             form.Dump.Save("Non-zero diff");
             AqualityServices.Application.Driver.Navigate().Refresh();
