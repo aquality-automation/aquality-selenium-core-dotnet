@@ -6,7 +6,6 @@ using Aquality.Selenium.Core.Localization;
 using Aquality.Selenium.Core.Logging;
 using Aquality.Selenium.Core.Tests.Applications.Browser;
 using Aquality.Selenium.Core.Tests.Applications.Browser.Elements;
-using Aquality.Selenium.Core.Waitings;
 using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
 using OpenQA.Selenium;
@@ -29,6 +28,7 @@ namespace Aquality.Selenium.Core.Tests.Visualization
         public new void SetUp()
         {
             AqualityServices.Application.Driver.Navigate().GoToUrl(HoversURL);
+            form.ClickOnContent();
             form.WaitUntilPresent();
         }
 
@@ -59,9 +59,10 @@ namespace Aquality.Selenium.Core.Tests.Visualization
         [Test]
         public void Should_BePossibleTo_CompareWithDump_WithCustomName_WhenDifferenceIsNotZero()
         {
-            form.Dump.Save("Non-zero diff");
             form.HoverAvatar();
-
+            form.Dump.Save("Non-zero diff");
+            AqualityServices.Application.Driver.Navigate().Refresh();
+            form.WaitUntilPresent();
             Assert.That(form.Dump.Compare("Non-zero diff"), Is.GreaterThan(0), "Difference with current page should be greater than zero");
         }
 
@@ -109,9 +110,13 @@ namespace Aquality.Selenium.Core.Tests.Visualization
             public override string Name => "Web page/form";
             private static IElementFactory ElementFactory => AqualityServices.ServiceProvider.GetRequiredService<IElementFactory>();
 
-            public void WaitUntilPresent()
+            public void ClickOnContent()
             {
                 ContentLabel.Click();
+            }
+
+            public void WaitUntilPresent()
+            {
                 DisplayedLabel.State.WaitForClickable();
             }
 
