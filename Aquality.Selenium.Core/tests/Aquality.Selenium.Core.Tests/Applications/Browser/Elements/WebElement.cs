@@ -9,7 +9,7 @@ using Aquality.Selenium.Core.Waitings;
 using Microsoft.Extensions.DependencyInjection;
 using OpenQA.Selenium;
 
-namespace Aquality.Selenium.Core.Tests.Applications.Browser
+namespace Aquality.Selenium.Core.Tests.Applications.Browser.Elements
 {
     public abstract class WebElement : Element
     {

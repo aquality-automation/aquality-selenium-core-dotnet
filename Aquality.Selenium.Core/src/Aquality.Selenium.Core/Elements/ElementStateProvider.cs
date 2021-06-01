@@ -1,4 +1,5 @@
 ﻿using Aquality.Selenium.Core.Elements.Interfaces;
+using Aquality.Selenium.Core.Logging;
 using Aquality.Selenium.Core.Waitings;
 using OpenQA.Selenium;
 using System;
@@ -33,22 +34,22 @@ namespace Aquality.Selenium.Core.Elements
 
         public bool WaitForDisplayed(TimeSpan? timeout = null)
         {
-            return DoAndLogWaitForState(() => IsAnyElementFound(timeout, ElementState.Displayed), "displayed");
+            return DoAndLogWaitForState(() => IsAnyElementFound(timeout, ElementState.Displayed), "displayed", timeout);
         }
 
         public bool WaitForNotDisplayed(TimeSpan? timeout = null)
         {
-            return DoAndLogWaitForState(() => ConditionalWait.WaitFor(() => !IsDisplayed, timeout), "not.displayed");
+            return DoAndLogWaitForState(() => ConditionalWait.WaitFor(() => !IsDisplayed, timeout), "not.displayed", timeout);
         }
 
         public bool WaitForExist(TimeSpan? timeout = null)
         {
-            return DoAndLogWaitForState(() => IsAnyElementFound(timeout, ElementState.ExistsInAnyState), "exist");
+            return DoAndLogWaitForState(() => IsAnyElementFound(timeout, ElementState.ExistsInAnyState), "exist", timeout);
         }
 
         public bool WaitForNotExist(TimeSpan? timeout = null)
         {
-            return DoAndLogWaitForState(() => ConditionalWait.WaitFor(() => !IsExist, timeout), "not.exist");
+            return DoAndLogWaitForState(() => ConditionalWait.WaitFor(() => !IsExist, timeout), "not.exist", timeout);
         }
 
         private bool IsAnyElementFound(TimeSpan? timeout, ElementState state)
@@ -58,12 +59,12 @@ namespace Aquality.Selenium.Core.Elements
 
         public bool WaitForEnabled(TimeSpan? timeout = null)
         {
-            return DoAndLogWaitForState(() => IsElementInDesiredState(element => IsElementEnabled(element), "ENABLED", timeout), "enabled");
+            return DoAndLogWaitForState(() => IsElementInDesiredState(element => IsElementEnabled(element), "ENABLED", timeout), "enabled", timeout);
         }
 
         public bool WaitForNotEnabled(TimeSpan? timeout = null)
         {
-            return DoAndLogWaitForState(() => IsElementInDesiredState(element => !IsElementEnabled(element), "NOT ENABLED", timeout), "not.enabled");
+            return DoAndLogWaitForState(() => IsElementInDesiredState(element => !IsElementEnabled(element), "NOT ENABLED", timeout), "not.enabled", timeout);
         }
 
         protected virtual bool IsElementEnabled(IWebElement element)

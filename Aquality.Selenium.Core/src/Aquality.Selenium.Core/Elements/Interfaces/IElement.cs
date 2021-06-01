@@ -1,4 +1,5 @@
-﻿using OpenQA.Selenium;
+﻿using Aquality.Selenium.Core.Visualization;
+using OpenQA.Selenium;
 using OpenQA.Selenium.Remote;
 using System;
 
@@ -28,6 +29,11 @@ namespace Aquality.Selenium.Core.Elements.Interfaces
         IElementStateProvider State { get; }
 
         /// <summary>
+        /// Gets element visual state.
+        /// </summary>
+        IVisualStateProvider Visual { get; }
+
+        /// <summary>
         /// Finds current element by specified <see cref="Locator"/>
         /// </summary>
         /// <param name="timeout">Timeout to find element. Default: <see cref="Configurations.ITimeoutConfiguration.Condition"/></param>
@@ -43,7 +49,7 @@ namespace Aquality.Selenium.Core.Elements.Interfaces
         /// <summary>
         /// Gets element attribute value by its name.
         /// </summary>
-        /// <param name="attr">Name of attrbiute</param>
+        /// <param name="attr">Name of attribute</param>
         /// <returns>Value of element attribute.</returns>
         string GetAttribute(string attr);
 

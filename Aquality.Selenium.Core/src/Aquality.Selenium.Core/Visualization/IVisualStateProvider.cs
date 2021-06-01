@@ -1,8 +1,7 @@
 ﻿using Aquality.Selenium.Core.Configurations;
-using Aquality.Selenium.Core.Visualization;
 using System.Drawing;
 
-namespace Aquality.Selenium.Core.Elements.Interfaces
+namespace Aquality.Selenium.Core.Visualization
 {
     /// <summary>
     /// Provides visual state of the element.

@@ -1,4 +1,4 @@
-﻿namespace Aquality.Selenium.Core.Elements
+﻿namespace Aquality.Selenium.Core.Logging
 {
     /// <summary>
     /// Logs element state.
