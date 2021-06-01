@@ -643,13 +643,13 @@
         <member name="P:Aquality.Selenium.Core.Forms.Form`1.VisualizationConfiguration">
             <summary>
             Visualization configuration used by <see cref="P:Aquality.Selenium.Core.Forms.Form`1.Dump"/>.
-            Could be get from AqualityServices.
+            Could be obtained from AqualityServices.
             </summary>
         </member>
         <member name="P:Aquality.Selenium.Core.Forms.Form`1.LocalizedLogger">
             <summary>
-            Localizer logger used by <see cref="P:Aquality.Selenium.Core.Forms.Form`1.Dump"/>.
-            Could be get from AqualityServices.
+            Localized logger used by <see cref="P:Aquality.Selenium.Core.Forms.Form`1.Dump"/>.
+            Could be obtained from AqualityServices.
             </summary>
         </member>
         <member name="P:Aquality.Selenium.Core.Forms.Form`1.Dump">

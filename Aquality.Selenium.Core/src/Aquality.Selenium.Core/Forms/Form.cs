@@ -23,13 +23,13 @@ namespace Aquality.Selenium.Core.Forms
 
         /// <summary>
         /// Visualization configuration used by <see cref="Dump"/>.
-        /// Could be get from AqualityServices.
+        /// Could be obtained from AqualityServices.
         /// </summary>
         protected abstract IVisualizationConfiguration VisualizationConfiguration { get; }
 
         /// <summary>
-        /// Localizer logger used by <see cref="Dump"/>.
-        /// Could be get from AqualityServices.
+        /// Localized logger used by <see cref="Dump"/>.
+        /// Could be obtained from AqualityServices.
         /// </summary>
         protected abstract ILocalizedLogger LocalizedLogger { get; }
 
