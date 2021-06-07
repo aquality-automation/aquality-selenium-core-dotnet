@@ -16,9 +16,10 @@ namespace Aquality.Selenium.Core.Elements.Interfaces
         /// <param name="locator">element locator</param>
         /// <param name="state">desired ElementState</param>
         /// <param name="timeout">timeout for search</param>
+        /// <param name="name">element name to be used for logging and exception message</param>
         /// <exception cref="NoSuchElementException">Thrown if element was not found in time in desired state</exception> 
         /// <returns>Found element</returns>
-        IWebElement FindElement(By locator, ElementState state = ElementState.ExistsInAnyState, TimeSpan? timeout = null);
+        IWebElement FindElement(By locator, ElementState state = ElementState.ExistsInAnyState, TimeSpan? timeout = null, string name = null);
 
         /// <summary>
         /// Finds element in state defined by predicate.
@@ -26,9 +27,10 @@ namespace Aquality.Selenium.Core.Elements.Interfaces
         /// <param name="locator">elements locator</param>
         /// <param name="elementStateCondition">predicate to define element state</param>
         /// <param name="timeout">timeout for search</param>
+        /// <param name="name">element name to be used for logging and exception message</param>
         /// <exception cref="NoSuchElementException">Thrown if element was not found in time in desired state</exception> 
         /// <returns>Found element</returns>
-        IWebElement FindElement(By locator, Func<IWebElement, bool> elementStateCondition, TimeSpan? timeout = null);
+        IWebElement FindElement(By locator, Func<IWebElement, bool> elementStateCondition, TimeSpan? timeout = null, string name = null);
 
         /// <summary>
         /// Finds elements in desired ElementState.

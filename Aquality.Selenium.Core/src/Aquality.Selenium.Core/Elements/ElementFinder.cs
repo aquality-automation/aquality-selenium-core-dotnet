@@ -24,23 +24,24 @@ namespace Aquality.Selenium.Core.Elements
 
         private IConditionalWait ConditionalWait { get; }
 
-        public virtual IWebElement FindElement(By locator, ElementState state = ElementState.ExistsInAnyState, TimeSpan? timeout = null)
+        public virtual IWebElement FindElement(By locator, ElementState state = ElementState.ExistsInAnyState, TimeSpan? timeout = null, string name = null)
         {
             var desiredState = ResolveState(state);
-            return FindElement(locator, desiredState.ElementStateCondition, desiredState.StateName, timeout);
+            return FindElement(locator, desiredState.ElementStateCondition, desiredState.StateName, timeout, name);
         }
 
-        public virtual IWebElement FindElement(By locator, Func<IWebElement, bool> elementStateCondition, TimeSpan? timeout = null)
+        public virtual IWebElement FindElement(By locator, Func<IWebElement, bool> elementStateCondition, TimeSpan? timeout = null, string name = null)
         {
-            return FindElement(locator, elementStateCondition, "desired", timeout);
+            return FindElement(locator, elementStateCondition, "desired", timeout, name);
         }
 
-        public virtual IWebElement FindElement(By locator, Func<IWebElement, bool> elementStateCondition, string stateName, TimeSpan? timeout = null)
+        public virtual IWebElement FindElement(By locator, Func<IWebElement, bool> elementStateCondition, string stateName, TimeSpan? timeout = null, string name = null)
         {
             var desiredState = new DesiredState(elementStateCondition, stateName)
             {
                 IsCatchingTimeoutException = false,
-                IsThrowingNoSuchElementException = true
+                IsThrowingNoSuchElementException = true,
+                ElementName = name
             };
             return FindElements(locator, desiredState, timeout).First();
         }
@@ -56,7 +57,7 @@ namespace Aquality.Selenium.Core.Elements
         {
             var desiredState = new DesiredState(elementStateCondition, "desired")
             {
-                IsCatchingTimeoutException = true
+                IsCatchingTimeoutException = true,
             };
             return FindElements(locator, desiredState, timeout);
         }
@@ -83,7 +84,9 @@ namespace Aquality.Selenium.Core.Elements
 
         protected virtual void HandleTimeoutException(WebDriverTimeoutException ex, DesiredState desiredState, By locator, List<IWebElement> foundElements)
         {
-            var message = $"No elements with locator '{locator.ToString()}' were found in {desiredState.StateName} state";
+            var message = string.IsNullOrEmpty(desiredState.ElementName) 
+                ? $"No elements with locator '{locator}' were found in {desiredState.StateName} state"
+                : $"Element [{desiredState.ElementName}] was not found by locator '{locator}' in {desiredState.StateName} state";
             if (desiredState.IsCatchingTimeoutException)
             {
                 if (!foundElements.Any())
@@ -101,12 +104,11 @@ namespace Aquality.Selenium.Core.Elements
             }
             else
             {
-                var combinedMessage = $"{ex.Message}: {message}";
                 if (desiredState.IsThrowingNoSuchElementException && !foundElements.Any())
                 {
-                    throw new NoSuchElementException(combinedMessage);
+                    throw new NoSuchElementException($"{message}: {ex.Message}");
                 }
-                throw new WebDriverTimeoutException(combinedMessage);
+                throw new WebDriverTimeoutException($"{ex.Message}: {message}");
             }
         }
 

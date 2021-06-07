@@ -57,11 +57,11 @@ namespace Aquality.Selenium.Core.Elements
             {
                 case ElementsCount.Zero:
                     ConditionalWait.WaitForTrue(() => !ElementFinder.FindElements(locator, state, TimeSpan.Zero).Any(), 
-                        message: LocalizationManager.GetLocalizedMessage("loc.elements.found.but.should.not", locator.ToString(), state.ToString()));
+                        message: LocalizationManager.GetLocalizedMessage("loc.elements.with.name.found.but.should.not", name, locator.ToString(), state.ToString()));
                     break;
                 case ElementsCount.MoreThenZero:
                     ConditionalWait.WaitForTrue(() => ElementFinder.FindElements(locator, state, TimeSpan.Zero).Any(), 
-                        message: LocalizationManager.GetLocalizedMessage("loc.no.elements.found.by.locator", locator.ToString()));
+                        message: LocalizationManager.GetLocalizedMessage("loc.no.elements.with.name.found.by.locator", name, locator.ToString()));
                     break;
                 case ElementsCount.Any:
                     ConditionalWait.WaitFor(() => ElementFinder.FindElements(locator, state, TimeSpan.Zero) != null);

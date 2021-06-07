@@ -45,7 +45,7 @@ namespace Aquality.Selenium.Core.Elements
             {
                 if (elementCacheHandler == null)
                 {
-                    elementCacheHandler = new ElementCacheHandler(Locator, elementState, Finder);
+                    elementCacheHandler = new ElementCacheHandler(Locator, Name, elementState, Finder);
                 }
 
                 return elementCacheHandler;
@@ -124,7 +124,7 @@ namespace Aquality.Selenium.Core.Elements
             {
                 return CacheConfiguration.IsEnabled
                     ? Cache.GetElement(timeout)
-                    : (RemoteWebElement) Finder.FindElement(Locator, elementState, timeout);
+                    : (RemoteWebElement) Finder.FindElement(Locator, elementState, timeout, Name);
             }
             catch (NoSuchElementException ex) when (LoggerConfiguration.LogPageSource)
             {

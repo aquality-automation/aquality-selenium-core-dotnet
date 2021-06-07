@@ -471,23 +471,25 @@
             Provides ability to find elements in desired ElementState.
             </summary>
         </member>
-        <member name="M:Aquality.Selenium.Core.Elements.Interfaces.IElementFinder.FindElement(OpenQA.Selenium.By,Aquality.Selenium.Core.Elements.ElementState,System.Nullable{System.TimeSpan})">
+        <member name="M:Aquality.Selenium.Core.Elements.Interfaces.IElementFinder.FindElement(OpenQA.Selenium.By,Aquality.Selenium.Core.Elements.ElementState,System.Nullable{System.TimeSpan},System.String)">
             <summary>
             Finds element in desired ElementState.
             </summary>
             <param name="locator">element locator</param>
             <param name="state">desired ElementState</param>
             <param name="timeout">timeout for search</param>
+            <param name="name">element name to be used for logging and exception message</param>
             <exception cref="T:OpenQA.Selenium.NoSuchElementException">Thrown if element was not found in time in desired state</exception> 
             <returns>Found element</returns>
         </member>
-        <member name="M:Aquality.Selenium.Core.Elements.Interfaces.IElementFinder.FindElement(OpenQA.Selenium.By,System.Func{OpenQA.Selenium.IWebElement,System.Boolean},System.Nullable{System.TimeSpan})">
+        <member name="M:Aquality.Selenium.Core.Elements.Interfaces.IElementFinder.FindElement(OpenQA.Selenium.By,System.Func{OpenQA.Selenium.IWebElement,System.Boolean},System.Nullable{System.TimeSpan},System.String)">
             <summary>
             Finds element in state defined by predicate.
             </summary>
             <param name="locator">elements locator</param>
             <param name="elementStateCondition">predicate to define element state</param>
             <param name="timeout">timeout for search</param>
+            <param name="name">element name to be used for logging and exception message</param>
             <exception cref="T:OpenQA.Selenium.NoSuchElementException">Thrown if element was not found in time in desired state</exception> 
             <returns>Found element</returns>
         </member>
@@ -507,6 +509,7 @@
             <param name="locator">elements locator</param>
             <param name="elementStateCondition">predicate to define elements state</param>
             <param name="timeout">timeout for search</param>
+            
             <returns>List of found elements</returns>
         </member>
         <member name="M:Aquality.Selenium.Core.Elements.Interfaces.IElementFinder.FindElements(OpenQA.Selenium.By,Aquality.Selenium.Core.Elements.DesiredState,System.Nullable{System.TimeSpan})">
