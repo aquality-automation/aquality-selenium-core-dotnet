@@ -56,21 +56,21 @@ namespace Aquality.Selenium.Core.Elements
             switch (expectedCount)
             {
                 case ElementsCount.Zero:
-                    ConditionalWait.WaitForTrue(() => !ElementFinder.FindElements(locator, state, TimeSpan.Zero).Any(), 
-                        message: LocalizationManager.GetLocalizedMessage("loc.elements.found.but.should.not", locator.ToString(), state.ToString()));
+                    ConditionalWait.WaitForTrue(() => !ElementFinder.FindElements(locator, state, TimeSpan.Zero, name).Any(), 
+                        message: LocalizationManager.GetLocalizedMessage("loc.elements.with.name.found.but.should.not", name, locator.ToString(), state.ToString()));
                     break;
                 case ElementsCount.MoreThenZero:
-                    ConditionalWait.WaitForTrue(() => ElementFinder.FindElements(locator, state, TimeSpan.Zero).Any(), 
-                        message: LocalizationManager.GetLocalizedMessage("loc.no.elements.found.by.locator", locator.ToString()));
+                    ConditionalWait.WaitForTrue(() => ElementFinder.FindElements(locator, state, TimeSpan.Zero, name).Any(), 
+                        message: LocalizationManager.GetLocalizedMessage("loc.no.elements.with.name.found.by.locator", name, locator.ToString()));
                     break;
                 case ElementsCount.Any:
-                    ConditionalWait.WaitFor(() => ElementFinder.FindElements(locator, state, TimeSpan.Zero) != null);
+                    ConditionalWait.WaitFor(() => ElementFinder.FindElements(locator, state, TimeSpan.Zero, name) != null);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException($"No such expected value: {expectedCount}");
             }
 
-            var webElements = ElementFinder.FindElements(locator, state, TimeSpan.Zero);
+            var webElements = ElementFinder.FindElements(locator, state, TimeSpan.Zero, name);
             IEnumerable<T> elements = webElements.Select((webElement, index) =>
             {
                 var elementIndex = index + 1;

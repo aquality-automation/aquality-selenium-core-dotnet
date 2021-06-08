@@ -23,7 +23,10 @@ namespace Aquality.Selenium.Core.Tests.Localization
             "loc.el.state.not.exist",
             "loc.el.state.enabled",
             "loc.el.state.not.enabled",
-            "loc.el.state.clickable"
+            "loc.el.state.clickable",
+            "loc.el.visual.getimage",
+            "loc.el.visual.getlocation",
+            "loc.el.visual.getsize"
         };
         private static readonly string[] KeysWithParams =
         {
@@ -32,11 +35,26 @@ namespace Aquality.Selenium.Core.Tests.Localization
             "loc.text.value",
             "loc.text.sending.keys",
             "loc.no.elements.found.in.state",
-            "loc.no.elements.found.by.locator",
+            "loc.no.elements.with.name.found.by.locator",
             "loc.elements.were.found.but.not.in.state",
-            "loc.elements.found.but.should.not",
+            "loc.elements.with.name.found.but.should.not",
+            "loc.search.of.elements.failed",
             "loc.wait.for.state",
-            "loc.wait.for.state.failed"
+            "loc.wait.for.state.failed",
+            "loc.el.visual.image.value",
+            "loc.el.visual.location.value",
+            "loc.el.visual.size.value",
+            "loc.el.visual.getdifference",
+            "loc.el.visual.getdifference.withthreshold",
+            "loc.el.visual.difference.value",
+            "loc.form.dump.save",
+            "loc.form.dump.imagenotsaved",
+            "loc.form.dump.compare",
+            "loc.form.dump.elementnotfound",
+            "loc.form.dump.elementsmissedindump",
+            "loc.form.dump.elementsmissedonform",
+            "loc.form.dump.unprocessedelements",
+            "loc.form.dump.compare.result"
         };
 
         [Test]

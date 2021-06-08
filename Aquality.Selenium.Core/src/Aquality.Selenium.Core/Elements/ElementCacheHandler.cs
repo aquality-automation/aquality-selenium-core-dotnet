@@ -8,14 +8,16 @@ namespace Aquality.Selenium.Core.Elements
     public class ElementCacheHandler : IElementCacheHandler
     {
         private readonly By locator;
+        private readonly string name;
         private readonly ElementState state;
         private readonly IElementFinder elementFinder;
 
         private RemoteWebElement remoteElement;
 
-        public ElementCacheHandler(By locator, ElementState state, IElementFinder finder)
+        public ElementCacheHandler(By locator, string name, ElementState state, IElementFinder finder)
         {
             this.locator = locator;
+            this.name = name;
             this.state = state;
             elementFinder = finder;
         }
@@ -46,7 +48,7 @@ namespace Aquality.Selenium.Core.Elements
 
             if (IsRefreshNeeded(customState))
             {
-                remoteElement = (RemoteWebElement)elementFinder.FindElement(locator, customState ?? state, timeout);
+                remoteElement = (RemoteWebElement)elementFinder.FindElement(locator, customState ?? state, timeout, name);
             }
 
             return remoteElement;

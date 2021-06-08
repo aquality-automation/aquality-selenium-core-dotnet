@@ -25,7 +25,7 @@ namespace Aquality.Selenium.Core.Elements
 
         private Func<ISearchContext> SearchContextSupplier { get; }
 
-        public override ReadOnlyCollection<IWebElement> FindElements(By locator, DesiredState desiredState, TimeSpan? timeout = null)
+        public override ReadOnlyCollection<IWebElement> FindElements(By locator, DesiredState desiredState, TimeSpan? timeout = null, string name = null)
         {
             var foundElements = new List<IWebElement>();
             var resultElements = new List<IWebElement>();
@@ -40,7 +40,7 @@ namespace Aquality.Selenium.Core.Elements
             }
             catch (TimeoutException ex)
             {
-                HandleTimeoutException(new WebDriverTimeoutException(ex.Message, ex), desiredState, locator, foundElements);
+                HandleTimeoutException(new WebDriverTimeoutException(ex.Message, ex), desiredState, locator, foundElements, name);
             }
             return resultElements.AsReadOnly();
         }
