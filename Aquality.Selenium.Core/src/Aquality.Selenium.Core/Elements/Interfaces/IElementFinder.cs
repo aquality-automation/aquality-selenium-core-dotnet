@@ -38,8 +38,9 @@ namespace Aquality.Selenium.Core.Elements.Interfaces
         /// <param name="locator">elements locator</param>
         /// <param name="state">desired ElementState</param>
         /// <param name="timeout">timeout for search</param>
+        /// <param name="name">elements' name to be used for logging and exception message</param>
         /// <returns>List of found elements</returns>
-        ReadOnlyCollection<IWebElement> FindElements(By locator, ElementState state = ElementState.ExistsInAnyState, TimeSpan? timeout = null);
+        ReadOnlyCollection<IWebElement> FindElements(By locator, ElementState state = ElementState.ExistsInAnyState, TimeSpan? timeout = null, string name = null);
 
         /// <summary>
         /// Finds elements in state defined by predicate.
@@ -47,8 +48,9 @@ namespace Aquality.Selenium.Core.Elements.Interfaces
         /// <param name="locator">elements locator</param>
         /// <param name="elementStateCondition">predicate to define elements state</param>
         /// <param name="timeout">timeout for search</param>
+        /// <param name="name">elements' name to be used for logging and exception message</param>
         /// <returns>List of found elements</returns>
-        ReadOnlyCollection<IWebElement> FindElements(By locator, Func<IWebElement, bool> elementStateCondition, TimeSpan? timeout = null);
+        ReadOnlyCollection<IWebElement> FindElements(By locator, Func<IWebElement, bool> elementStateCondition, TimeSpan? timeout = null, string name = null);
 
         /// <summary>
         /// Finds elements in state defined by desired state.
@@ -56,7 +58,8 @@ namespace Aquality.Selenium.Core.Elements.Interfaces
         /// <param name="locator">elements locator</param>
         /// <param name="desiredState">desired elements state</param>
         /// <param name="timeout">timeout for search</param>
+        /// <param name="name">elements' name to be used for logging and exception message</param>
         /// <returns>List of found elements</returns>
-        ReadOnlyCollection<IWebElement> FindElements(By locator, DesiredState desiredState, TimeSpan? timeout = null);
+        ReadOnlyCollection<IWebElement> FindElements(By locator, DesiredState desiredState, TimeSpan? timeout = null, string name = null);
     }
 }

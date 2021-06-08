@@ -21,7 +21,5 @@ namespace Aquality.Selenium.Core.Elements
         public bool IsThrowingNoSuchElementException { get; set; }
 
         public string StateName { get; }
-
-        public string ElementName { get; set; }
     }
 }

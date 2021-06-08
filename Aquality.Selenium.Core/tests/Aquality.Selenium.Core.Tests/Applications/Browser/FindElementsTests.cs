@@ -80,8 +80,9 @@ namespace Aquality.Selenium.Core.Tests.Applications.Browser
         [TestCase(ElementsCount.Zero, ElementState.ExistsInAnyState)]
         public void Should_BeImpossibleTo_FindHiddenElements_WithWrongArguments(ElementsCount count, ElementState state)
         {
-            Assert.Throws<TimeoutException>(
-                () => FindElements<Label>(HiddenElementsLoc, expectedCount: count, state: state),
+            const string name = "custom name";
+            Assert.Throws(Is.AssignableFrom(typeof(TimeoutException)).And.Message.Contains(name),
+                () => FindElements<Label>(HiddenElementsLoc, name, expectedCount: count, state: state),
                 $"Tried to find elements with expected count '{count}' and state '{state}'");
         }
 

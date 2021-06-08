@@ -32,13 +32,15 @@ namespace Aquality.Selenium.Core.Tests.Utilities
         }
 
         [Test]
-        public void Should_LogPageSource_WhenIsEnabledAndElementAbsent()
+        public void Should_ThrowException_And_LogPageSource_WhenIsEnabledAndElementAbsent()
         {
             File.Delete(AddTargetLogFile);
             Environment.SetEnvironmentVariable(LogPageSourceEnvironmentVariable, true.ToString());
             Logger.Instance.AddTarget(GetTarget(AddTargetLogFile));
-            var element = new Label(By.Name("Absent element"), "Absent element", Elements.ElementState.ExistsInAnyState);
-            Assert.Throws<NoSuchElementException>(() => element.GetElement(TimeSpan.Zero), "Attempt to get absent element should throw an exception");
+            var element = new Label(By.Name("Absent element"), "Absent element", Elements.ElementState.ExistsInAnyState);            
+            Assert.Throws(Is.AssignableFrom(typeof(NoSuchElementException)).And.Message.Contains(element.Name),
+                () => element.GetElement(TimeSpan.Zero), 
+                "Attempt to get absent element should throw an exception");
             Assert.True(File.Exists(AddTargetLogFile),
                 $"Target wasn't added. File '{AddTargetLogFile}' doesn't exist.");
             var log = File.ReadAllText(AddTargetLogFile).Trim();
