@@ -509,7 +509,6 @@
             <param name="locator">elements locator</param>
             <param name="elementStateCondition">predicate to define elements state</param>
             <param name="timeout">timeout for search</param>
-            
             <returns>List of found elements</returns>
         </member>
         <member name="M:Aquality.Selenium.Core.Elements.Interfaces.IElementFinder.FindElements(OpenQA.Selenium.By,Aquality.Selenium.Core.Elements.DesiredState,System.Nullable{System.TimeSpan})">
