@@ -12,7 +12,7 @@ namespace Aquality.Selenium.Core.Elements
         private readonly ElementState state;
         private readonly IElementFinder elementFinder;
 
-        private RemoteWebElement remoteElement;
+        private IWebElement remoteElement;
 
         public ElementCacheHandler(By locator, string name, ElementState state, IElementFinder finder)
         {
@@ -43,12 +43,12 @@ namespace Aquality.Selenium.Core.Elements
             }
         }
 
-        public RemoteWebElement GetElement(TimeSpan? timeout = null, ElementState? customState = null)
+        public IWebElement GetElement(TimeSpan? timeout = null, ElementState? customState = null)
         {
 
             if (IsRefreshNeeded(customState))
             {
-                remoteElement = (RemoteWebElement)elementFinder.FindElement(locator, customState ?? state, timeout, name);
+                remoteElement = elementFinder.FindElement(locator, customState ?? state, timeout, name);
             }
 
             return remoteElement;

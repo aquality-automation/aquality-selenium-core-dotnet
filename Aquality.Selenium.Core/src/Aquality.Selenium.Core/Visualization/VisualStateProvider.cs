@@ -1,5 +1,6 @@
 ﻿using Aquality.Selenium.Core.Logging;
 using Aquality.Selenium.Core.Utilities;
+using OpenQA.Selenium;
 using OpenQA.Selenium.Remote;
 using System;
 using System.Drawing;
@@ -11,10 +12,10 @@ namespace Aquality.Selenium.Core.Visualization
     {
         private readonly IImageComparator imageComparator;
         private readonly IElementActionRetrier actionRetrier;
-        private readonly Func<RemoteWebElement> getElement;
+        private readonly Func<IWebElement> getElement;
         private readonly LogVisualState logVisualState;
 
-        public VisualStateProvider(IImageComparator imageComparator, IElementActionRetrier actionRetrier, Func<RemoteWebElement> getElement, LogVisualState logVisualState)
+        public VisualStateProvider(IImageComparator imageComparator, IElementActionRetrier actionRetrier, Func<IWebElement> getElement, LogVisualState logVisualState)
         {
             this.imageComparator = imageComparator;
             this.actionRetrier = actionRetrier;
@@ -27,9 +28,9 @@ namespace Aquality.Selenium.Core.Visualization
         public Point Location => GetLoggedValue(nameof(Location), element => element.Location);
 
         public Image Image 
-            => GetLoggedValue(nameof(Image), element => element.GetScreenshot().AsImage(), image => image.Size.ToString());
+            => GetLoggedValue(nameof(Image), element => ((ITakesScreenshot)element).GetScreenshot().AsImage(), image => image.Size.ToString());
 
-        private T GetLoggedValue<T>(string name, Func<RemoteWebElement, T> getValue, Func<T, string> toString = null)
+        private T GetLoggedValue<T>(string name, Func<IWebElement, T> getValue, Func<T, string> toString = null)
         {
             logVisualState($"loc.el.visual.get{name.ToLower()}");
             var value = actionRetrier.DoWithRetry(() => getValue(getElement()));

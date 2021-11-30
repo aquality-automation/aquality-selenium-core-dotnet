@@ -85,7 +85,7 @@ namespace Aquality.Selenium.Core.Tests.Localization
         {
             StartLoading();
             var firstImage = LoadingLabel.Visual.Image;
-            var secondImage = LoadingLabel.GetElement().GetScreenshot().AsImage();
+            var secondImage = ((ITakesScreenshot)LoadingLabel.GetElement()).GetScreenshot().AsImage();
             Assert.Multiple(() =>
             {
                 Assert.That(LoadingLabel.Visual.GetDifference(firstImage, threshold: 0), Is.Not.EqualTo(0));

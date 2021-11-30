@@ -13,6 +13,7 @@ using OpenQA.Selenium.Interactions;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using WebElement = Aquality.Selenium.Core.Tests.Applications.Browser.Elements.WebElement;
 
 namespace Aquality.Selenium.Core.Tests.Visualization
 {

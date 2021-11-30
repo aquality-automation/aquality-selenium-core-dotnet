@@ -15,7 +15,7 @@ namespace Aquality.Selenium.Core.Tests.Applications.WindowsApp
         public WindowsApplication(string application, Uri driverServer, ITimeoutConfiguration timeoutConfiguration, AppiumOptions appiumOptions)
         {
             var options = appiumOptions ?? new AppiumOptions();
-            options.AddAdditionalCapability("app", application);
+            options.AddAdditionalOption("app", application);
             lazyDriver = new Lazy<RemoteWebDriver>(() =>
             {
                 var value = new WindowsDriver<WindowsElement>(driverServer, options, timeoutConfiguration.Command);

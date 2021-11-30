@@ -59,7 +59,8 @@ namespace Aquality.Selenium.Core.Tests.Applications.Browser
 
         private void StartLoading()
         {
-            AqualityServices.Application.Driver.Navigate().GoToUrl(DynamicLoadingUrl);
+            var driver = AqualityServices.Application.Driver;
+            driver.Navigate().GoToUrl(DynamicLoadingUrl);
             new Label(StartLoc, "start", ElementState.Displayed).Click();
         }
 

@@ -1,4 +1,5 @@
-﻿using OpenQA.Selenium.Remote;
+﻿using OpenQA.Selenium;
+using OpenQA.Selenium.Remote;
 using System;
 
 namespace Aquality.Selenium.Core.Elements.Interfaces
@@ -26,6 +27,6 @@ namespace Aquality.Selenium.Core.Elements.Interfaces
         /// <param name="timeout">Timeout used to retrive the element when <see cref="IsRefreshNeeded(ElementState?)"/> is true.</param>
         /// <param name="customState">Custom element's existance state used for search.</param>
         /// <returns>Cached element.</returns>
-        RemoteWebElement GetElement(TimeSpan? timeout = null, ElementState? customState = null);
+        IWebElement GetElement(TimeSpan? timeout = null, ElementState? customState = null);
     }
 }

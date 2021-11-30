@@ -118,13 +118,13 @@ namespace Aquality.Selenium.Core.Elements
             return value;
         }
 
-        public virtual RemoteWebElement GetElement(TimeSpan? timeout = null)
+        public virtual IWebElement GetElement(TimeSpan? timeout = null)
         {
             try
             {
                 return CacheConfiguration.IsEnabled
                     ? Cache.GetElement(timeout)
-                    : (RemoteWebElement) Finder.FindElement(Locator, elementState, timeout, Name);
+                    : Finder.FindElement(Locator, elementState, timeout, Name);
             }
             catch (NoSuchElementException ex) when (LoggerConfiguration.LogPageSource)
             {

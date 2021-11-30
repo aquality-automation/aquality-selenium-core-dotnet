@@ -31,34 +31,34 @@ namespace Aquality.Selenium.Core.Tests.Localization
         [Test]
         public void Should_BePossibleTo_GetPercentageDifference_ForSameElement()
         {
-            var firstImage = StartLabel.GetElement().GetScreenshot().AsImage();
-            var secondImage = StartLabel.GetElement().GetScreenshot().AsImage();
+            var firstImage = ((ITakesScreenshot)StartLabel.GetElement()).GetScreenshot().AsImage();
+            var secondImage = ((ITakesScreenshot)StartLabel.GetElement()).GetScreenshot().AsImage();
             Assert.That(ImageComparator.PercentageDifference(firstImage, secondImage), Is.EqualTo(0));
         }
 
         [Test]
         public void Should_BePossibleTo_GetPercentageDifference_ForSameElement_WithZeroThreshold()
         {
-            var firstImage = StartLabel.GetElement().GetScreenshot().AsImage();
-            var secondImage = StartLabel.GetElement().GetScreenshot().AsImage();
+            var firstImage = ((ITakesScreenshot)StartLabel.GetElement()).GetScreenshot().AsImage();
+            var secondImage = ((ITakesScreenshot)StartLabel.GetElement()).GetScreenshot().AsImage();
             Assert.That(ImageComparator.PercentageDifference(firstImage, secondImage, threshold: 0), Is.EqualTo(0));
         }
 
         [Test]
         public void Should_BePossibleTo_GetPercentageDifference_ForDifferentElements()
         {
-            var firstImage = StartLabel.GetElement().GetScreenshot().AsImage();
+            var firstImage = ((ITakesScreenshot)StartLabel.GetElement()).GetScreenshot().AsImage();
             StartLoading();
-            var secondImage = LoadingLabel.GetElement().GetScreenshot().AsImage();
+            var secondImage = ((ITakesScreenshot)LoadingLabel.GetElement()).GetScreenshot().AsImage();
             Assert.That(ImageComparator.PercentageDifference(firstImage, secondImage), Is.Not.EqualTo(0));
         }
 
         [Test]
         public void Should_BePossibleTo_GetPercentageDifference_ForDifferentElements_WithFullThreshold()
         {
-            var firstImage = StartLabel.GetElement().GetScreenshot().AsImage();
+            var firstImage = ((ITakesScreenshot)StartLabel.GetElement()).GetScreenshot().AsImage();
             StartLoading();
-            var secondImage = LoadingLabel.GetElement().GetScreenshot().AsImage();
+            var secondImage = ((ITakesScreenshot)LoadingLabel.GetElement()).GetScreenshot().AsImage();
             Assert.That(ImageComparator.PercentageDifference(firstImage, secondImage, threshold: 1), Is.EqualTo(0));
         }
 
@@ -66,8 +66,8 @@ namespace Aquality.Selenium.Core.Tests.Localization
         public void Should_BePossibleTo_GetPercentageDifference_ForSimilarElements()
         {
             StartLoading();
-            var firstImage = LoadingLabel.GetElement().GetScreenshot().AsImage();
-            var secondImage = LoadingLabel.GetElement().GetScreenshot().AsImage();
+            var firstImage = ((ITakesScreenshot)LoadingLabel.GetElement()).GetScreenshot().AsImage();
+            var secondImage = ((ITakesScreenshot)LoadingLabel.GetElement()).GetScreenshot().AsImage();
             Assert.Multiple(() =>
             {
                 Assert.That(ImageComparator.PercentageDifference(firstImage, secondImage, threshold: 0), Is.Not.EqualTo(0));

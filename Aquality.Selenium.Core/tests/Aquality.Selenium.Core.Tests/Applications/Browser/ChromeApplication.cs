@@ -12,7 +12,8 @@ namespace Aquality.Selenium.Core.Tests.Applications.Browser
 
         public ChromeApplication(ITimeoutConfiguration timeoutConfiguration)
         {
-            Driver = new ChromeDriver();
+            var options = new ChromeOptions();
+            Driver = new RemoteWebDriver(options);
             implicitWait = timeoutConfiguration.Implicit;
             Driver.Manage().Timeouts().ImplicitWait = implicitWait;
         }

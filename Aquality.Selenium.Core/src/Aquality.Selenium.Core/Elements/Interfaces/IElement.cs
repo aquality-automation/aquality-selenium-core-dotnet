@@ -37,9 +37,9 @@ namespace Aquality.Selenium.Core.Elements.Interfaces
         /// Finds current element by specified <see cref="Locator"/>
         /// </summary>
         /// <param name="timeout">Timeout to find element. Default: <see cref="Configurations.ITimeoutConfiguration.Condition"/></param>
-        /// <returns>Instance of <see cref="RemoteWebElement"/> if found.</returns>
+        /// <returns>Instance of <see cref="IWebElement"/> if found.</returns>
         /// <exception cref="NoSuchElementException">Thrown when no elements found.</exception>
-        RemoteWebElement GetElement(TimeSpan? timeout = null);
+        IWebElement GetElement(TimeSpan? timeout = null);
                 
         /// <summary>
         /// Gets element text.

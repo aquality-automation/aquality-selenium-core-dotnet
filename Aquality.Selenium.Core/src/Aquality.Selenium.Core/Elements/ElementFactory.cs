@@ -6,7 +6,7 @@ using Aquality.Selenium.Core.Elements.Interfaces;
 using Aquality.Selenium.Core.Localization;
 using Aquality.Selenium.Core.Waitings;
 using OpenQA.Selenium;
-using OpenQA.Selenium.Support.PageObjects;
+using SeleniumExtras.PageObjects;
 
 namespace Aquality.Selenium.Core.Elements
 {
