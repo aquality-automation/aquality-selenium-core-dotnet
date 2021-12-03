@@ -5,7 +5,7 @@ namespace Aquality.Selenium.Core.Tests.Applications.WindowsApp.Locators
 {
     public static class CalculatorWindow
     {
-        public static By WindowLocator => By.TagName("Window");
+        public static By WindowLocator => By.XPath("//Window");
 
         public static By OneButton => By.Name("1");
 
@@ -14,7 +14,7 @@ namespace Aquality.Selenium.Core.Tests.Applications.WindowsApp.Locators
         public static By ThreeButton => By.Name("3");
 
         public static By PlusButton => By.Name("+");
-
+        
         public static By EqualsButton => By.Name("=");
 
         public static By ResultsLabel => MobileBy.AccessibilityId("48");
