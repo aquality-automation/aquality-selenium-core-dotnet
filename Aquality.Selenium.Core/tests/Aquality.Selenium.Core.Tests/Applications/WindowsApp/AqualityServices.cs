@@ -31,9 +31,9 @@ namespace Aquality.Selenium.Core.Tests.Applications.WindowsApp
                 var driverService = AppiumLocalService.BuildDefaultService();
                 driverService.Start();
                 driverServer = driverService.ServiceUrl;
-                options.AddAdditionalOption("platformVersion", "10");
-                options.AddAdditionalOption("platformName", "Windows");
-                options.AddAdditionalOption("deviceName", "WindowsPC");
+                options.PlatformVersion = "10";
+                options.PlatformName = "Windows";
+                options.DeviceName = "WindowsPC";
             }
             else
             {

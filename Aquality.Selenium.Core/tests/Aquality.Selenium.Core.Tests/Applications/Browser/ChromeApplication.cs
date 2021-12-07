@@ -1,7 +1,7 @@
 ﻿using Aquality.Selenium.Core.Applications;
 using Aquality.Selenium.Core.Configurations;
+using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
-using OpenQA.Selenium.Remote;
 using System;
 
 namespace Aquality.Selenium.Core.Tests.Applications.Browser
@@ -12,13 +12,12 @@ namespace Aquality.Selenium.Core.Tests.Applications.Browser
 
         public ChromeApplication(ITimeoutConfiguration timeoutConfiguration)
         {
-            var options = new ChromeOptions();
-            Driver = new RemoteWebDriver(options);
+            Driver = new ChromeDriver();
             implicitWait = timeoutConfiguration.Implicit;
             Driver.Manage().Timeouts().ImplicitWait = implicitWait;
         }
 
-        public RemoteWebDriver Driver { get; }
+        public WebDriver Driver { get; }
 
         public bool IsStarted => Driver.SessionId != null;
 
