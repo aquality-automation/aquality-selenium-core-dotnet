@@ -5,7 +5,7 @@ namespace Aquality.Selenium.Core.Tests.Applications.WindowsApp.Locators
 {
     public static class CalculatorWindow
     {
-        public static By WindowLocator => By.XPath("//Window");
+        public static By WindowLocator => MobileBy.ClassName("ThunderRT6FormDC");
 
         public static By OneButton => By.XPath("//*[@Name='1']");
 
@@ -19,7 +19,7 @@ namespace Aquality.Selenium.Core.Tests.Applications.WindowsApp.Locators
 
         public static By ResultsLabel => MobileBy.AccessibilityId("48");
 
-        public static By EmptyButton => By.XPath("//*[@AutomationId='7']");
+        public static By EmptyButton => MobileBy.AccessibilityId("7");
 
         public static By AbsentElement => By.XPath("//*[@Name='Absent element']");
     }
