@@ -34,7 +34,7 @@ namespace Aquality.Selenium.Core.Tests.Applications.WindowsApp
                 driver.FindElement(CalculatorWindow.PlusButton).Click();
                 driver.FindElement(CalculatorWindow.OneButton).Click();
                 driver.FindElement(CalculatorWindow.EqualsButton).Click();
-                var first = driver.FindElement(By.TagName("Window")).Text;
+                var first = driver.FindElement(CalculatorWindow.WindowLocator).Text;
                 var pageSource = driver.PageSource;
                 return elementFinderCondition();
             }, LittleTimeout));

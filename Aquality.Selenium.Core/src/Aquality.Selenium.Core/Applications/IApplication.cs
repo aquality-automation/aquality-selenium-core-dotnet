@@ -1,5 +1,5 @@
 ﻿using System;
-using OpenQA.Selenium.Remote;
+using OpenQA.Selenium;
 
 namespace Aquality.Selenium.Core.Applications
 {
@@ -11,7 +11,7 @@ namespace Aquality.Selenium.Core.Applications
         /// <summary>
         /// Current instance of driver
         /// </summary>
-        RemoteWebDriver Driver { get; }
+        WebDriver Driver { get; }
 
         /// <summary>
         /// Defines if the application is already started or not.

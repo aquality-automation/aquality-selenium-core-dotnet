@@ -1,6 +1,6 @@
 ﻿using Aquality.Selenium.Core.Logging;
 using Aquality.Selenium.Core.Utilities;
-using OpenQA.Selenium.Remote;
+using OpenQA.Selenium;
 using System;
 using System.Drawing;
 using System.Globalization;
@@ -11,10 +11,10 @@ namespace Aquality.Selenium.Core.Visualization
     {
         private readonly IImageComparator imageComparator;
         private readonly IElementActionRetrier actionRetrier;
-        private readonly Func<RemoteWebElement> getElement;
+        private readonly Func<WebElement> getElement;
         private readonly LogVisualState logVisualState;
 
-        public VisualStateProvider(IImageComparator imageComparator, IElementActionRetrier actionRetrier, Func<RemoteWebElement> getElement, LogVisualState logVisualState)
+        public VisualStateProvider(IImageComparator imageComparator, IElementActionRetrier actionRetrier, Func<WebElement> getElement, LogVisualState logVisualState)
         {
             this.imageComparator = imageComparator;
             this.actionRetrier = actionRetrier;
@@ -27,12 +27,22 @@ namespace Aquality.Selenium.Core.Visualization
         public Point Location => GetLoggedValue(nameof(Location), element => element.Location);
 
         public Image Image 
-            => GetLoggedValue(nameof(Image), element => element.GetScreenshot().AsImage(), image => image.Size.ToString());
+            => GetLoggedValue(nameof(Image), element => element.GetScreenshot().AsImage(), image => image?.Size.ToString());
 
-        private T GetLoggedValue<T>(string name, Func<RemoteWebElement, T> getValue, Func<T, string> toString = null)
+        private T GetLoggedValue<T>(string name, Func<WebElement, T> getValue, Func<T, string> toString = null)
         {
             logVisualState($"loc.el.visual.get{name.ToLower()}");
-            var value = actionRetrier.DoWithRetry(() => getValue(getElement()));
+            var value = actionRetrier.DoWithRetry(() =>
+                {
+                    try
+                    {
+                        return getValue(getElement());
+                    }
+                    catch (WebDriverException)
+                    {
+                        return default;
+                    }
+                });
             logVisualState($"loc.el.visual.{name.ToLower()}.value", toString == null ? value.ToString() : toString(value));
             return value;
         }
@@ -40,6 +50,8 @@ namespace Aquality.Selenium.Core.Visualization
         public float GetDifference(Image theOtherOne, float? threshold = null)
         {
             var currentImage = Image;
+            float value = 1;
+
             if (threshold == null)
             {
                 logVisualState("loc.el.visual.getdifference", theOtherOne.Size.ToString());
@@ -48,7 +60,11 @@ namespace Aquality.Selenium.Core.Visualization
             {
                 logVisualState("loc.el.visual.getdifference.withthreshold", theOtherOne.Size.ToString(), threshold?.ToString("P", CultureInfo.InvariantCulture));
             }
-            var value = imageComparator.PercentageDifference(currentImage, theOtherOne, threshold);
+
+            if (currentImage != default)
+            {
+                value = imageComparator.PercentageDifference(currentImage, theOtherOne, threshold);
+            }
             logVisualState("loc.el.visual.difference.value", value.ToString("P", CultureInfo.InvariantCulture));
             return value;
         }
