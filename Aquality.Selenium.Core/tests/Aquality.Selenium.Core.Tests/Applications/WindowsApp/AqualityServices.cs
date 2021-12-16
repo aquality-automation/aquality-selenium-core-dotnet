@@ -34,6 +34,7 @@ namespace Aquality.Selenium.Core.Tests.Applications.WindowsApp
                 options.PlatformVersion = "10";
                 options.PlatformName = "windows";
                 options.DeviceName = "WindowsPC";
+                options.AutomationName = "windows";
             }
             else
             {
