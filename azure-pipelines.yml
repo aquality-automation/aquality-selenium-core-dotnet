@@ -47,41 +47,44 @@ stages:
       isRemote: true
     steps:
     - task: NodeTool@0
-    displayName: 'Install Node.js'
-    inputs:
+      displayName: 'Install Node.js'
+      inputs:
         versionSpec: '16.x'
 
     - task: CmdLine@2
-        displayName: 'Install Appium'
-        inputs:
+      displayName: 'Install Appium'
+      inputs:
         script: |
             echo "Installing Appium"
             npm install -g appium@next
             appium --version
             echo "Appium installed"
+
     - task: CmdLine@2
-        displayName: 'Install and Run Appium doctor'
-        inputs:
+      displayName: 'Install and Run Appium doctor'
+      inputs:
         script: |
-            echo "Installing and Running Appium doctor"
-            npm install -g request@2.34.0
-            npm install -g appium-doctor@1.15.1
-            appium-doctor
-            echo "Appium doctor installed and executed"
+          echo "Installing and Running Appium doctor"
+          npm install -g request@2.34.0
+          npm install -g appium-doctor@1.15.1
+          appium-doctor
+          echo "Appium doctor installed and executed"
+
     - task: CmdLine@2
-        displayName: 'Install Appium Windows Driver'
-        inputs:
+      displayName: 'Install Appium Windows Driver'
+      inputs:
         script: |
-            echo "Installing Appium Windows Driver"
-            appium driver install windows
-            appium driver list
-            echo "Appium Windows Driver installed"
+          echo "Installing Appium Windows Driver"
+          appium driver install windows
+          appium driver list
+          echo "Appium Windows Driver installed"
+
     - task: CmdLine@2
-        displayName: 'Start Appium server'
-        inputs:
+      displayName: 'Start Appium server'
+      inputs:
         script: |
-            start cmd.exe @cmd /k "appium"
-            echo "Appium server started"
+          start cmd.exe @cmd /k "appium"
+          echo "Appium server started"
 
     - task: DotNetCoreCLI@2
       displayName: 'Run tests'
