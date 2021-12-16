@@ -32,7 +32,7 @@ namespace Aquality.Selenium.Core.Tests.Applications.WindowsApp
                 driverService.Start();
                 driverServer = driverService.ServiceUrl;
                 options.PlatformVersion = "10";
-                options.PlatformName = "Windows";
+                options.PlatformName = "windows";
                 options.DeviceName = "WindowsPC";
             }
             else

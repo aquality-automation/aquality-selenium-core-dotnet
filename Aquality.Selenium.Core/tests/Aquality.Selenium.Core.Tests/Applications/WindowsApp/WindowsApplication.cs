@@ -16,6 +16,7 @@ namespace Aquality.Selenium.Core.Tests.Applications.WindowsApp
         {
             var options = appiumOptions ?? new AppiumOptions();
             options.App = application;
+            options.AutomationName = "windows";
             lazyDriver = new Lazy<WebDriver>(() =>
             {
                 var value = new WindowsDriver(driverServer, options, timeoutConfiguration.Command);
