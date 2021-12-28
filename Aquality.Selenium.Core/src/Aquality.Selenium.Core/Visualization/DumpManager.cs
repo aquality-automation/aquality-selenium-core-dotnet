@@ -44,8 +44,7 @@ namespace Aquality.Selenium.Core.Visualization
             {
                 throw new InvalidOperationException($"Dump directory [{directory.FullName}] does not contain any [*{ImageFormat}] files.");
             }
-            var existingElements = ElementsForVisualization.Where(element => element.Value.State.IsExist)
-                .ToDictionary(el => el.Key, el => el.Value);
+            var existingElements = FilterElementsForVisualization().ToDictionary(el => el.Key, el => el.Value);
             var countOfUnproceededElements = existingElements.Count;
             var countOfProceededElements = 0;
             var comparisonResult = 0f;
@@ -89,7 +88,7 @@ namespace Aquality.Selenium.Core.Visualization
         {
             var directory = CleanUpAndGetDumpDirectory(dumpName);
             LocalizedLogger.Info("loc.form.dump.save", directory.Name);
-            ElementsForVisualization.Where(element => element.Value.State.IsExist).ToList()
+            FilterElementsForVisualization()
                 .ForEach(element =>
                 {
                     try
@@ -101,6 +100,11 @@ namespace Aquality.Selenium.Core.Visualization
                         LocalizedLogger.Fatal("loc.form.dump.imagenotsaved", e, element.Key, e.Message);
                     }
                 });
+        }
+
+        protected virtual List<KeyValuePair<string, T>> FilterElementsForVisualization()
+        {
+            return ElementsForVisualization.Where(element => element.Value.State.IsDisplayed).ToList();
         }
 
         protected virtual DirectoryInfo CleanUpAndGetDumpDirectory(string dumpName = null)
