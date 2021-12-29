@@ -12,7 +12,7 @@ namespace Aquality.Selenium.Core.Elements
         private readonly ElementState state;
         private readonly IElementFinder elementFinder;
 
-        private RemoteWebElement remoteElement;
+        private WebElement element;
 
         public ElementCacheHandler(By locator, string name, ElementState state, IElementFinder finder)
         {
@@ -22,17 +22,17 @@ namespace Aquality.Selenium.Core.Elements
             elementFinder = finder;
         }
 
-        public bool IsStale => remoteElement != null && IsRefreshNeeded();
+        public bool IsStale => element != null && IsRefreshNeeded();
 
         public bool IsRefreshNeeded(ElementState? customState = null)
         {
-            if (remoteElement == null)
+            if (element == null)
             {
                 return true;
             }
             try
             {
-                var isDisplayed = remoteElement.Displayed;
+                var isDisplayed = element.Displayed;
                 // refresh is needed only if the property is not match to expected element state
                 return (customState ?? state) == ElementState.Displayed && !isDisplayed;
             }
@@ -43,15 +43,15 @@ namespace Aquality.Selenium.Core.Elements
             }
         }
 
-        public RemoteWebElement GetElement(TimeSpan? timeout = null, ElementState? customState = null)
+        public WebElement GetElement(TimeSpan? timeout = null, ElementState? customState = null)
         {
 
             if (IsRefreshNeeded(customState))
             {
-                remoteElement = (RemoteWebElement)elementFinder.FindElement(locator, customState ?? state, timeout, name);
+                element = (WebElement)elementFinder.FindElement(locator, customState ?? state, timeout, name);
             }
 
-            return remoteElement;
+            return element;
         }
     }
 }

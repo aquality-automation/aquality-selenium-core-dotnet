@@ -9,7 +9,6 @@ using Aquality.Selenium.Core.Utilities;
 using Aquality.Selenium.Core.Visualization;
 using Aquality.Selenium.Core.Waitings;
 using OpenQA.Selenium;
-using OpenQA.Selenium.Remote;
 
 namespace Aquality.Selenium.Core.Elements
 {
@@ -118,13 +117,13 @@ namespace Aquality.Selenium.Core.Elements
             return value;
         }
 
-        public virtual RemoteWebElement GetElement(TimeSpan? timeout = null)
+        public virtual WebElement GetElement(TimeSpan? timeout = null)
         {
             try
             {
                 return CacheConfiguration.IsEnabled
                     ? Cache.GetElement(timeout)
-                    : (RemoteWebElement) Finder.FindElement(Locator, elementState, timeout, Name);
+                    : (WebElement) Finder.FindElement(Locator, elementState, timeout, Name);
             }
             catch (NoSuchElementException ex) when (LoggerConfiguration.LogPageSource)
             {

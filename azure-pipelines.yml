@@ -45,12 +45,46 @@ stages:
     
     variables:
       isRemote: true
-
     steps:
-    - task: Windows Application Driver@0
-      displayName: 'Start WinAppDriver'
+    - task: NodeTool@0
+      displayName: 'Install Node.js'
       inputs:
-        OperationType: 'Start'
+        versionSpec: '16.x'
+
+    - task: CmdLine@2
+      displayName: 'Install Appium'
+      inputs:
+        script: |
+            echo "Installing Appium"
+            npm install -g appium@next
+            appium --version
+            echo "Appium installed"
+
+    - task: CmdLine@2
+      displayName: 'Install and Run Appium doctor'
+      inputs:
+        script: |
+          echo "Installing and Running Appium doctor"
+          npm install -g request@2.34.0
+          npm install -g appium-doctor@1.15.1
+          appium-doctor
+          echo "Appium doctor installed and executed"
+
+    - task: CmdLine@2
+      displayName: 'Install Appium Windows Driver'
+      inputs:
+        script: |
+          echo "Installing Appium Windows Driver"
+          appium driver install windows
+          appium driver list
+          echo "Appium Windows Driver installed"
+
+    - task: CmdLine@2
+      displayName: 'Start Appium server'
+      inputs:
+        script: |
+          start cmd.exe @cmd /k "appium"
+          echo "Appium server started"
 
     - task: DotNetCoreCLI@2
       displayName: 'Run tests'
@@ -59,11 +93,6 @@ stages:
         projects: '**/*Tests*/*.csproj'
         arguments: -c $(buildConfiguration)
         publishTestResults: true
-
-    - task: Windows Application Driver@0
-      displayName: 'Stop WinAppDriver'
-      inputs:
-        OperationType: 'Stop'
 
 - stage: deploy
   condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))

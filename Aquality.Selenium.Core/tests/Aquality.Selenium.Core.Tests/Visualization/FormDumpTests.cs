@@ -13,6 +13,7 @@ using OpenQA.Selenium.Interactions;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using WebElement = Aquality.Selenium.Core.Tests.Applications.Browser.Elements.WebElement;
 
 namespace Aquality.Selenium.Core.Tests.Visualization
 {
@@ -35,7 +36,7 @@ namespace Aquality.Selenium.Core.Tests.Visualization
         public void Should_BePossibleTo_SaveFormDump_WithDefaultName()
         {
             var form = new WebForm();
-            var pathToDump = 
+            var pathToDump =
                 new DirectoryInfo(Path.Combine(PathToDumps, form.Name.Replace("/", " ")));
             if (pathToDump.Exists)
             {
@@ -83,7 +84,7 @@ namespace Aquality.Selenium.Core.Tests.Visualization
             var customForm = new WebForm();
             customForm.SetElementsForDump(WebForm.ElementsFilter.AllElements);
             Assert.DoesNotThrow(() => customForm.Dump.Save("All elements"));
-            Assert.That(customForm.Dump.Compare("All elements"), Is.GreaterThan(0), "Some elements should be failed to take image, so count of elements would not match");
+            Assert.That(customForm.Dump.Compare("All elements"), Is.EqualTo(0), "Some elements should be failed to take image, but difference should be around zero");
         }
 
         private class WebForm : Form<WebElement>
@@ -99,9 +100,9 @@ namespace Aquality.Selenium.Core.Tests.Visualization
                 = new Label(DisplayedElementsLoc, "I'm displayed but initialized as existing", ElementState.ExistsInAnyState);
             private Label DisplayedLabel
                 => new Label(DisplayedElementsLoc, "I'm displayed property", ElementState.Displayed);
-            private Label HiddenLabel 
+            private Label HiddenLabel
                 => new Label(HiddenElementsLoc, "I'm hidden", ElementState.ExistsInAnyState);
-            private Label HiddenLabelInitializedAsDisplayed 
+            private Label HiddenLabelInitializedAsDisplayed
                 => new Label(HiddenElementsLoc, "I'm hidden but mask as displayed", ElementState.Displayed);
 
             private Label ContentLabel => new Label(ContentLoc, "Content", ElementState.Displayed);
@@ -163,7 +164,7 @@ namespace Aquality.Selenium.Core.Tests.Visualization
             protected override IVisualizationConfiguration VisualizationConfiguration => AqualityServices.ServiceProvider.GetRequiredService<IVisualizationConfiguration>();
 
             protected override ILocalizedLogger LocalizedLogger => AqualityServices.ServiceProvider.GetRequiredService<ILocalizedLogger>();
-                        
+
             public enum ElementsFilter
             {
                 ElementsInitializedAsDisplayed,
