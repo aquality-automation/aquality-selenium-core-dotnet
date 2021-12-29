@@ -32,17 +32,7 @@ namespace Aquality.Selenium.Core.Visualization
         private T GetLoggedValue<T>(string name, Func<WebElement, T> getValue, Func<T, string> toString = null)
         {
             logVisualState($"loc.el.visual.get{name.ToLower()}");
-            var value = actionRetrier.DoWithRetry(() =>
-                {
-                    try
-                    {
-                        return getValue(getElement());
-                    }
-                    catch (WebDriverException)
-                    {
-                        return default;
-                    }
-                });
+            var value = actionRetrier.DoWithRetry(() => getValue(getElement()));
             logVisualState($"loc.el.visual.{name.ToLower()}.value", toString == null ? value.ToString() : toString(value));
             return value;
         }

@@ -78,6 +78,15 @@ namespace Aquality.Selenium.Core.Tests.Visualization
             Assert.That(customForm.Dump.Compare("Set differs"), Is.GreaterThan(0), "Difference with current page should be greater than zero if element set differs");
         }
 
+        [Test]
+        public void Should_BePossibleTo_SaveAndCompareWithDump_WithCustomName_WhenAllElementsSelected()
+        {
+            var customForm = new WebForm();
+            customForm.SetElementsForDump(WebForm.ElementsFilter.AllElements);
+            Assert.DoesNotThrow(() => customForm.Dump.Save("All elements"));
+            Assert.That(customForm.Dump.Compare("All elements"), Is.EqualTo(0), "Some elements should be failed to take image, but difference should be around zero");
+        }
+
         private class WebForm : Form<WebElement>
         {
             private static readonly By ContentLoc = By.XPath("//div[contains(@class,'example')]");
