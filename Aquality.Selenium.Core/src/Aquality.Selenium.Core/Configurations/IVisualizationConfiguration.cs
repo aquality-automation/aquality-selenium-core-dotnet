@@ -6,6 +6,16 @@
     public interface IVisualizationConfiguration
     {
         /// <summary>
+        /// Image format for comparison.
+        /// </summary>
+        string ImageFormat { get; }
+
+        /// <summary>
+        /// Maximum length of full file name with path for image comparison.
+        /// </summary>
+        int MaxFullFileNameLength { get; }
+
+        /// <summary>
         /// Default threshold used for image comparison.
         /// </summary>
         float DefaultThreshold { get; }

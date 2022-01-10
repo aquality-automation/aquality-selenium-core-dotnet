@@ -20,6 +20,10 @@ namespace Aquality.Selenium.Core.Configurations
             this.settingsFile = settingsFile;
         }
 
+        public string ImageFormat => settingsFile.GetValueOrDefault(".visualization.imageFormat", ".png");
+
+        public int MaxFullFileNameLength => settingsFile.GetValueOrDefault(".visualization.maxFullFileNameLength", 255);
+
         public float DefaultThreshold => settingsFile.GetValueOrDefault(".visualization.defaultThreshold", 0.012f);
 
         public int ComparisonWidth => settingsFile.GetValueOrDefault(".visualization.comparisonWidth", 16);

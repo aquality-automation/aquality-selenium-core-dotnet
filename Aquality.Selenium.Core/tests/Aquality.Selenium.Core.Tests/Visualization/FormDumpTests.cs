@@ -87,6 +87,8 @@ namespace Aquality.Selenium.Core.Tests.Visualization
             Assert.That(customForm.Dump.Compare("All elements"), Is.EqualTo(0), "Some elements should be failed to take image, but difference should be around zero");
         }
 
+        //TODO: add tests for max length of dump name
+
         private class WebForm : Form<WebElement>
         {
             private static readonly By ContentLoc = By.XPath("//div[contains(@class,'example')]");
