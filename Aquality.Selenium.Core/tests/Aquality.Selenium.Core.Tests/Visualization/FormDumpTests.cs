@@ -13,6 +13,7 @@ using OpenQA.Selenium.Interactions;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Reflection;
 using WebElement = Aquality.Selenium.Core.Tests.Applications.Browser.Elements.WebElement;
 
 namespace Aquality.Selenium.Core.Tests.Visualization
@@ -36,15 +37,22 @@ namespace Aquality.Selenium.Core.Tests.Visualization
         public void Should_BePossibleTo_SaveFormDump_WithDefaultName()
         {
             var form = new WebForm();
-            var pathToDump =
-                new DirectoryInfo(Path.Combine(PathToDumps, form.Name.Replace("/", " ")));
-            if (pathToDump.Exists)
-            {
-                pathToDump.Delete(true);
-                pathToDump.Refresh();
-            }
-            Assert.AreEqual(0, pathToDump.Exists ? pathToDump.GetFiles().Length : 0, "Dump directory should not contain any files before saving");
+            var pathToDump = CleanUAndGetpPathToDump(form.Name.Replace("/", " "));
+
             Assert.DoesNotThrow(() => form.Dump.Save());
+            pathToDump.Refresh();
+            DirectoryAssert.Exists(pathToDump);
+            Assert.Greater(pathToDump.GetFiles().Length, 0, "Dump should contain some files");
+        }
+
+        [Test]
+        public void Should_BePossibleTo_SaveFormDump_WithSubfoldersInName()
+        {
+            var form = new WebForm();
+            var dumpName = $"{form.Name.Replace("/", " ")}\\SubFolder1\\SubFolder2";
+            var pathToDump = CleanUAndGetpPathToDump(dumpName);
+
+            Assert.DoesNotThrow(() => form.Dump.Save(dumpName));
             pathToDump.Refresh();
             DirectoryAssert.Exists(pathToDump);
             Assert.Greater(pathToDump.GetFiles().Length, 0, "Dump should contain some files");
@@ -87,7 +95,45 @@ namespace Aquality.Selenium.Core.Tests.Visualization
             Assert.That(customForm.Dump.Compare("All elements"), Is.EqualTo(0), "Some elements should be failed to take image, but difference should be around zero");
         }
 
-        //TODO: add tests for max length of dump name
+        [Test]
+        public void Should_BePossibleTo_SaveAndCompareWithDump_WithOverlengthDumpName_WhenAllElementsSelected()
+        {
+            var customForm = new WebForm();
+            customForm.SetElementsForDump(WebForm.ElementsFilter.AllElements);
+
+            var maxElementNameLength = (int)customForm.Dump.GetType().GetMethod("GetMaxNameLengthOfDumpElements", BindingFlags.Instance | BindingFlags.NonPublic).Invoke(customForm.Dump, new object[] { });
+            var imageFormatLength = customForm.Dump.GetType().GetProperty("ImageFormat", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(customForm.Dump).ToString().Length;
+            var maxLength = (int)customForm.Dump.GetType().GetProperty("MaxFullFileNameLength", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(customForm.Dump);
+            var pathToDumpLength = PathToDumps.Length;
+
+            var dumpName = new string('A', maxLength - pathToDumpLength - maxElementNameLength - imageFormatLength);
+            var overlengthDumpName = dumpName + "_BCDE";
+
+            var overlengthPathToDump = CleanUAndGetpPathToDump(overlengthDumpName);
+            var pathToDump = CleanUAndGetpPathToDump(dumpName);
+
+            Assert.DoesNotThrow(() => customForm.Dump.Save(overlengthDumpName));
+
+            overlengthPathToDump.Refresh();
+            DirectoryAssert.DoesNotExist(overlengthPathToDump);
+
+            pathToDump.Refresh();
+            DirectoryAssert.Exists(pathToDump);
+
+            Assert.That(customForm.Dump.Compare(dumpName), Is.EqualTo(0), "Some elements should be failed to take image, but difference should be around zero");
+        }
+
+        private DirectoryInfo CleanUAndGetpPathToDump(string dumpName)
+        {
+            var pathToDump = new DirectoryInfo(Path.Combine(PathToDumps, dumpName));
+            if (pathToDump.Exists)
+            {
+                pathToDump.Delete(true);
+                pathToDump.Refresh();
+            }
+            Assert.AreEqual(0, pathToDump.Exists ? pathToDump.GetFiles().Length : 0, "Dump directory should not contain any files before saving");
+            return pathToDump;
+        }
 
         private class WebForm : Form<WebElement>
         {
