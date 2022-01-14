@@ -135,6 +135,16 @@
             Represents visualization configuration, used for image comparison.
             </summary>
         </member>
+        <member name="P:Aquality.Selenium.Core.Configurations.IVisualizationConfiguration.ImageExtension">
+          <summary>
+            Image extension for comparison.
+          </summary>
+        </member>
+        <member name="P:Aquality.Selenium.Core.Configurations.IVisualizationConfiguration.MaxFullFileNameLength">
+          <summary>
+            Maximum length of full file name with path for image comparison.
+          </summary>
+        </member>
         <member name="P:Aquality.Selenium.Core.Configurations.IVisualizationConfiguration.DefaultThreshold">
             <summary>
             Default threshold used for image comparison.

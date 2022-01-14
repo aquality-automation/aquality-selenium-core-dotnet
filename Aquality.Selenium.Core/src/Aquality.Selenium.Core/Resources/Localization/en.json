@@ -29,6 +29,7 @@
   "loc.el.visual.getdifference.withthreshold": "Comparing element's image to image of size [{0}] with threshold [{1}]",
   "loc.el.visual.difference.value": "The difference between the current and the given images is [{0}]",
   "loc.form.dump.save": "Saving dump of the form with name [{0}]",
+  "loc.form.dump.exceededdumpname": "Dump name length exceeded. Final path: [{0}]",
   "loc.form.dump.imagenotsaved": "Failed to save image of the element [{0}]: {1}",
   "loc.form.dump.compare": "Comparing elements of the form to dump [{0}]",
   "loc.form.dump.elementnotfound": "Element [{0}] found in the dump but was not found on form",

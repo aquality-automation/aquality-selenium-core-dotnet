@@ -1,4 +1,6 @@
 ﻿using Aquality.Selenium.Core.Utilities;
+using Aquality.Selenium.Core.Visualization;
+using System.Drawing.Imaging;
 using System.IO;
 
 namespace Aquality.Selenium.Core.Configurations
@@ -19,6 +21,10 @@ namespace Aquality.Selenium.Core.Configurations
         {
             this.settingsFile = settingsFile;
         }
+
+        public virtual ImageFormat ImageExtension => ImageExtensions.ConvertImageFormat(settingsFile.GetValueOrDefault(".visualization.imageExtension", ".png"));
+
+        public int MaxFullFileNameLength => settingsFile.GetValueOrDefault(".visualization.maxFullFileNameLength", 255);
 
         public float DefaultThreshold => settingsFile.GetValueOrDefault(".visualization.defaultThreshold", 0.012f);
 
