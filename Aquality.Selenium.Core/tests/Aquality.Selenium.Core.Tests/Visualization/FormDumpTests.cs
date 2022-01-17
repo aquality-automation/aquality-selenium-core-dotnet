@@ -152,7 +152,7 @@ namespace Aquality.Selenium.Core.Tests.Visualization
 
         [TestCase(".abc")]
         [TestCase("")]
-        public void Should_BePossibleTo_SaveFormDump_WithInvalidExtension(string imageExtension)
+        public void Should_BeImpossibleTo_SaveFormDump_WithInvalidExtension(string imageExtension)
         {
             var form = new LiteWebForm(imageExtension);
             var dumpName = $"Test {imageExtension} extension";
@@ -172,7 +172,7 @@ namespace Aquality.Selenium.Core.Tests.Visualization
                 pathToDump.Delete(true);
                 pathToDump.Refresh();
             }
-            Assert.AreEqual(0, pathToDump.Exists? pathToDump.GetFiles().Length : 0, "Dump directory should not contain any files before saving");
+            Assert.AreEqual(0, pathToDump.Exists ? pathToDump.GetFiles().Length : 0, "Dump directory should not contain any files before saving");
             return pathToDump;
         }
 
@@ -276,7 +276,7 @@ namespace Aquality.Selenium.Core.Tests.Visualization
             private class CustomVisualizationConfiguration : VisualizationConfiguration
             {
                 private readonly string imageFormat;
-                public override ImageFormat ImageExtension => ImageExtensions.ConvertImageFormat(imageFormat);
+                public override ImageFormat ImageExtension => ImageFormatExtensions.Convert(imageFormat);
 
                 public CustomVisualizationConfiguration(string format) : base(AqualityServices.ServiceProvider.GetRequiredService<ISettingsFile>())
                 {

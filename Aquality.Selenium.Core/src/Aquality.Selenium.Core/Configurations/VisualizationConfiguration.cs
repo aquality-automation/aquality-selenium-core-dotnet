@@ -22,7 +22,7 @@ namespace Aquality.Selenium.Core.Configurations
             this.settingsFile = settingsFile;
         }
 
-        public virtual ImageFormat ImageExtension => ImageExtensions.ConvertImageFormat(settingsFile.GetValueOrDefault(".visualization.imageExtension", ".png"));
+        public virtual ImageFormat ImageExtension => ImageFormatExtensions.Convert(settingsFile.GetValueOrDefault(".visualization.imageExtension", ".png"));
 
         public int MaxFullFileNameLength => settingsFile.GetValueOrDefault(".visualization.maxFullFileNameLength", 255);
 

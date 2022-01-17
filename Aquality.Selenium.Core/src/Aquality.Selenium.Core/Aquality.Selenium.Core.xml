@@ -1235,6 +1235,25 @@
             <returns>A gray scale version of the image</returns>
             <remarks>See http://www.switchonthecode.com/tutorials/csharp-tutorial-convert-a-color-image-to-grayscale for more details</remarks>
         </member>
+        <member name="T:Aquality.Selenium.Core.Visualization.ImageFormatExtensions">
+          <summary>
+            Image format conversion extensions.
+          </summary>
+        </member>
+        <member name="M:Aquality.Selenium.Core.Visualization.ImageFormatExtensions.Convert(System.Drawing.Imaging.ImageFormat)">
+          <summary>
+            Convert an image format from string representation to ImageFormat
+          </summary>
+          <param name="format">String representation of image format</param>
+          <returns>ImageFormat version of string representation</returns>
+        </member>
+        <member name="M:Aquality.Selenium.Core.Visualization.ImageFormatExtensions.Convert(System.String)">
+          <summary>
+            Convert an image format from string representation to ImageFormat
+          </summary>
+          <param name="format">ImageFormat representation of image format</param>
+          <returns>String version of ImageFormat representation</returns>
+        </member>
         <member name="T:Aquality.Selenium.Core.Visualization.IVisualStateProvider">
             <summary>
             Provides visual state of the element.

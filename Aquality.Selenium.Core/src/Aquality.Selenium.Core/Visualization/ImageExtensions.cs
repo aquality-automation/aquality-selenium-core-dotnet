@@ -1,5 +1,4 @@
-﻿using System;
-using System.Drawing;
+﻿using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 
@@ -68,36 +67,6 @@ namespace Aquality.Selenium.Core.Visualization
             }
 
             return newBitmap;
-        }
-
-        /// <summary>
-        /// Convert an image format from string representation to ImageFormat
-        /// </summary>
-        /// <param name="format">String representation of image format</param>
-        /// <returns>ImageFormat version of string representation</returns>
-        public static ImageFormat ConvertImageFormat(string format)
-        {
-            switch (format.ToLower())
-            {
-                case ".png":
-                    return ImageFormat.Png;
-                case ".jpg":
-                case ".jpeg":
-                    return ImageFormat.Jpeg;
-                case ".icon":
-                    return ImageFormat.Icon;
-                case ".gif":
-                    return ImageFormat.Gif;
-                case ".bmp":
-                    return ImageFormat.Bmp;
-                case ".exif":
-                    return ImageFormat.Exif;
-                case ".tif":
-                case ".tiff":
-                    return ImageFormat.Tiff;
-                default:
-                    throw new NotSupportedException($"Unknown <{format}> extension for image file");
-            }
         }
     }
 }

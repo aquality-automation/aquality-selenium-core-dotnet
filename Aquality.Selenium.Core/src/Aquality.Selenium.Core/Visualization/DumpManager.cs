@@ -44,7 +44,7 @@ namespace Aquality.Selenium.Core.Visualization
             {
                 throw new InvalidOperationException($"Dump directory [{directory.FullName}] does not exist.");
             }
-            var imageFiles = directory.GetFiles($"*.{ImageExtension.ToString().ToLower()}");
+            var imageFiles = directory.GetFiles($"*{ImageFormatExtensions.Convert(ImageExtension)}");
             if (imageFiles.Length == 0)
             {
                 throw new InvalidOperationException($"Dump directory [{directory.FullName}] does not contain any [*{ImageExtension}] files.");
@@ -56,7 +56,7 @@ namespace Aquality.Selenium.Core.Visualization
             var absentOnFormElementNames = new List<string>();
             foreach (var imageFile in imageFiles)
             {
-                var key = imageFile.Name.Replace($".{ImageExtension.ToString().ToLower()}", string.Empty);
+                var key = imageFile.Name.Replace(ImageFormatExtensions.Convert(ImageExtension), string.Empty);
                 if (!existingElements.ContainsKey(key))
                 {
                     LocalizedLogger.Warn("loc.form.dump.elementnotfound", key);
@@ -99,7 +99,7 @@ namespace Aquality.Selenium.Core.Visualization
                     try
                     {
                         element.Value.Visual.Image.Save(
-                            Path.Combine(directory.FullName, $"{element.Key}.{ImageExtension.ToString().ToLower()}"), 
+                            Path.Combine(directory.FullName, $"{element.Key}{ImageFormatExtensions.Convert(ImageExtension)}"), 
                             ImageExtension);
                     }
                     catch (Exception e)
