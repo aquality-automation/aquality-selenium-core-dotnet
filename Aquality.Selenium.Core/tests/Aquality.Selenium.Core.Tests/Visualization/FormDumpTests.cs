@@ -13,7 +13,6 @@ using OpenQA.Selenium;
 using OpenQA.Selenium.Interactions;
 using System;
 using System.Collections.Generic;
-using System.Drawing.Imaging;
 using System.IO;
 using System.Reflection;
 using WebElement = Aquality.Selenium.Core.Tests.Applications.Browser.Elements.WebElement;
@@ -51,7 +50,7 @@ namespace Aquality.Selenium.Core.Tests.Visualization
         public void Should_BePossibleTo_SaveFormDump_WithSubfoldersInName()
         {
             var form = new WebForm();
-            var dumpName = $"{form.Name.Replace("/", " ")}\\SubFolder1\\SubFolder2";
+            var dumpName = $"SubFolder1\\SubFolder2";
             var pathToDump = CleanUpAndGetPathToDump(dumpName);
 
             Assert.DoesNotThrow(() => form.Dump.Save(dumpName));
@@ -104,7 +103,7 @@ namespace Aquality.Selenium.Core.Tests.Visualization
             customForm.SetElementsForDump(WebForm.ElementsFilter.AllElements);
 
             var maxElementNameLength = (int)customForm.Dump.GetType().GetMethod("GetMaxNameLengthOfDumpElements", BindingFlags.Instance | BindingFlags.NonPublic).Invoke(customForm.Dump, new object[] { });
-            var imageExtensioLength = customForm.Dump.GetType().GetProperty("ImageExtension", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(customForm.Dump).ToString().Length + 1;
+            var imageExtensioLength = customForm.Dump.GetType().GetProperty("ImageExtension", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(customForm.Dump).ToString().Length;
             var maxLength = (int)customForm.Dump.GetType().GetProperty("MaxFullFileNameLength", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(customForm.Dump);
             var pathToDumpLength = PathToDumps.Length;
 
@@ -125,13 +124,18 @@ namespace Aquality.Selenium.Core.Tests.Visualization
             Assert.That(customForm.Dump.Compare(dumpName), Is.EqualTo(0), "Some elements should be failed to take image, but difference should be around zero");
         }
 
-        [TestCase(".png")]
-        [TestCase(".jpeg")]
         [TestCase(".bmp")]
+        [TestCase(".emf")]
         [TestCase(".exif")]
         [TestCase(".gif")]
-        [TestCase(".tiff")]
         [TestCase(".icon")]
+        [TestCase(".jpg")]
+        [TestCase(".jpeg")]
+        [TestCase(".memorybmp")]
+        [TestCase(".png")]
+        [TestCase(".tif")]
+        [TestCase(".tiff")]
+        [TestCase(".wmf")]
         public void Should_BePossibleTo_SaveFormDump_WithValidExtension(string imageExtension)
         {
             var form = new LiteWebForm(imageExtension);
@@ -276,7 +280,7 @@ namespace Aquality.Selenium.Core.Tests.Visualization
             private class CustomVisualizationConfiguration : VisualizationConfiguration
             {
                 private readonly string imageFormat;
-                public override ImageFormat ImageExtension => ImageFormatExtensions.Convert(imageFormat);
+                public override ImageFormat ImageExtension => ImageFormat.Convert(imageFormat);
 
                 public CustomVisualizationConfiguration(string format) : base(AqualityServices.ServiceProvider.GetRequiredService<ISettingsFile>())
                 {

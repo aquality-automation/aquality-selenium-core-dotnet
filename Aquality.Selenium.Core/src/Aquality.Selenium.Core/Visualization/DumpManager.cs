@@ -4,7 +4,6 @@ using Aquality.Selenium.Core.Localization;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Drawing.Imaging;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -44,7 +43,7 @@ namespace Aquality.Selenium.Core.Visualization
             {
                 throw new InvalidOperationException($"Dump directory [{directory.FullName}] does not exist.");
             }
-            var imageFiles = directory.GetFiles($"*{ImageFormatExtensions.Convert(ImageExtension)}");
+            var imageFiles = directory.GetFiles($"*{ImageExtension}");
             if (imageFiles.Length == 0)
             {
                 throw new InvalidOperationException($"Dump directory [{directory.FullName}] does not contain any [*{ImageExtension}] files.");
@@ -56,7 +55,7 @@ namespace Aquality.Selenium.Core.Visualization
             var absentOnFormElementNames = new List<string>();
             foreach (var imageFile in imageFiles)
             {
-                var key = imageFile.Name.Replace(ImageFormatExtensions.Convert(ImageExtension), string.Empty);
+                var key = imageFile.Name.Replace(ImageExtension.ToString(), string.Empty);
                 if (!existingElements.ContainsKey(key))
                 {
                     LocalizedLogger.Warn("loc.form.dump.elementnotfound", key);
@@ -98,9 +97,7 @@ namespace Aquality.Selenium.Core.Visualization
                 {
                     try
                     {
-                        element.Value.Visual.Image.Save(
-                            Path.Combine(directory.FullName, $"{element.Key}{ImageFormatExtensions.Convert(ImageExtension)}"), 
-                            ImageExtension);
+                        element.Value.Visual.Image.Save(Path.Combine(directory.FullName, $"{element.Key}{ImageExtension}"));
                     }
                     catch (Exception e)
                     {
@@ -145,7 +142,7 @@ namespace Aquality.Selenium.Core.Visualization
         protected virtual DirectoryInfo GetDumpDirectory(string dumpName = null)
         {
             // get the maximum length of the name among the form elements for the dump
-            var maxNameLengthOfDumpElements = GetMaxNameLengthOfDumpElements() + ImageExtension.ToString().Length + 1;
+            var maxNameLengthOfDumpElements = GetMaxNameLengthOfDumpElements() + ImageExtension.ToString().Length;
 
             // get array of subfolders in dump name
             var dumpSubfoldersNames = (dumpName ?? FormName).Split('\\');

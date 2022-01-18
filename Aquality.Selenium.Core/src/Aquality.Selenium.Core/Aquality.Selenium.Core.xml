@@ -1235,24 +1235,23 @@
             <returns>A gray scale version of the image</returns>
             <remarks>See http://www.switchonthecode.com/tutorials/csharp-tutorial-convert-a-color-image-to-grayscale for more details</remarks>
         </member>
-        <member name="T:Aquality.Selenium.Core.Visualization.ImageFormatExtensions">
+        <member name="T:Aquality.Selenium.Core.Visualization.ImageFormat">
           <summary>
             Image format conversion extensions.
           </summary>
         </member>
-        <member name="M:Aquality.Selenium.Core.Visualization.ImageFormatExtensions.Convert(System.Drawing.Imaging.ImageFormat)">
+        <member name="M:Aquality.Selenium.Core.Visualization.ImageFormat.Convert(System.String)">
           <summary>
             Convert an image format from string representation to ImageFormat
           </summary>
           <param name="format">String representation of image format</param>
           <returns>ImageFormat version of string representation</returns>
         </member>
-        <member name="M:Aquality.Selenium.Core.Visualization.ImageFormatExtensions.Convert(System.String)">
+        <member name="M:Aquality.Selenium.Core.Visualization.ImageFormat.ToString()">
           <summary>
-            Convert an image format from string representation to ImageFormat
+            Overridden method to convert an ImageFormat to string representation
           </summary>
-          <param name="format">ImageFormat representation of image format</param>
-          <returns>String version of ImageFormat representation</returns>
+          <returns>string version of ImageFormat representation</returns>
         </member>
         <member name="T:Aquality.Selenium.Core.Visualization.IVisualStateProvider">
             <summary>

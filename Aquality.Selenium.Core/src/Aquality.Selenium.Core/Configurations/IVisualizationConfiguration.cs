@@ -1,4 +1,4 @@
-﻿using System.Drawing.Imaging;
+﻿using Aquality.Selenium.Core.Visualization;
 
 namespace Aquality.Selenium.Core.Configurations
 {
