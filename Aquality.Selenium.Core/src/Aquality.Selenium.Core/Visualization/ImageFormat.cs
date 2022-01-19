@@ -5,30 +5,35 @@ namespace Aquality.Selenium.Core.Visualization
 {
     public sealed class ImageFormat
     {
-        private readonly string format;
+        public string Extension { get; }
+        public DrawingImageFormat Format { get; }
 
         public static readonly ImageFormat Bmp = new ImageFormat(DrawingImageFormat.Bmp);
         public static readonly ImageFormat Emf = new ImageFormat(DrawingImageFormat.Emf);
         public static readonly ImageFormat Exif = new ImageFormat(DrawingImageFormat.Exif);
         public static readonly ImageFormat Gif = new ImageFormat(DrawingImageFormat.Gif);
-        public static readonly ImageFormat Icon = new ImageFormat(DrawingImageFormat.Icon);
-        public static readonly ImageFormat Jpg = new ImageFormat("Jpg");
+        public static readonly ImageFormat Icon = new ImageFormat(".ico", DrawingImageFormat.Icon);
+        public static readonly ImageFormat Jpg = new ImageFormat(".jpg", DrawingImageFormat.Jpeg);
         public static readonly ImageFormat Jpeg = new ImageFormat(DrawingImageFormat.Jpeg);
         public static readonly ImageFormat MemoryBmp = new ImageFormat(DrawingImageFormat.MemoryBmp);
         public static readonly ImageFormat Png = new ImageFormat(DrawingImageFormat.Png);
-        public static readonly ImageFormat Tif = new ImageFormat("Tif");
+        public static readonly ImageFormat Tif = new ImageFormat(".tif", DrawingImageFormat.Tiff);
         public static readonly ImageFormat Tiff = new ImageFormat(DrawingImageFormat.Tiff);
         public static readonly ImageFormat Wmf = new ImageFormat(DrawingImageFormat.Wmf);
 
-        private ImageFormat(string format) { this.format = format; }
-        private ImageFormat(DrawingImageFormat format) { this.format = format.ToString(); }
+        private ImageFormat(DrawingImageFormat format) : this($".{format.ToString().ToLower()}", format) { }
+        private ImageFormat(string extension, DrawingImageFormat format) 
+        { 
+            Extension = extension;
+            Format = format;
+        }
 
         /// <summary>
-        /// Convert an image format from string representation to ImageFormat
+        /// Parse an image format from string representation to ImageFormat
         /// </summary>
         /// <param name="format">String representation of image format</param>
         /// <returns>ImageFormat version of string representation</returns>
-        public static ImageFormat Convert(string format)
+        public static ImageFormat Parse(string format)
         {
             switch (format.ToLower())
             {
@@ -40,7 +45,7 @@ namespace Aquality.Selenium.Core.Visualization
                     return Exif;
                 case ".gif":
                     return Gif;
-                case ".icon":
+                case ".ico":
                     return Icon;
                 case ".jpg":
                     return Jpg;
@@ -60,11 +65,5 @@ namespace Aquality.Selenium.Core.Visualization
                     throw new NotSupportedException($"Unknown <{format}> extension for image file");
             }
         }
-
-        /// <summary>
-        /// Overridden method to convert an ImageFormat to string representation
-        /// </summary>
-        /// <returns>string version of ImageFormat representation</returns>
-        public override string ToString() => $".{format.ToLower()}";
     }
 }

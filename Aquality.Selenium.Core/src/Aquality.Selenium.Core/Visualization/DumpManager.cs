@@ -29,7 +29,7 @@ namespace Aquality.Selenium.Core.Visualization
 
         protected ILocalizedLogger LocalizedLogger { get; }
 
-        protected ImageFormat ImageExtension => VisualizationConfiguration.ImageExtension; 
+        protected ImageFormat ImageFormat => VisualizationConfiguration.ImageFormat; 
         
         protected int MaxFullFileNameLength => VisualizationConfiguration.MaxFullFileNameLength;
 
@@ -43,10 +43,10 @@ namespace Aquality.Selenium.Core.Visualization
             {
                 throw new InvalidOperationException($"Dump directory [{directory.FullName}] does not exist.");
             }
-            var imageFiles = directory.GetFiles($"*{ImageExtension}");
+            var imageFiles = directory.GetFiles($"*{ImageFormat.Extension}");
             if (imageFiles.Length == 0)
             {
-                throw new InvalidOperationException($"Dump directory [{directory.FullName}] does not contain any [*{ImageExtension}] files.");
+                throw new InvalidOperationException($"Dump directory [{directory.FullName}] does not contain any [*{ImageFormat.Extension}] files.");
             }
             var existingElements = FilterElementsForVisualization().ToDictionary(el => el.Key, el => el.Value);
             var countOfUnproceededElements = existingElements.Count;
@@ -55,7 +55,7 @@ namespace Aquality.Selenium.Core.Visualization
             var absentOnFormElementNames = new List<string>();
             foreach (var imageFile in imageFiles)
             {
-                var key = imageFile.Name.Replace(ImageExtension.ToString(), string.Empty);
+                var key = imageFile.Name.Replace(ImageFormat.Extension, string.Empty);
                 if (!existingElements.ContainsKey(key))
                 {
                     LocalizedLogger.Warn("loc.form.dump.elementnotfound", key);
@@ -97,7 +97,7 @@ namespace Aquality.Selenium.Core.Visualization
                 {
                     try
                     {
-                        element.Value.Visual.Image.Save(Path.Combine(directory.FullName, $"{element.Key}{ImageExtension}"));
+                        element.Value.Visual.Image.Save(Path.Combine(directory.FullName, $"{element.Key}{ImageFormat.Extension}"), ImageFormat.Format);
                     }
                     catch (Exception e)
                     {
@@ -142,7 +142,7 @@ namespace Aquality.Selenium.Core.Visualization
         protected virtual DirectoryInfo GetDumpDirectory(string dumpName = null)
         {
             // get the maximum length of the name among the form elements for the dump
-            var maxNameLengthOfDumpElements = GetMaxNameLengthOfDumpElements() + ImageExtension.ToString().Length;
+            var maxNameLengthOfDumpElements = GetMaxNameLengthOfDumpElements() + ImageFormat.Extension.Length;
 
             // get array of subfolders in dump name
             var dumpSubfoldersNames = (dumpName ?? FormName).Split('\\');

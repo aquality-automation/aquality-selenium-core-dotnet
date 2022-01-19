@@ -8,9 +8,9 @@ namespace Aquality.Selenium.Core.Configurations
     public interface IVisualizationConfiguration
     {
         /// <summary>
-        /// Image extension for comparison.
+        /// Image format for comparison.
         /// </summary>
-        ImageFormat ImageExtension { get; }
+        ImageFormat ImageFormat { get; }
 
         /// <summary>
         /// Maximum length of full file name with path for image comparison.

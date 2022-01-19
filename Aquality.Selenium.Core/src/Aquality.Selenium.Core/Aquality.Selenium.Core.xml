@@ -135,9 +135,9 @@
             Represents visualization configuration, used for image comparison.
             </summary>
         </member>
-        <member name="P:Aquality.Selenium.Core.Configurations.IVisualizationConfiguration.ImageExtension">
+        <member name="P:Aquality.Selenium.Core.Configurations.IVisualizationConfiguration.ImageFormat">
           <summary>
-            Image extension for comparison.
+            Image format for comparison.
           </summary>
         </member>
         <member name="P:Aquality.Selenium.Core.Configurations.IVisualizationConfiguration.MaxFullFileNameLength">
@@ -1240,18 +1240,12 @@
             Image format conversion extensions.
           </summary>
         </member>
-        <member name="M:Aquality.Selenium.Core.Visualization.ImageFormat.Convert(System.String)">
+        <member name="M:Aquality.Selenium.Core.Visualization.ImageFormat.Parse(System.String)">
           <summary>
-            Convert an image format from string representation to ImageFormat
+            Parse an image format from string representation to ImageFormat
           </summary>
           <param name="format">String representation of image format</param>
           <returns>ImageFormat version of string representation</returns>
-        </member>
-        <member name="M:Aquality.Selenium.Core.Visualization.ImageFormat.ToString()">
-          <summary>
-            Overridden method to convert an ImageFormat to string representation
-          </summary>
-          <returns>string version of ImageFormat representation</returns>
         </member>
         <member name="T:Aquality.Selenium.Core.Visualization.IVisualStateProvider">
             <summary>

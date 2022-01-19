@@ -128,7 +128,7 @@ namespace Aquality.Selenium.Core.Tests.Visualization
         [TestCase(".emf")]
         [TestCase(".exif")]
         [TestCase(".gif")]
-        [TestCase(".icon")]
+        [TestCase(".ico")]
         [TestCase(".jpg")]
         [TestCase(".jpeg")]
         [TestCase(".memorybmp")]
@@ -280,7 +280,7 @@ namespace Aquality.Selenium.Core.Tests.Visualization
             private class CustomVisualizationConfiguration : VisualizationConfiguration
             {
                 private readonly string imageFormat;
-                public override ImageFormat ImageExtension => ImageFormat.Convert(imageFormat);
+                public override ImageFormat ImageFormat => ImageFormat.Parse(imageFormat);
 
                 public CustomVisualizationConfiguration(string format) : base(AqualityServices.ServiceProvider.GetRequiredService<ISettingsFile>())
                 {
