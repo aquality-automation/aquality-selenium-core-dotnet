@@ -103,7 +103,7 @@ namespace Aquality.Selenium.Core.Tests.Visualization
             customForm.SetElementsForDump(WebForm.ElementsFilter.AllElements);
 
             var maxElementNameLength = (int)customForm.Dump.GetType().GetMethod("GetMaxNameLengthOfDumpElements", BindingFlags.Instance | BindingFlags.NonPublic).Invoke(customForm.Dump, new object[] { });
-            var imageExtensioLength = customForm.Dump.GetType().GetProperty("ImageExtension", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(customForm.Dump).ToString().Length;
+            var imageExtensioLength = ((ImageFormat)customForm.Dump.GetType().GetProperty("ImageFormat", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(customForm.Dump)).Extension.Length;
             var maxLength = (int)customForm.Dump.GetType().GetProperty("MaxFullFileNameLength", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(customForm.Dump);
             var pathToDumpLength = PathToDumps.Length;
 
