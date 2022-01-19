@@ -7,7 +7,7 @@ using NUnit.Framework;
 using OpenQA.Selenium;
 using System;
 
-namespace Aquality.Selenium.Core.Tests.Localization
+namespace Aquality.Selenium.Core.Tests.Visualization
 {
     public sealed class ImageComparatorTests : TestWithBrowser
     {

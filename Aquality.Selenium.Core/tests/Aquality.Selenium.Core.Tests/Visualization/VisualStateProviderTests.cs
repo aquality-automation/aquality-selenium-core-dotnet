@@ -7,7 +7,7 @@ using OpenQA.Selenium;
 using System;
 using System.Drawing;
 
-namespace Aquality.Selenium.Core.Tests.Localization
+namespace Aquality.Selenium.Core.Tests.Visualization
 {
     public sealed class VisualStateProviderTests : TestWithBrowser
     {

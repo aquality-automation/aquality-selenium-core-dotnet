@@ -1,10 +1,22 @@
-﻿namespace Aquality.Selenium.Core.Configurations
+﻿using Aquality.Selenium.Core.Visualization;
+
+namespace Aquality.Selenium.Core.Configurations
 {
     /// <summary>
     /// Represents visualization configuration, used for image comparison.
     /// </summary>
     public interface IVisualizationConfiguration
     {
+        /// <summary>
+        /// Image format for comparison.
+        /// </summary>
+        ImageFormat ImageFormat { get; }
+
+        /// <summary>
+        /// Maximum length of full file name with path for image comparison.
+        /// </summary>
+        int MaxFullFileNameLength { get; }
+
         /// <summary>
         /// Default threshold used for image comparison.
         /// </summary>

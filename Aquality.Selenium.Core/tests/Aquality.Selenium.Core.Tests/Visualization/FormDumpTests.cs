@@ -6,6 +6,7 @@ using Aquality.Selenium.Core.Localization;
 using Aquality.Selenium.Core.Logging;
 using Aquality.Selenium.Core.Tests.Applications.Browser;
 using Aquality.Selenium.Core.Tests.Applications.Browser.Elements;
+using Aquality.Selenium.Core.Visualization;
 using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
 using OpenQA.Selenium;
@@ -13,6 +14,7 @@ using OpenQA.Selenium.Interactions;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Reflection;
 using WebElement = Aquality.Selenium.Core.Tests.Applications.Browser.Elements.WebElement;
 
 namespace Aquality.Selenium.Core.Tests.Visualization
@@ -36,15 +38,22 @@ namespace Aquality.Selenium.Core.Tests.Visualization
         public void Should_BePossibleTo_SaveFormDump_WithDefaultName()
         {
             var form = new WebForm();
-            var pathToDump =
-                new DirectoryInfo(Path.Combine(PathToDumps, form.Name.Replace("/", " ")));
-            if (pathToDump.Exists)
-            {
-                pathToDump.Delete(true);
-                pathToDump.Refresh();
-            }
-            Assert.AreEqual(0, pathToDump.Exists ? pathToDump.GetFiles().Length : 0, "Dump directory should not contain any files before saving");
+            var pathToDump = CleanUpAndGetPathToDump(form.Name.Replace("/", " "));
+
             Assert.DoesNotThrow(() => form.Dump.Save());
+            pathToDump.Refresh();
+            DirectoryAssert.Exists(pathToDump);
+            Assert.Greater(pathToDump.GetFiles().Length, 0, "Dump should contain some files");
+        }
+
+        [Test]
+        public void Should_BePossibleTo_SaveFormDump_WithSubfoldersInName()
+        {
+            var form = new WebForm();
+            var dumpName = $"SubFolder1\\SubFolder2";
+            var pathToDump = CleanUpAndGetPathToDump(dumpName);
+
+            Assert.DoesNotThrow(() => form.Dump.Save(dumpName));
             pathToDump.Refresh();
             DirectoryAssert.Exists(pathToDump);
             Assert.Greater(pathToDump.GetFiles().Length, 0, "Dump should contain some files");
@@ -87,6 +96,90 @@ namespace Aquality.Selenium.Core.Tests.Visualization
             Assert.That(customForm.Dump.Compare("All elements"), Is.EqualTo(0), "Some elements should be failed to take image, but difference should be around zero");
         }
 
+        [Test]
+        public void Should_BePossibleTo_SaveAndCompareWithDump_WithOverlengthDumpName_WhenAllElementsSelected()
+        {
+            var customForm = new WebForm();
+            customForm.SetElementsForDump(WebForm.ElementsFilter.AllElements);
+
+            var maxElementNameLength = (int)customForm.Dump.GetType().GetMethod("GetMaxNameLengthOfDumpElements", BindingFlags.Instance | BindingFlags.NonPublic).Invoke(customForm.Dump, new object[] { });
+            var imageExtensioLength = ((ImageFormat)customForm.Dump.GetType().GetProperty("ImageFormat", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(customForm.Dump)).Extension.Length;
+            var maxLength = (int)customForm.Dump.GetType().GetProperty("MaxFullFileNameLength", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(customForm.Dump);
+            var pathToDumpLength = PathToDumps.Length;
+
+            var dumpName = new string('A', maxLength - pathToDumpLength - maxElementNameLength - imageExtensioLength);
+            var overlengthDumpName = dumpName + "_BCDE";
+
+            var overlengthPathToDump = CleanUpAndGetPathToDump(overlengthDumpName);
+            var pathToDump = CleanUpAndGetPathToDump(dumpName);
+
+            Assert.DoesNotThrow(() => customForm.Dump.Save(overlengthDumpName));
+
+            overlengthPathToDump.Refresh();
+            DirectoryAssert.DoesNotExist(overlengthPathToDump);
+
+            pathToDump.Refresh();
+            DirectoryAssert.Exists(pathToDump);
+
+            Assert.That(customForm.Dump.Compare(dumpName), Is.EqualTo(0), "Some elements should be failed to take image, but difference should be around zero");
+        }
+
+        [TestCase(".bmp")]
+        [TestCase(".emf")]
+        [TestCase(".exif")]
+        [TestCase(".gif")]
+        [TestCase(".ico")]
+        [TestCase(".jpg")]
+        [TestCase(".jpeg")]
+        [TestCase(".memorybmp")]
+        [TestCase(".png")]
+        [TestCase(".tif")]
+        [TestCase(".tiff")]
+        [TestCase(".wmf")]
+        public void Should_BePossibleTo_SaveFormDump_WithValidExtension(string imageExtension)
+        {
+            var form = new LiteWebForm(imageExtension);
+            var dumpName = $"Test {imageExtension} extension";
+            var pathToDump = CleanUpAndGetPathToDump(dumpName);
+
+            Assert.DoesNotThrow(() => form.Dump.Save(dumpName));
+            pathToDump.Refresh();
+            DirectoryAssert.Exists(pathToDump);
+            Assert.Greater(pathToDump.GetFiles().Length, 0, "Dump should contain some files");
+
+            foreach (var file in pathToDump.GetFiles())
+            {
+                Assert.AreEqual(imageExtension, file.Extension, "Image extension not exual to expexted");
+                Assert.That(file.Name.Contains(imageExtension), "Image name doesn't contain expected extension");
+            }
+        }
+
+        [TestCase(".abc")]
+        [TestCase("")]
+        public void Should_BeImpossibleTo_SaveFormDump_WithInvalidExtension(string imageExtension)
+        {
+            var form = new LiteWebForm(imageExtension);
+            var dumpName = $"Test {imageExtension} extension";
+            var pathToDump = CleanUpAndGetPathToDump(dumpName);
+
+            Assert.Throws<NotSupportedException>(() => form.Dump.Save(dumpName));
+
+            pathToDump.Refresh();
+            DirectoryAssert.DoesNotExist(pathToDump);
+        }
+
+        private DirectoryInfo CleanUpAndGetPathToDump(string dumpName)
+        {
+            var pathToDump = new DirectoryInfo(Path.Combine(PathToDumps, dumpName));
+            if (pathToDump.Exists)
+            {
+                pathToDump.Delete(true);
+                pathToDump.Refresh();
+            }
+            Assert.AreEqual(0, pathToDump.Exists ? pathToDump.GetFiles().Length : 0, "Dump directory should not contain any files before saving");
+            return pathToDump;
+        }
+
         private class WebForm : Form<WebElement>
         {
             private static readonly By ContentLoc = By.XPath("//div[contains(@class,'example')]");
@@ -98,14 +191,14 @@ namespace Aquality.Selenium.Core.Tests.Visualization
                 DisplayedElementsLoc, "I'm displayed field");
             private readonly Label displayedButInitializedAsExist
                 = new Label(DisplayedElementsLoc, "I'm displayed but initialized as existing", ElementState.ExistsInAnyState);
-            private Label DisplayedLabel
+            protected Label DisplayedLabel
                 => new Label(DisplayedElementsLoc, "I'm displayed property", ElementState.Displayed);
             private Label HiddenLabel
                 => new Label(HiddenElementsLoc, "I'm hidden", ElementState.ExistsInAnyState);
             private Label HiddenLabelInitializedAsDisplayed
                 => new Label(HiddenElementsLoc, "I'm hidden but mask as displayed", ElementState.Displayed);
 
-            private Label ContentLabel => new Label(ContentLoc, "Content", ElementState.Displayed);
+            protected Label ContentLabel => new Label(ContentLoc, "Content", ElementState.Displayed);
             private Label ContentDuplicateLabel => new Label(ContentLoc, "Content", ElementState.Displayed);
 
 
@@ -170,6 +263,29 @@ namespace Aquality.Selenium.Core.Tests.Visualization
                 ElementsInitializedAsDisplayed,
                 AllElements,
                 DisplayedElements
+            }
+        }
+
+        private class LiteWebForm : WebForm
+        {
+            private readonly string ImageExtension;
+
+            protected override IVisualizationConfiguration VisualizationConfiguration => new CustomVisualizationConfiguration(ImageExtension);
+
+            public LiteWebForm(string imageExtension)
+            {
+                ImageExtension = imageExtension;
+            }
+
+            private class CustomVisualizationConfiguration : VisualizationConfiguration
+            {
+                private readonly string imageFormat;
+                public override ImageFormat ImageFormat => ImageFormat.Parse(imageFormat);
+
+                public CustomVisualizationConfiguration(string format) : base(AqualityServices.ServiceProvider.GetRequiredService<ISettingsFile>())
+                {
+                    imageFormat = format;
+                }
             }
         }
     }

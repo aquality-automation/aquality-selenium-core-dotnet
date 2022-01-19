@@ -7,12 +7,12 @@ using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Text;
 
 namespace Aquality.Selenium.Core.Visualization
 {
     public class DumpManager<T> : IDumpManager where T : IElement
     {
-        private const string ImageFormat = ".png";
         public DumpManager(IDictionary<string, T> elementsForVisualization, string formName, IVisualizationConfiguration visualizationConfiguration, ILocalizedLogger localizedLogger)
         {
             ElementsForVisualization = elementsForVisualization;
@@ -29,6 +29,10 @@ namespace Aquality.Selenium.Core.Visualization
 
         protected ILocalizedLogger LocalizedLogger { get; }
 
+        protected ImageFormat ImageFormat => VisualizationConfiguration.ImageFormat; 
+        
+        protected int MaxFullFileNameLength => VisualizationConfiguration.MaxFullFileNameLength;
+
         protected string DumpsDirectory => VisualizationConfiguration.PathToDumps;
 
         public virtual float Compare(string dumpName = null)
@@ -39,10 +43,10 @@ namespace Aquality.Selenium.Core.Visualization
             {
                 throw new InvalidOperationException($"Dump directory [{directory.FullName}] does not exist.");
             }
-            var imageFiles = directory.GetFiles($"*{ImageFormat}");
+            var imageFiles = directory.GetFiles($"*{ImageFormat.Extension}");
             if (imageFiles.Length == 0)
             {
-                throw new InvalidOperationException($"Dump directory [{directory.FullName}] does not contain any [*{ImageFormat}] files.");
+                throw new InvalidOperationException($"Dump directory [{directory.FullName}] does not contain any [*{ImageFormat.Extension}] files.");
             }
             var existingElements = FilterElementsForVisualization().ToDictionary(el => el.Key, el => el.Value);
             var countOfUnproceededElements = existingElements.Count;
@@ -51,7 +55,7 @@ namespace Aquality.Selenium.Core.Visualization
             var absentOnFormElementNames = new List<string>();
             foreach (var imageFile in imageFiles)
             {
-                var key = imageFile.Name.Replace(ImageFormat, string.Empty);
+                var key = imageFile.Name.Replace(ImageFormat.Extension, string.Empty);
                 if (!existingElements.ContainsKey(key))
                 {
                     LocalizedLogger.Warn("loc.form.dump.elementnotfound", key);
@@ -93,7 +97,7 @@ namespace Aquality.Selenium.Core.Visualization
                 {
                     try
                     {
-                        element.Value.Visual.Image.Save(Path.Combine(directory.FullName, $"{element.Key}.png"));
+                        element.Value.Visual.Image.Save(Path.Combine(directory.FullName, $"{element.Key}{ImageFormat.Extension}"), ImageFormat.Format);
                     }
                     catch (Exception e)
                     {
@@ -133,18 +137,43 @@ namespace Aquality.Selenium.Core.Visualization
             return dirInfo;
         }
 
+        protected virtual int GetMaxNameLengthOfDumpElements() => ElementsForVisualization.Max(element => element.Key == null ? 0 : element.Key.Length);
+
         protected virtual DirectoryInfo GetDumpDirectory(string dumpName = null)
         {
-            const int maxNameLenght = 40;
-            var invalid = new string(Path.GetInvalidFileNameChars()) + new string(Path.GetInvalidPathChars());
-            var name = dumpName ?? FormName;
-            foreach (var character in invalid)
-            {
-                name = name.Replace(character, ' ');
-            }
-            name = name.Length > maxNameLenght ? name.Substring(0, maxNameLenght) : name;
+            // get the maximum length of the name among the form elements for the dump
+            var maxNameLengthOfDumpElements = GetMaxNameLengthOfDumpElements() + ImageFormat.Extension.Length;
 
-            return new DirectoryInfo(Path.Combine(DumpsDirectory, name));
+            // get array of subfolders in dump name
+            var dumpSubfoldersNames = (dumpName ?? FormName).Split('\\');
+
+            // get invalid characters that can not be in folder name
+            var invalid = new string(Path.GetInvalidFileNameChars()) + new string(Path.GetInvalidPathChars());
+
+            // create new dump name without invalid chars for each subfolder
+            var validDumpName = new StringBuilder();
+            foreach (string folderName in dumpSubfoldersNames)
+            {
+                string folderNameCopy = folderName;
+                foreach (var character in invalid)
+                {
+                    folderNameCopy = folderNameCopy.Replace(character, ' ');
+                }
+                validDumpName.Append($"{folderNameCopy}\\");
+            }
+            var validDumpNameString = validDumpName.ToString();
+
+            // create full dump path
+            var fullDumpPath = Path.Combine(DumpsDirectory, validDumpNameString);
+
+            // cut off the excess length and log warn message
+            if (fullDumpPath.Length + maxNameLengthOfDumpElements > MaxFullFileNameLength)
+            {
+                validDumpNameString = validDumpNameString.Substring(0, MaxFullFileNameLength - Path.GetFullPath(DumpsDirectory).Length - maxNameLengthOfDumpElements);
+                LocalizedLogger.Warn("loc.form.dump.exceededdumpname", validDumpNameString);
+            }
+
+            return new DirectoryInfo(Path.Combine(DumpsDirectory, validDumpNameString));
         }
     }
 }
