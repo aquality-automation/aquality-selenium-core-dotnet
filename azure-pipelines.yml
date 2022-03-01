@@ -101,10 +101,14 @@ stages:
     displayName: 'Create tag on GitHub and publish NuGet package'
 
     steps:
-    - task: GitVersion@5
-      displayName: 'Run GitVersion'
+    - task: gitversion/setup@0
+      displayName: 'Install GitTools'
       inputs:
-        runtime: 'core'
+        versionSpec: '5.x'
+    - task: gitversion/execute@0
+      inputs:
+        useConfigFile: true
+        configFilePath: 'GitVersion.yml'
 
     - script: dotnet pack Aquality.Selenium.Core\src\Aquality.Selenium.Core\Aquality.Selenium.Core.csproj -c $(buildConfiguration) -p:Version=$(GitVersion.NuGetVersion) -o $(Build.ArtifactStagingDirectory)
       displayName: 'Create NuGet package'
