@@ -1,7 +1,7 @@
 ﻿{
   "loc.clicking": "Клик",
-  "loc.el.getattr": "Получение аттрибута '{0}'",
-  "loc.el.attr.value": "Значение аттрибута '{0}': [{1}]",
+  "loc.el.getattr": "Получение атрибута '{0}'",
+  "loc.el.attr.value": "Значение атрибута '{0}': [{1}]",
   "loc.get.text": "Получение текста элемента",
   "loc.text.value": "Текст элемента: [{0}]",
   "loc.text.sending.keys": "Нажатие клавиши '{0}'",
@@ -13,7 +13,7 @@
   "loc.wait.for.state": "Ожидание, пока элемент станет {0}",
   "loc.wait.for.state.failed": "Элемент не стал {0} по истечении времени ожидания",
   "loc.el.state.displayed": "видимым",
-  "loc.el.state.not.displayed": "невидимым или остуствующим",
+  "loc.el.state.not.displayed": "невидимым или отсутствующим",
   "loc.el.state.exist": "присутствующим",
   "loc.el.state.not.exist": "отсутствующим",
   "loc.el.state.enabled": "доступным",

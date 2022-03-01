@@ -136,14 +136,14 @@
             </summary>
         </member>
         <member name="P:Aquality.Selenium.Core.Configurations.IVisualizationConfiguration.ImageFormat">
-          <summary>
+            <summary>
             Image format for comparison.
-          </summary>
+            </summary>
         </member>
         <member name="P:Aquality.Selenium.Core.Configurations.IVisualizationConfiguration.MaxFullFileNameLength">
-          <summary>
+            <summary>
             Maximum length of full file name with path for image comparison.
-          </summary>
+            </summary>
         </member>
         <member name="P:Aquality.Selenium.Core.Configurations.IVisualizationConfiguration.DefaultThreshold">
             <summary>
@@ -369,7 +369,7 @@
             Finds current element by specified <see cref="P:Aquality.Selenium.Core.Elements.Interfaces.IElement.Locator"/>
             </summary>
             <param name="timeout">Timeout to find element. Default: <see cref="P:Aquality.Selenium.Core.Configurations.ITimeoutConfiguration.Condition"/></param>
-            <returns>Instance of <see cref="T:OpenQA.Selenium.Remote.RemoteWebElement"/> if found.</returns>
+            <returns>Instance of <see cref="T:OpenQA.Selenium.WebElement"/> if found.</returns>
             <exception cref="T:OpenQA.Selenium.NoSuchElementException">Thrown when no elements found.</exception>
         </member>
         <member name="P:Aquality.Selenium.Core.Elements.Interfaces.IElement.Text">
@@ -1235,17 +1235,12 @@
             <returns>A gray scale version of the image</returns>
             <remarks>See http://www.switchonthecode.com/tutorials/csharp-tutorial-convert-a-color-image-to-grayscale for more details</remarks>
         </member>
-        <member name="T:Aquality.Selenium.Core.Visualization.ImageFormat">
-          <summary>
-            Image format conversion extensions.
-          </summary>
-        </member>
         <member name="M:Aquality.Selenium.Core.Visualization.ImageFormat.Parse(System.String)">
-          <summary>
+            <summary>
             Parse an image format from string representation to ImageFormat
-          </summary>
-          <param name="format">String representation of image format</param>
-          <returns>ImageFormat version of string representation</returns>
+            </summary>
+            <param name="format">String representation of image format</param>
+            <returns>ImageFormat version of string representation</returns>
         </member>
         <member name="T:Aquality.Selenium.Core.Visualization.IVisualStateProvider">
             <summary>
