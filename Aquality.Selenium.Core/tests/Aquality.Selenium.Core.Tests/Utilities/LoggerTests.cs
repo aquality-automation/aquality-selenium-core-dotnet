@@ -87,7 +87,9 @@ namespace Aquality.Selenium.Core.Tests.Utilities
             {
                 Name = Guid.NewGuid().ToString(),
                 FileName = filePath,
-                Layout = "${message}"
+                Layout = "${message}",
+                KeepFileOpen = false,
+                ConcurrentWrites = true
             };
         }
     }
