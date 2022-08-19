@@ -38,7 +38,9 @@ namespace Aquality.Selenium.Core.Logging
             config.AddRule(LogLevel.Debug, LogLevel.Fatal, new FileTarget("logfile")
             {
                 FileName = "../../../Log/log.log",
-                Layout = layout
+                Layout = layout,
+                KeepFileOpen = false,
+                ConcurrentWrites = true
             });
             return config;
         }
