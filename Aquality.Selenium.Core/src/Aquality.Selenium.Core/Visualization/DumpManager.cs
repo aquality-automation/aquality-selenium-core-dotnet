@@ -29,8 +29,8 @@ namespace Aquality.Selenium.Core.Visualization
 
         protected ILocalizedLogger LocalizedLogger { get; }
 
-        protected ImageFormat ImageFormat => VisualizationConfiguration.ImageFormat; 
-        
+        protected ImageFormat ImageFormat => VisualizationConfiguration.ImageFormat;
+
         protected int MaxFullFileNameLength => VisualizationConfiguration.MaxFullFileNameLength;
 
         protected string DumpsDirectory => VisualizationConfiguration.PathToDumps;
@@ -145,7 +145,7 @@ namespace Aquality.Selenium.Core.Visualization
             var maxNameLengthOfDumpElements = GetMaxNameLengthOfDumpElements() + ImageFormat.Extension.Length;
 
             // get array of subfolders in dump name
-            var dumpSubfoldersNames = (dumpName ?? FormName).Split('\\');
+            var dumpSubfoldersNames = (dumpName ?? FormName).Split(Path.DirectorySeparatorChar);
 
             // get invalid characters that can not be in folder name
             var invalid = new string(Path.GetInvalidFileNameChars()) + new string(Path.GetInvalidPathChars());
@@ -159,7 +159,7 @@ namespace Aquality.Selenium.Core.Visualization
                 {
                     folderNameCopy = folderNameCopy.Replace(character, ' ');
                 }
-                validDumpName.Append($"{folderNameCopy}\\");
+                validDumpName.Append($"{folderNameCopy}{Path.DirectorySeparatorChar}");
             }
             var validDumpNameString = validDumpName.ToString();
 
