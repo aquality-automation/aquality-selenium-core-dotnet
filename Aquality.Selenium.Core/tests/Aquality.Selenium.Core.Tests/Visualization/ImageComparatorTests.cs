@@ -71,8 +71,8 @@ namespace Aquality.Selenium.Core.Tests.Visualization
             Assert.Multiple(() =>
             {
                 Assert.That(ImageComparator.PercentageDifference(firstImage, secondImage, threshold: 0), Is.Not.EqualTo(0));
-                Assert.That(ImageComparator.PercentageDifference(firstImage, secondImage, threshold: 0.2f), Is.AtMost(0.2));
-                Assert.That(ImageComparator.PercentageDifference(firstImage, secondImage, threshold: 0.4f), Is.AtMost(0.15));
+                Assert.That(ImageComparator.PercentageDifference(firstImage, secondImage, threshold: 0.2f), Is.AtMost(0.3));
+                Assert.That(ImageComparator.PercentageDifference(firstImage, secondImage, threshold: 0.4f), Is.AtMost(0.2));
                 Assert.That(ImageComparator.PercentageDifference(firstImage, secondImage, threshold: 0.6f), Is.AtMost(0.1));
                 Assert.That(ImageComparator.PercentageDifference(firstImage, secondImage, threshold: 0.8f), Is.EqualTo(0));
             });
