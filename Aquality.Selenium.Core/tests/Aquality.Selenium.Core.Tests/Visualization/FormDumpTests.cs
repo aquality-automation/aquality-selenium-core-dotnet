@@ -125,17 +125,18 @@ namespace Aquality.Selenium.Core.Tests.Visualization
         }
 
         [TestCase(".bmp")]
-        [TestCase(".emf")]
-        [TestCase(".exif")]
+        [TestCase(".heif")]
+        [TestCase(".avif")]
         [TestCase(".gif")]
         [TestCase(".ico")]
         [TestCase(".jpg")]
         [TestCase(".jpeg")]
-        [TestCase(".memorybmp")]
-        [TestCase(".png")]
-        [TestCase(".tif")]
-        [TestCase(".tiff")]
-        [TestCase(".wmf")]
+        [TestCase(".wbmp")]
+        [TestCase(".astc")]
+        [TestCase(".dng")]
+        [TestCase(".ktx")]
+        [TestCase(".webp")]
+        [TestCase(".pkm")]
         public void Should_BePossibleTo_SaveFormDump_WithValidExtension(string imageExtension)
         {
             var form = new LiteWebForm(imageExtension);

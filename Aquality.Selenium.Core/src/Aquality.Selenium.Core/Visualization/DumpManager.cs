@@ -1,9 +1,9 @@
 ﻿using Aquality.Selenium.Core.Configurations;
 using Aquality.Selenium.Core.Elements.Interfaces;
 using Aquality.Selenium.Core.Localization;
+using SkiaSharp;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -64,7 +64,7 @@ namespace Aquality.Selenium.Core.Visualization
                 }
                 else
                 {
-                    comparisonResult += existingElements[key].Visual.GetDifference(Image.FromFile(imageFile.FullName));
+                    comparisonResult += existingElements[key].Visual.GetDifference(SKImage.FromEncodedData(imageFile.FullName));
                     countOfUnproceededElements--;
                     countOfProceededElements++;
                     existingElements.Remove(key);

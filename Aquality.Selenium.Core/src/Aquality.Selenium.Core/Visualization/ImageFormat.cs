@@ -1,28 +1,30 @@
-﻿using System;
-using DrawingImageFormat = System.Drawing.Imaging.ImageFormat;
+﻿using SkiaSharp;
+using System;
 
 namespace Aquality.Selenium.Core.Visualization
 {
     public sealed class ImageFormat
     {
         public string Extension { get; }
-        public DrawingImageFormat Format { get; }
+        public SKEncodedImageFormat Format { get; }
 
-        public static readonly ImageFormat Bmp = new ImageFormat(DrawingImageFormat.Bmp);
-        public static readonly ImageFormat Emf = new ImageFormat(DrawingImageFormat.Emf);
-        public static readonly ImageFormat Exif = new ImageFormat(DrawingImageFormat.Exif);
-        public static readonly ImageFormat Gif = new ImageFormat(DrawingImageFormat.Gif);
-        public static readonly ImageFormat Icon = new ImageFormat(".ico", DrawingImageFormat.Icon);
-        public static readonly ImageFormat Jpg = new ImageFormat(".jpg", DrawingImageFormat.Jpeg);
-        public static readonly ImageFormat Jpeg = new ImageFormat(DrawingImageFormat.Jpeg);
-        public static readonly ImageFormat MemoryBmp = new ImageFormat(DrawingImageFormat.MemoryBmp);
-        public static readonly ImageFormat Png = new ImageFormat(DrawingImageFormat.Png);
-        public static readonly ImageFormat Tif = new ImageFormat(".tif", DrawingImageFormat.Tiff);
-        public static readonly ImageFormat Tiff = new ImageFormat(DrawingImageFormat.Tiff);
-        public static readonly ImageFormat Wmf = new ImageFormat(DrawingImageFormat.Wmf);
+        public static readonly ImageFormat Bmp = new ImageFormat(SKEncodedImageFormat.Bmp);
+        public static readonly ImageFormat Pkm = new ImageFormat(SKEncodedImageFormat.Pkm);
+        public static readonly ImageFormat Webp = new ImageFormat(SKEncodedImageFormat.Webp);
+        public static readonly ImageFormat Ktx = new ImageFormat(SKEncodedImageFormat.Ktx);
+        public static readonly ImageFormat Avif = new ImageFormat(SKEncodedImageFormat.Avif);
+        public static readonly ImageFormat Astc = new ImageFormat(SKEncodedImageFormat.Astc);
+        public static readonly ImageFormat Dng = new ImageFormat(SKEncodedImageFormat.Dng);
+        public static readonly ImageFormat Gif = new ImageFormat(SKEncodedImageFormat.Gif);
+        public static readonly ImageFormat Ico = new ImageFormat(SKEncodedImageFormat.Ico);
+        public static readonly ImageFormat Jpg = new ImageFormat(".jpg", SKEncodedImageFormat.Jpeg);
+        public static readonly ImageFormat Jpeg = new ImageFormat(SKEncodedImageFormat.Jpeg);
+        public static readonly ImageFormat Png = new ImageFormat(SKEncodedImageFormat.Png);
+        public static readonly ImageFormat Heif = new ImageFormat(SKEncodedImageFormat.Heif);
+        public static readonly ImageFormat Wbmp = new ImageFormat(SKEncodedImageFormat.Wbmp);
 
-        private ImageFormat(DrawingImageFormat format) : this($".{format.ToString().ToLower()}", format) { }
-        private ImageFormat(string extension, DrawingImageFormat format) 
+        private ImageFormat(SKEncodedImageFormat format) : this($".{format.ToString().ToLower()}", format) { }
+        private ImageFormat(string extension, SKEncodedImageFormat format) 
         { 
             Extension = extension;
             Format = format;
@@ -39,28 +41,32 @@ namespace Aquality.Selenium.Core.Visualization
             {
                 case ".bmp":
                     return Bmp;
-                case ".emf":
-                    return Emf;
-                case ".exif":
-                    return Exif;
+                case ".heif":
+                    return Heif;
+                case ".avif":
+                    return Avif;
                 case ".gif":
                     return Gif;
                 case ".ico":
-                    return Icon;
+                    return Ico;
                 case ".jpg":
                     return Jpg;
                 case ".jpeg":
                     return Jpeg;
-                case ".memorybmp":
-                    return MemoryBmp;
+                case ".wbmp":
+                    return Wbmp;
                 case ".png":
                     return Png;
-                case ".tif":
-                    return Tif;
-                case ".tiff":
-                    return Tiff;
-                case ".wmf":
-                    return Wmf;
+                case ".astc":
+                    return Astc;
+                case ".dng":
+                    return Dng;
+                case ".ktx":
+                    return Ktx;
+                case ".webp":
+                    return Webp;
+                case ".pkm":
+                    return Pkm;
                 default:
                     throw new NotSupportedException($"Unknown <{format}> extension for image file");
             }

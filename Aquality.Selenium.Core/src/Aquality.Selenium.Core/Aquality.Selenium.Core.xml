@@ -1159,7 +1159,7 @@
             Default implementation uses parameters from <see cref="T:Aquality.Selenium.Core.Configurations.IVisualizationConfiguration"/>.
             </summary>
         </member>
-        <member name="M:Aquality.Selenium.Core.Visualization.IImageComparator.PercentageDifference(System.Drawing.Image,System.Drawing.Image,System.Nullable{System.Single})">
+        <member name="M:Aquality.Selenium.Core.Visualization.IImageComparator.PercentageDifference(SkiaSharp.SKImage,SkiaSharp.SKImage,System.Nullable{System.Single})">
             <summary>
             Gets the difference between two images as a percentage
             </summary>
@@ -1176,7 +1176,7 @@
             Special thanks to https://www.codeproject.com/Articles/374386/Simple-image-comparison-in-NET
             </summary>
         </member>
-        <member name="M:Aquality.Selenium.Core.Visualization.ImageComparator.PercentageDifference(System.Drawing.Image,System.Drawing.Image,System.Nullable{System.Single})">
+        <member name="M:Aquality.Selenium.Core.Visualization.ImageComparator.PercentageDifference(SkiaSharp.SKImage,SkiaSharp.SKImage,System.Nullable{System.Single})">
             <summary>
             Gets the difference between two images as a percentage
             </summary>
@@ -1187,7 +1187,7 @@
             <returns>The difference between the two images as a percentage  - value between 0 and 1.</returns>
             <remarks>See https://web.archive.org/web/20130208001434/http://tech.pro:80/tutorial/660/csharp-tutorial-convert-a-color-image-to-grayscale for more details.</remarks>
         </member>
-        <member name="M:Aquality.Selenium.Core.Visualization.ImageComparator.PercentageDifference(System.Drawing.Image,System.Drawing.Image,System.Byte)">
+        <member name="M:Aquality.Selenium.Core.Visualization.ImageComparator.PercentageDifference(SkiaSharp.SKImage,SkiaSharp.SKImage,System.Byte)">
             <summary>
             Gets the difference between two images as a percentage
             </summary>
@@ -1197,7 +1197,7 @@
             <returns>The difference between the two images as a percentage</returns>
             <remarks>See https://web.archive.org/web/20130208001434/http://tech.pro:80/tutorial/660/csharp-tutorial-convert-a-color-image-to-grayscale for more details</remarks>
         </member>
-        <member name="M:Aquality.Selenium.Core.Visualization.ImageComparator.GetDifferences(System.Drawing.Image,System.Drawing.Image)">
+        <member name="M:Aquality.Selenium.Core.Visualization.ImageComparator.GetDifferences(SkiaSharp.SKImage,SkiaSharp.SKImage)">
             <summary>
             Finds the differences between two images and returns them in a double-array
             </summary>
@@ -1205,7 +1205,7 @@
             <param name="theOtherOne">The image to compare with</param>
             <returns>the differences between the two images as a double-array</returns>
         </member>
-        <member name="M:Aquality.Selenium.Core.Visualization.ImageComparator.GetResizedGrayScaleValues(System.Drawing.Image)">
+        <member name="M:Aquality.Selenium.Core.Visualization.ImageComparator.GetResizedGrayScaleValues(SkiaSharp.SKImage)">
             <summary>
             Gets the lightness of the image in sections (by default 256 sections, 16x16)
             </summary>
@@ -1218,7 +1218,7 @@
             Special thanks to https://www.codeproject.com/Articles/374386/Simple-image-comparison-in-NET
             </summary>
         </member>
-        <member name="M:Aquality.Selenium.Core.Visualization.ImageExtensions.Resize(System.Drawing.Image,System.Int32,System.Int32)">
+        <member name="M:Aquality.Selenium.Core.Visualization.ImageExtensions.Resize(SkiaSharp.SKImage,System.Int32,System.Int32)">
             <summary>
             Resizes an image
             </summary>
@@ -1227,7 +1227,7 @@
             <param name="newHeight">The new height in pixels</param>
             <returns>A resized version of the original image</returns>
         </member>
-        <member name="M:Aquality.Selenium.Core.Visualization.ImageExtensions.GetGrayScaleVersion(System.Drawing.Image)">
+        <member name="M:Aquality.Selenium.Core.Visualization.ImageExtensions.GetGrayScaleVersion(SkiaSharp.SKImage)">
             <summary>
             Converts an image to gray scale
             </summary>
@@ -1263,7 +1263,7 @@
             Gets an image containing the screenshot of the element.
             </summary>
         </member>
-        <member name="M:Aquality.Selenium.Core.Visualization.IVisualStateProvider.GetDifference(System.Drawing.Image,System.Nullable{System.Single})">
+        <member name="M:Aquality.Selenium.Core.Visualization.IVisualStateProvider.GetDifference(SkiaSharp.SKImage,System.Nullable{System.Single})">
             <summary>
             Gets the difference between the image of the element and the provided image
             using <see cref="T:Aquality.Selenium.Core.Visualization.IImageComparator"/>

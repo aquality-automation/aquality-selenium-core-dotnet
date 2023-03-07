@@ -1,4 +1,5 @@
 ﻿using Aquality.Selenium.Core.Configurations;
+using SkiaSharp;
 using System.Drawing;
 
 namespace Aquality.Selenium.Core.Visualization
@@ -22,7 +23,7 @@ namespace Aquality.Selenium.Core.Visualization
         /// <summary>
         /// Gets an image containing the screenshot of the element.
         /// </summary>
-        Image Image { get; }
+        SKImage Image { get; }
 
         /// <summary>
         /// Gets the difference between the image of the element and the provided image
@@ -32,6 +33,6 @@ namespace Aquality.Selenium.Core.Visualization
         /// <param name="threshold">How big a difference will be ignored as a percentage - value between 0 and 1.
         /// If the value is null, the default value is got from <see cref="IVisualizationConfiguration"/>.</param>
         /// <returns>The difference between the two images as a percentage  - value between 0 and 1.</returns>
-        float GetDifference(Image theOtherOne, float? threshold = null);
+        float GetDifference(SKImage theOtherOne, float? threshold = null);
     }
 }

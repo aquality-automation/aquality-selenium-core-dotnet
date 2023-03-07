@@ -1,5 +1,5 @@
 ﻿using Aquality.Selenium.Core.Configurations;
-using System.Drawing;
+using SkiaSharp;
 
 namespace Aquality.Selenium.Core.Visualization
 {
@@ -17,6 +17,6 @@ namespace Aquality.Selenium.Core.Visualization
         /// <param name="theOtherOne">The image to compare with</param>
         /// <param name="threshold">How big a difference will be ignored as a percentage - value between 0 and 1. </param>
         /// <returns>The difference between the two images as a percentage  - value between 0 and 1.</returns>
-        float PercentageDifference(Image thisOne, Image theOtherOne, float? threshold = null);
+        float PercentageDifference(SKImage thisOne, SKImage theOtherOne, float? threshold = null);
     }
 }
