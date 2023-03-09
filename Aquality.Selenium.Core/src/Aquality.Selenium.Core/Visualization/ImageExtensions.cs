@@ -12,10 +12,10 @@ namespace Aquality.Selenium.Core.Visualization
     {
         private static readonly SKColorFilter ColorMatrix = SKColorFilter.CreateColorMatrix(new float[]
         {
-            .3f, .3f, .3f, 0, 0,
-            .59f, .59f, .59f, 0, 0,
-            .11f, .11f, .11f, 0, 0,
-            0, 0, 0, 1, 0
+            0.21f, 0.72f, 0.07f, 0, 0,
+            0.21f, 0.72f, 0.07f, 0, 0,
+            0.21f, 0.72f, 0.07f, 0, 0,
+            0,     0,     0,      1, 0
         });
 
         /// <summary>

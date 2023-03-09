@@ -1,4 +1,5 @@
 ﻿using Aquality.Selenium.Core.Elements;
+using Aquality.Selenium.Core.Waitings;
 using Aquality.Selenium.Core.Tests.Applications.Browser;
 using Aquality.Selenium.Core.Tests.Applications.Browser.Elements;
 using NUnit.Framework;
@@ -6,6 +7,7 @@ using OpenQA.Selenium;
 using SkiaSharp;
 using System;
 using System.Drawing;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Aquality.Selenium.Core.Tests.Visualization
 {
@@ -85,6 +87,7 @@ namespace Aquality.Selenium.Core.Tests.Visualization
         {
             StartLoading();
             var firstImage = LoadingLabel.Visual.Image;
+            AqualityServices.ServiceProvider.GetRequiredService<IConditionalWait>().WaitFor(() => firstImage.Height < LoadingLabel.Visual.Size.Height);
             Assert.Multiple(() =>
             {
                 Assert.That(LoadingLabel.Visual.GetDifference(firstImage, threshold: 0), Is.Not.EqualTo(0));
