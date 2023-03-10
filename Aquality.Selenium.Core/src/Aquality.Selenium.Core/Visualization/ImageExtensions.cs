@@ -19,6 +19,16 @@ namespace Aquality.Selenium.Core.Visualization
         });
 
         /// <summary>
+        /// Reads image from file.
+        /// </summary>
+        /// <param name="imageFile">The file to read the image from.</param>
+        /// <returns>Instance of SKImage.</returns>
+        public static SKImage ReadImage(this FileInfo imageFile)
+        {
+            return SKImage.FromEncodedData(imageFile.FullName);
+        }
+
+        /// <summary>
         /// Resizes an image
         /// </summary>
         /// <param name="originalImage">The image to resize</param>
@@ -66,8 +76,19 @@ namespace Aquality.Selenium.Core.Visualization
             return SKImage.FromBitmap(newBitmap);
         }
 
+        /// <summary>
+        /// Gets size of the image.
+        /// </summary>
+        /// <param name="image">Current image.</param>
+        /// <returns>Size of the image.</returns>
         public static Size Size(this SKImage image) => new Size(image.Width, image.Height);
 
+        /// <summary>
+        /// Saves the image in specified format.
+        /// </summary>
+        /// <param name="image">Source image.</param>
+        /// <param name="name">Target file name.</param>
+        /// <param name="format">Image format.</param>
         public static void Save(this SKImage image, string name, SKEncodedImageFormat format = SKEncodedImageFormat.Png)
         {
             using (Stream stream = new FileStream(name, FileMode.OpenOrCreate))

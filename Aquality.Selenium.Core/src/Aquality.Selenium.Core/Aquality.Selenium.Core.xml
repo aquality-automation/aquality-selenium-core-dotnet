@@ -1218,6 +1218,13 @@
             Special thanks to https://www.codeproject.com/Articles/374386/Simple-image-comparison-in-NET
             </summary>
         </member>
+        <member name="M:Aquality.Selenium.Core.Visualization.ImageExtensions.ReadImage(System.IO.FileInfo)">
+            <summary>
+            Reads image from file.
+            </summary>
+            <param name="imageFile">The file to read the image from.</param>
+            <returns>Instance of SKImage.</returns>
+        </member>
         <member name="M:Aquality.Selenium.Core.Visualization.ImageExtensions.Resize(SkiaSharp.SKImage,System.Int32,System.Int32)">
             <summary>
             Resizes an image
@@ -1234,6 +1241,21 @@
             <param name="original">The image to gray scale</param>
             <returns>A gray scale version of the image</returns>
             <remarks>See http://www.switchonthecode.com/tutorials/csharp-tutorial-convert-a-color-image-to-grayscale for more details</remarks>
+        </member>
+        <member name="M:Aquality.Selenium.Core.Visualization.ImageExtensions.Size(SkiaSharp.SKImage)">
+            <summary>
+            Gets size of the image.
+            </summary>
+            <param name="image">Current image.</param>
+            <returns>Size of the image.</returns>
+        </member>
+        <member name="M:Aquality.Selenium.Core.Visualization.ImageExtensions.Save(SkiaSharp.SKImage,System.String,SkiaSharp.SKEncodedImageFormat)">
+            <summary>
+            Saves the image in specified format.
+            </summary>
+            <param name="image">Source image.</param>
+            <param name="name">Target file name.</param>
+            <param name="format">Image format.</param>
         </member>
         <member name="M:Aquality.Selenium.Core.Visualization.ImageFormat.Parse(System.String)">
             <summary>
