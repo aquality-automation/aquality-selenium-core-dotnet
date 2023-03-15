@@ -1,6 +1,7 @@
 ﻿using Aquality.Selenium.Core.Logging;
 using Aquality.Selenium.Core.Utilities;
 using OpenQA.Selenium;
+using SkiaSharp;
 using System;
 using System.Drawing;
 using System.Globalization;
@@ -26,8 +27,8 @@ namespace Aquality.Selenium.Core.Visualization
 
         public Point Location => GetLoggedValue(nameof(Location), element => element.Location);
 
-        public Image Image 
-            => GetLoggedValue(nameof(Image), element => element.GetScreenshot().AsImage(), image => image?.Size.ToString());
+        public SKImage Image 
+            => GetLoggedValue(nameof(Image), element => element.GetScreenshot().AsImage(), image => image?.Size().ToString());
 
         private T GetLoggedValue<T>(string name, Func<WebElement, T> getValue, Func<T, string> toString = null)
         {
@@ -37,18 +38,18 @@ namespace Aquality.Selenium.Core.Visualization
             return value;
         }
 
-        public float GetDifference(Image theOtherOne, float? threshold = null)
+        public float GetDifference(SKImage theOtherOne, float? threshold = null)
         {
             var currentImage = Image;
             float value = 1;
 
             if (threshold == null)
             {
-                logVisualState("loc.el.visual.getdifference", theOtherOne.Size.ToString());
+                logVisualState("loc.el.visual.getdifference", theOtherOne.Size().ToString());
             }
             else
             {
-                logVisualState("loc.el.visual.getdifference.withthreshold", theOtherOne.Size.ToString(), threshold?.ToString("P", CultureInfo.InvariantCulture));
+                logVisualState("loc.el.visual.getdifference.withthreshold", theOtherOne.Size().ToString(), threshold?.ToString("P", CultureInfo.InvariantCulture));
             }
 
             if (currentImage != default)

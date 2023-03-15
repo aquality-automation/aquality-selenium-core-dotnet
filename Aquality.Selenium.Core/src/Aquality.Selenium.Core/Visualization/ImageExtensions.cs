@@ -1,6 +1,6 @@
-﻿using System.Drawing;
-using System.Drawing.Drawing2D;
-using System.Drawing.Imaging;
+﻿using SkiaSharp;
+using System.Drawing;
+using System.IO;
 
 namespace Aquality.Selenium.Core.Visualization
 {
@@ -10,14 +10,23 @@ namespace Aquality.Selenium.Core.Visualization
     /// </summary>
     public static class ImageExtensions
     {
-        private static readonly ColorMatrix ColorMatrix = new ColorMatrix(new float[][]
+        private static readonly SKColorFilter ColorMatrix = SKColorFilter.CreateColorMatrix(new float[]
         {
-            new float[] {.3f, .3f, .3f, 0, 0},
-            new float[] {.59f, .59f, .59f, 0, 0},
-            new float[] {.11f, .11f, .11f, 0, 0},
-            new float[] {0, 0, 0, 1, 0},
-            new float[] {0, 0, 0, 0, 1}
+            0.21f, 0.72f, 0.07f, 0, 0,
+            0.21f, 0.72f, 0.07f, 0, 0,
+            0.21f, 0.72f, 0.07f, 0, 0,
+            0,     0,     0,      1, 0
         });
+
+        /// <summary>
+        /// Reads image from file.
+        /// </summary>
+        /// <param name="imageFile">The file to read the image from.</param>
+        /// <returns>Instance of SKImage.</returns>
+        public static SKImage ReadImage(this FileInfo imageFile)
+        {
+            return SKImage.FromEncodedData(imageFile.FullName);
+        }
 
         /// <summary>
         /// Resizes an image
@@ -26,18 +35,16 @@ namespace Aquality.Selenium.Core.Visualization
         /// <param name="newWidth">The new width in pixels</param>
         /// <param name="newHeight">The new height in pixels</param>
         /// <returns>A resized version of the original image</returns>
-        public static Image Resize(this Image originalImage, int newWidth, int newHeight)
+        public static SKImage Resize(this SKImage originalImage, int newWidth, int newHeight)
         {
-            var smallVersion = new Bitmap(newWidth, newHeight);
-            using (var graphics = Graphics.FromImage(smallVersion))
+            using (var srcBitmap = SKBitmap.FromImage(originalImage))
             {
-                graphics.SmoothingMode = SmoothingMode.HighQuality;
-                graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
-                graphics.PixelOffsetMode = PixelOffsetMode.HighQuality;
-                graphics.DrawImage(originalImage, 0, 0, newWidth, newHeight);
-            }
-
-            return smallVersion;
+                var resizeInfo = new SKImageInfo(newWidth, newHeight);
+                using (var smallVersion = srcBitmap.Resize(resizeInfo, SKFilterQuality.High))
+                {
+                    return SKImage.FromBitmap(smallVersion);
+                }
+            }                
         }
 
         /// <summary>
@@ -46,27 +53,49 @@ namespace Aquality.Selenium.Core.Visualization
         /// <param name="original">The image to gray scale</param>
         /// <returns>A gray scale version of the image</returns>
         /// <remarks>See http://www.switchonthecode.com/tutorials/csharp-tutorial-convert-a-color-image-to-grayscale for more details</remarks>
-        public static Image GetGrayScaleVersion(this Image original)
+        public static SKImage GetGrayScaleVersion(this SKImage original)
         {
             //create a blank bitmap the same size as original
-            var newBitmap = new Bitmap(original.Width, original.Height);
+            var info = new SKImageInfo(original.Width, original.Height);
+            var newBitmap = new SKBitmap(info);
+            
 
+            //create some image attributes
+            using (var paint = new SKPaint())
             //get a graphics object from the new image
-            using (var graphics = Graphics.FromImage(newBitmap))
+            using (var graphics = new SKCanvas(newBitmap))
             {
-                //create some image attributes
-                var attributes = new ImageAttributes();
-
                 //set the color matrix attribute
-                attributes.SetColorMatrix(ColorMatrix);
+                paint.ColorFilter = ColorMatrix;                
 
                 //draw the original image on the new image
                 //using the gray-scale color matrix
-                graphics.DrawImage(original, new Rectangle(0, 0, original.Width, original.Height),
-                   0, 0, original.Width, original.Height, GraphicsUnit.Pixel, attributes);
+                graphics.DrawImage(original, 0, 0, paint);
             }
 
-            return newBitmap;
+            return SKImage.FromBitmap(newBitmap);
+        }
+
+        /// <summary>
+        /// Gets size of the image.
+        /// </summary>
+        /// <param name="image">Current image.</param>
+        /// <returns>Size of the image.</returns>
+        public static Size Size(this SKImage image) => new Size(image.Width, image.Height);
+
+        /// <summary>
+        /// Saves the image in specified format.
+        /// </summary>
+        /// <param name="image">Source image.</param>
+        /// <param name="name">Target file name.</param>
+        /// <param name="format">Image format.</param>
+        public static void Save(this SKImage image, string name, SKEncodedImageFormat format = SKEncodedImageFormat.Png)
+        {
+            using (Stream stream = new FileStream(name, FileMode.OpenOrCreate))
+            {
+                SKData d = image.Encode(format, 100);
+                d.SaveTo(stream);
+            }
         }
     }
 }

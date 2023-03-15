@@ -1,11 +1,13 @@
 ﻿using Aquality.Selenium.Core.Elements;
+using Aquality.Selenium.Core.Waitings;
 using Aquality.Selenium.Core.Tests.Applications.Browser;
 using Aquality.Selenium.Core.Tests.Applications.Browser.Elements;
-using Aquality.Selenium.Core.Visualization;
 using NUnit.Framework;
 using OpenQA.Selenium;
+using SkiaSharp;
 using System;
 using System.Drawing;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Aquality.Selenium.Core.Tests.Visualization
 {
@@ -45,7 +47,7 @@ namespace Aquality.Selenium.Core.Tests.Visualization
         [Test]
         public void Should_BePossibleTo_GetElementImage()
         {
-            Image image = null;
+            SKImage image = null;
             Assert.DoesNotThrow(() => image = StartLabel.Visual.Image);
             Assert.IsNotNull(image);
         }
@@ -85,12 +87,12 @@ namespace Aquality.Selenium.Core.Tests.Visualization
         {
             StartLoading();
             var firstImage = LoadingLabel.Visual.Image;
-            var secondImage = LoadingLabel.GetElement().GetScreenshot().AsImage();
+            AqualityServices.ServiceProvider.GetRequiredService<IConditionalWait>().WaitFor(() => firstImage.Height < LoadingLabel.Visual.Size.Height);
             Assert.Multiple(() =>
             {
                 Assert.That(LoadingLabel.Visual.GetDifference(firstImage, threshold: 0), Is.Not.EqualTo(0));
-                Assert.That(LoadingLabel.Visual.GetDifference(firstImage, threshold: 0.2f), Is.AtMost(0.2));
-                Assert.That(LoadingLabel.Visual.GetDifference(firstImage, threshold: 0.4f), Is.AtMost(0.15));
+                Assert.That(LoadingLabel.Visual.GetDifference(firstImage, threshold: 0.2f), Is.AtMost(0.3));
+                Assert.That(LoadingLabel.Visual.GetDifference(firstImage, threshold: 0.4f), Is.AtMost(0.2));
                 Assert.That(LoadingLabel.Visual.GetDifference(firstImage, threshold: 0.6f), Is.AtMost(0.1));
                 Assert.That(LoadingLabel.Visual.GetDifference(firstImage, threshold: 0.8f), Is.EqualTo(0));
             });

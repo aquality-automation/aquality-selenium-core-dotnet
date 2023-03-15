@@ -3,7 +3,6 @@ using Aquality.Selenium.Core.Elements.Interfaces;
 using Aquality.Selenium.Core.Localization;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -39,15 +38,7 @@ namespace Aquality.Selenium.Core.Visualization
         {
             var directory = GetDumpDirectory(dumpName);
             LocalizedLogger.Info("loc.form.dump.compare", directory.Name);
-            if (!directory.Exists)
-            {
-                throw new InvalidOperationException($"Dump directory [{directory.FullName}] does not exist.");
-            }
-            var imageFiles = directory.GetFiles($"*{ImageFormat.Extension}");
-            if (imageFiles.Length == 0)
-            {
-                throw new InvalidOperationException($"Dump directory [{directory.FullName}] does not contain any [*{ImageFormat.Extension}] files.");
-            }
+            var imageFiles = GetImageFiles(directory);
             var existingElements = FilterElementsForVisualization().ToDictionary(el => el.Key, el => el.Value);
             var countOfUnproceededElements = existingElements.Count;
             var countOfProceededElements = 0;
@@ -64,12 +55,21 @@ namespace Aquality.Selenium.Core.Visualization
                 }
                 else
                 {
-                    comparisonResult += existingElements[key].Visual.GetDifference(Image.FromFile(imageFile.FullName));
+                    comparisonResult += existingElements[key].Visual.GetDifference(imageFile.ReadImage());
                     countOfUnproceededElements--;
                     countOfProceededElements++;
                     existingElements.Remove(key);
                 }
             }
+            LogUnproceededElements(countOfUnproceededElements, existingElements, absentOnFormElementNames);
+            // adding of countOfUnproceededElements means 100% difference for each element absent in dump or on page
+            var result = (comparisonResult + countOfUnproceededElements) / (countOfProceededElements + countOfUnproceededElements);
+            LocalizedLogger.Info("loc.form.dump.compare.result", result.ToString("P", CultureInfo.InvariantCulture));
+            return result;
+        }
+
+        private void LogUnproceededElements(int countOfUnproceededElements, IDictionary<string, T> existingElements, IList<string> absentOnFormElementNames)
+        {
             if (countOfUnproceededElements > 0)
             {
                 if (existingElements.Any())
@@ -82,10 +82,20 @@ namespace Aquality.Selenium.Core.Visualization
                 }
                 LocalizedLogger.Warn("loc.form.dump.unprocessedelements", countOfUnproceededElements);
             }
-            // adding of countOfUnproceededElements means 100% difference for each element absent in dump or on page
-            var result = (comparisonResult + countOfUnproceededElements) / (countOfProceededElements + countOfUnproceededElements);
-            LocalizedLogger.Info("loc.form.dump.compare.result", result.ToString("P", CultureInfo.InvariantCulture));
-            return result;
+        }
+
+        private FileInfo[] GetImageFiles(DirectoryInfo directory)
+        {
+            if (!directory.Exists)
+            {
+                throw new InvalidOperationException($"Dump directory [{directory.FullName}] does not exist.");
+            }
+            var imageFiles = directory.GetFiles($"*{ImageFormat.Extension}");
+            if (imageFiles.Length == 0)
+            {
+                throw new InvalidOperationException($"Dump directory [{directory.FullName}] does not contain any [*{ImageFormat.Extension}] files.");
+            }
+            return imageFiles;
         }
 
         public virtual void Save(string dumpName = null)
@@ -170,10 +180,11 @@ namespace Aquality.Selenium.Core.Visualization
             if (fullDumpPath.Length + maxNameLengthOfDumpElements > MaxFullFileNameLength)
             {
                 validDumpNameString = validDumpNameString.Substring(0, MaxFullFileNameLength - Path.GetFullPath(DumpsDirectory).Length - maxNameLengthOfDumpElements);
-                LocalizedLogger.Warn("loc.form.dump.exceededdumpname", validDumpNameString);
+                fullDumpPath = Path.Combine(DumpsDirectory, validDumpNameString);
+                LocalizedLogger.Warn("loc.form.dump.exceededdumpname", fullDumpPath);
             }
 
-            return new DirectoryInfo(Path.Combine(DumpsDirectory, validDumpNameString));
+            return new DirectoryInfo(fullDumpPath);
         }
     }
 }

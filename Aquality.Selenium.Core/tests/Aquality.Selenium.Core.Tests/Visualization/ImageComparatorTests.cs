@@ -1,4 +1,5 @@
 ﻿using Aquality.Selenium.Core.Elements;
+using Aquality.Selenium.Core.Waitings;
 using Aquality.Selenium.Core.Tests.Applications.Browser;
 using Aquality.Selenium.Core.Tests.Applications.Browser.Elements;
 using Aquality.Selenium.Core.Visualization;
@@ -67,6 +68,7 @@ namespace Aquality.Selenium.Core.Tests.Visualization
         {
             StartLoading();
             var firstImage = LoadingLabel.GetElement().GetScreenshot().AsImage();
+            AqualityServices.ServiceProvider.GetRequiredService<IConditionalWait>().WaitFor(() => firstImage.Height < LoadingLabel.Visual.Size.Height);
             var secondImage = LoadingLabel.GetElement().GetScreenshot().AsImage();
             Assert.Multiple(() =>
             {

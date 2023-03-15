@@ -1,6 +1,6 @@
 ﻿using Aquality.Selenium.Core.Configurations;
+using SkiaSharp;
 using System;
-using System.Drawing;
 
 namespace Aquality.Selenium.Core.Visualization
 {
@@ -33,7 +33,7 @@ namespace Aquality.Selenium.Core.Visualization
         /// If the value is null, the default value is got from <see cref="IVisualizationConfiguration"/>.</param>
         /// <returns>The difference between the two images as a percentage  - value between 0 and 1.</returns>
         /// <remarks>See https://web.archive.org/web/20130208001434/http://tech.pro:80/tutorial/660/csharp-tutorial-convert-a-color-image-to-grayscale for more details.</remarks>
-        public virtual float PercentageDifference(Image thisOne, Image theOtherOne, float? threshold = null)
+        public virtual float PercentageDifference(SKImage thisOne, SKImage theOtherOne, float? threshold = null)
         {
             var thresholdValue = threshold ?? DefaultThreshold;
             if (thresholdValue < 0 || thresholdValue > 1)
@@ -53,7 +53,7 @@ namespace Aquality.Selenium.Core.Visualization
         /// <param name="threshold">How big a difference (out of 255) will be ignored - the default is 3.</param>
         /// <returns>The difference between the two images as a percentage</returns>
         /// <remarks>See https://web.archive.org/web/20130208001434/http://tech.pro:80/tutorial/660/csharp-tutorial-convert-a-color-image-to-grayscale for more details</remarks>
-        protected virtual float PercentageDifference(Image thisOne, Image theOtherOne, byte threshold = 3)
+        protected virtual float PercentageDifference(SKImage thisOne, SKImage theOtherOne, byte threshold = 3)
         {
             var differences = GetDifferences(thisOne, theOtherOne);
 
@@ -73,7 +73,7 @@ namespace Aquality.Selenium.Core.Visualization
         /// <param name="thisOne">The first image</param>
         /// <param name="theOtherOne">The image to compare with</param>
         /// <returns>the differences between the two images as a double-array</returns>
-        protected virtual byte[,] GetDifferences(Image thisOne, Image theOtherOne)
+        protected virtual byte[,] GetDifferences(SKImage thisOne, SKImage theOtherOne)
         {
             var firstGray = GetResizedGrayScaleValues(thisOne);
             var secondGray = GetResizedGrayScaleValues(theOtherOne);
@@ -95,9 +95,9 @@ namespace Aquality.Selenium.Core.Visualization
         /// </summary>
         /// <param name="img">The image to get the lightness for</param>
         /// <returns>A double-array (16x16 by default) containing the lightness of the sections(256 by default)</returns>
-        protected virtual byte[,] GetResizedGrayScaleValues(Image img)
+        protected virtual byte[,] GetResizedGrayScaleValues(SKImage img)
         {
-            using (var thisOne = (Bitmap)img.Resize(ComparisonWidth, ComparisonHeight).GetGrayScaleVersion())
+            using (var thisOne = SKBitmap.FromImage(img.Resize(ComparisonWidth, ComparisonHeight).GetGrayScaleVersion()))
             {
                 byte[,] grayScale = new byte[thisOne.Width, thisOne.Height];
 
@@ -105,7 +105,7 @@ namespace Aquality.Selenium.Core.Visualization
                 {
                     for (int x = 0; x < thisOne.Width; x++)
                     {
-                        grayScale[x, y] = (byte)Math.Abs(thisOne.GetPixel(x, y).R);
+                        grayScale[x, y] = (byte)Math.Abs(thisOne.GetPixel(x, y).Red);
                     }
                 }
 

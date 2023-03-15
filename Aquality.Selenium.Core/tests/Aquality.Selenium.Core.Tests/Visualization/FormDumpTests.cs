@@ -50,7 +50,7 @@ namespace Aquality.Selenium.Core.Tests.Visualization
         public void Should_BePossibleTo_SaveFormDump_WithSubfoldersInName()
         {
             var form = new WebForm();
-            var dumpName = $"SubFolder1\\SubFolder2";
+            var dumpName = $"SubFolder1{Path.DirectorySeparatorChar}SubFolder2";
             var pathToDump = CleanUpAndGetPathToDump(dumpName);
 
             Assert.DoesNotThrow(() => form.Dump.Save(dumpName));
@@ -103,11 +103,11 @@ namespace Aquality.Selenium.Core.Tests.Visualization
             customForm.SetElementsForDump(WebForm.ElementsFilter.AllElements);
 
             var maxElementNameLength = (int)customForm.Dump.GetType().GetMethod("GetMaxNameLengthOfDumpElements", BindingFlags.Instance | BindingFlags.NonPublic).Invoke(customForm.Dump, new object[] { });
-            var imageExtensioLength = ((ImageFormat)customForm.Dump.GetType().GetProperty("ImageFormat", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(customForm.Dump)).Extension.Length;
+            var imageExtensionLength = ((ImageFormat)customForm.Dump.GetType().GetProperty("ImageFormat", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(customForm.Dump)).Extension.Length;
             var maxLength = (int)customForm.Dump.GetType().GetProperty("MaxFullFileNameLength", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(customForm.Dump);
             var pathToDumpLength = PathToDumps.Length;
 
-            var dumpName = new string('A', maxLength - pathToDumpLength - maxElementNameLength - imageExtensioLength);
+            var dumpName = new string('A', maxLength - pathToDumpLength - maxElementNameLength - imageExtensionLength);
             var overlengthDumpName = dumpName + "_BCDE";
 
             var overlengthPathToDump = CleanUpAndGetPathToDump(overlengthDumpName);
@@ -125,17 +125,18 @@ namespace Aquality.Selenium.Core.Tests.Visualization
         }
 
         [TestCase(".bmp")]
-        [TestCase(".emf")]
-        [TestCase(".exif")]
+        [TestCase(".heif")]
+        [TestCase(".avif")]
         [TestCase(".gif")]
         [TestCase(".ico")]
         [TestCase(".jpg")]
         [TestCase(".jpeg")]
-        [TestCase(".memorybmp")]
-        [TestCase(".png")]
-        [TestCase(".tif")]
-        [TestCase(".tiff")]
-        [TestCase(".wmf")]
+        [TestCase(".wbmp")]
+        [TestCase(".astc")]
+        [TestCase(".dng")]
+        [TestCase(".ktx")]
+        [TestCase(".webp")]
+        [TestCase(".pkm")]
         public void Should_BePossibleTo_SaveFormDump_WithValidExtension(string imageExtension)
         {
             var form = new LiteWebForm(imageExtension);
@@ -149,7 +150,7 @@ namespace Aquality.Selenium.Core.Tests.Visualization
 
             foreach (var file in pathToDump.GetFiles())
             {
-                Assert.AreEqual(imageExtension, file.Extension, "Image extension not exual to expexted");
+                Assert.AreEqual(imageExtension, file.Extension, "Image extension not equal to expected");
                 Assert.That(file.Name.Contains(imageExtension), "Image name doesn't contain expected extension");
             }
         }

@@ -1,6 +1,5 @@
 ﻿using OpenQA.Selenium;
-using System.Drawing;
-using System.IO;
+using SkiaSharp;
 
 namespace Aquality.Selenium.Core.Visualization
 {
@@ -14,9 +13,9 @@ namespace Aquality.Selenium.Core.Visualization
         /// </summary>
         /// <param name="screenshot">Given screenshot.</param>
         /// <returns>Image.</returns>
-        public static Image AsImage(this Screenshot screenshot)
+        public static SKImage AsImage(this Screenshot screenshot)
         {
-            return Image.FromStream(new MemoryStream(screenshot.AsByteArray));
+            return SKImage.FromEncodedData(screenshot.AsByteArray);
         }
     }
 }
