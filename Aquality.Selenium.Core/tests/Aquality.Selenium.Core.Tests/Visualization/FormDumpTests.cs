@@ -97,6 +97,15 @@ namespace Aquality.Selenium.Core.Tests.Visualization
         }
 
         [Test]
+        public void Should_BePossibleTo_SaveAndCompareWithDump_WithCustomName_WhenCurrentFormElementsSelected()
+        {
+            var customForm = new WebForm();
+            customForm.SetElementsForDump(WebForm.ElementsFilter.CurrentFormElements);
+            Assert.DoesNotThrow(() => customForm.Dump.Save("CurrentForm elements"));
+            Assert.That(customForm.Dump.Compare("CurrentForm elements"), Is.EqualTo(0), "Some elements should be failed to take image, but difference should be around zero");
+        }
+
+        [Test]
         public void Should_BePossibleTo_SaveAndCompareWithDump_WithOverlengthDumpName_WhenAllElementsSelected()
         {
             var customForm = new WebForm();
@@ -240,6 +249,9 @@ namespace Aquality.Selenium.Core.Tests.Visualization
                     case ElementsFilter.DisplayedElements:
                         elementsToCheck = DisplayedElements;
                         break;
+                    case ElementsFilter.CurrentFormElements:
+                        elementsToCheck = AllCurrentFormElements;
+                        break;
                 }
             }
 
@@ -263,7 +275,8 @@ namespace Aquality.Selenium.Core.Tests.Visualization
             {
                 ElementsInitializedAsDisplayed,
                 AllElements,
-                DisplayedElements
+                DisplayedElements,
+                CurrentFormElements
             }
         }
 
