@@ -41,28 +41,58 @@ namespace Aquality.Selenium.Core.Forms
 
         /// <summary>
         /// List of pairs uniqueName-element to be used for dump saving and comparing.
-        /// By default, only currently displayed elements to be used (<see cref="ElementsInitializedAsDisplayed"/>).
-        /// You can override this property with defined <see cref="AllElements"/>, <see cref="DisplayedElements"/> or your own element set.
+        /// By default, only currently displayed elements to be used (<see cref="DisplayedElements"/>).
+        /// You can override this property with defined <see cref="AllElements"/>, <see cref="AllCurrentFormElements"/>, <see cref="ElementsInitializedAsDisplayed"/> or your own element set.
         /// </summary>
         protected virtual IDictionary<string, T> ElementsForVisualization => DisplayedElements;
 
         /// <summary>
-        /// List of pairs uniqueName-element from all fields and properties of type <typeparamref name="T"/>.
+        /// List of pairs uniqueName-element from all fields and properties of type <typeparamref name="T"/> from the current form and it's parent forms.
         /// </summary>
         protected IDictionary<string, T> AllElements
         {
             get
             {
-                const BindingFlags bindingFlags = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance;
-                var elementProperties = GetType().GetProperties(bindingFlags).Where(property => typeof(T).IsAssignableFrom(property.PropertyType))
-                    .ToDictionary(property => property.Name, property => (T)property.GetValue(this));
-                var elementFields = GetType().GetFields(bindingFlags).Where(field => typeof(T).IsAssignableFrom(field.FieldType))
-                    .ToDictionary(field => elementProperties.Keys.Any(
-                        key => key.Equals(field.Name, StringComparison.InvariantCultureIgnoreCase)) ? $"_{field.Name}" : field.Name,
-                    field => (T)field.GetValue(this));
-                return elementFields.Concat(elementProperties)
-                    .ToDictionary(el => el.Key, el => el.Value);
+                var elements = new Dictionary<string, T>();
+                AddElementsToDictionary(elements, GetType());
+                Type baseType = GetType().BaseType;
+                while(baseType != null)
+                {
+                    AddElementsToDictionary(elements, baseType);
+                    baseType = baseType.BaseType;
+                }
+                return elements;
             }
+        }
+
+        /// <summary>
+        /// List of pairs uniqueName-element from all fields and properties of type <typeparamref name="T"/> from the current form.
+        /// </summary>
+        protected IDictionary<string, T> AllCurrentFormElements
+        {
+            get
+            {
+                var elements = new Dictionary<string, T>();
+                AddElementsToDictionary(elements, GetType());
+                return elements;
+            }
+        }
+
+        /// <summary>
+        /// Adds pairs uniqueName-element from the specified type to dictionary using the reflection.
+        /// </summary>
+        /// <param name="dictionary">Dictionary to save elements.</param>
+        /// <param name="type">Type to extract element fields and properties from.</param>
+        protected void AddElementsToDictionary(IDictionary<string, T> dictionary, Type type)
+        {
+#pragma warning disable S3011 // Reflection should not be used to increase accessibility of classes, methods, or fields
+            const BindingFlags bindingFlags = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance;
+#pragma warning restore S3011 // Reflection should not be used to increase accessibility of classes, methods, or fields
+            type.GetProperties(bindingFlags).Where(property => typeof(T).IsAssignableFrom(property.PropertyType) && !dictionary.ContainsKey(property.Name))
+                .ToList().ForEach(property => dictionary.Add(property.Name, (T)property.GetValue(this)));
+            type.GetFields(bindingFlags).Where(field => typeof(T).IsAssignableFrom(field.FieldType) && (!dictionary.ContainsKey(field.Name) || !dictionary.ContainsKey($"_{field.Name}")))
+                .ToList().ForEach(field => dictionary.Add(dictionary.Keys.Any(
+                    key => key.Equals(field.Name, StringComparison.InvariantCultureIgnoreCase)) ? $"_{field.Name}" : field.Name, (T)field.GetValue(this)));
         }
 
         /// <summary>

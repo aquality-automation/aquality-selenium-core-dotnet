@@ -676,14 +676,26 @@
         <member name="P:Aquality.Selenium.Core.Forms.Form`1.ElementsForVisualization">
             <summary>
             List of pairs uniqueName-element to be used for dump saving and comparing.
-            By default, only currently displayed elements to be used (<see cref="P:Aquality.Selenium.Core.Forms.Form`1.ElementsInitializedAsDisplayed"/>).
-            You can override this property with defined <see cref="P:Aquality.Selenium.Core.Forms.Form`1.AllElements"/>, <see cref="P:Aquality.Selenium.Core.Forms.Form`1.DisplayedElements"/> or your own element set.
+            By default, only currently displayed elements to be used (<see cref="P:Aquality.Selenium.Core.Forms.Form`1.DisplayedElements"/>).
+            You can override this property with defined <see cref="P:Aquality.Selenium.Core.Forms.Form`1.AllElements"/>, <see cref="P:Aquality.Selenium.Core.Forms.Form`1.AllCurrentFormElements"/>, <see cref="P:Aquality.Selenium.Core.Forms.Form`1.ElementsInitializedAsDisplayed"/> or your own element set.
             </summary>
         </member>
         <member name="P:Aquality.Selenium.Core.Forms.Form`1.AllElements">
             <summary>
-            List of pairs uniqueName-element from all fields and properties of type <typeparamref name="T"/>.
+            List of pairs uniqueName-element from all fields and properties of type <typeparamref name="T"/> from the current form and it's parent forms.
             </summary>
+        </member>
+        <member name="P:Aquality.Selenium.Core.Forms.Form`1.AllCurrentFormElements">
+            <summary>
+            List of pairs uniqueName-element from all fields and properties of type <typeparamref name="T"/> from the current form.
+            </summary>
+        </member>
+        <member name="M:Aquality.Selenium.Core.Forms.Form`1.AddElementsToDictionary(System.Collections.Generic.IDictionary{System.String,`0},System.Type)">
+            <summary>
+            Adds pairs uniqueName-element from the specified type to dictionary using the reflection.
+            </summary>
+            <param name="dictionary">Dictionary to save elements.</param>
+            <param name="type">Type to extract element fields and properties from.</param>
         </member>
         <member name="P:Aquality.Selenium.Core.Forms.Form`1.ElementsInitializedAsDisplayed">
             <summary>
