@@ -2,16 +2,11 @@
 using Aquality.Selenium.Core.Configurations;
 using Microsoft.Extensions.DependencyInjection;
 using System;
-using WebDriverManager;
-using WebDriverManager.DriverConfigs.Impl;
-using WebDriverManager.Helpers;
 
 namespace Aquality.Selenium.Core.Tests.Applications.Browser
 {
     public class AqualityServices : AqualityServices<ChromeApplication>
     {
-        private static readonly object downloadDriverLock = new object();
-
         public new static bool IsApplicationStarted => IsApplicationStarted();
 
         public static ChromeApplication Application => GetApplication(services => StartChrome(services));
@@ -30,11 +25,6 @@ namespace Aquality.Selenium.Core.Tests.Applications.Browser
 
         private static ChromeApplication StartChrome(IServiceProvider services)
         {
-            lock (downloadDriverLock)
-            {
-                new DriverManager().SetUpDriver(new ChromeConfig(), VersionResolveStrategy.MatchingBrowser);
-            }
-
             return new ChromeApplication(services.GetRequiredService<ITimeoutConfiguration>());
         }
     }
