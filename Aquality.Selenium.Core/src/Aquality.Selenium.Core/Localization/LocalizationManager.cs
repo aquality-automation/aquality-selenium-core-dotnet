@@ -1,7 +1,7 @@
 ﻿using Aquality.Selenium.Core.Configurations;
 using Aquality.Selenium.Core.Logging;
 using Aquality.Selenium.Core.Utilities;
-using System.Linq;
+using System;
 using System.Reflection;
 
 namespace Aquality.Selenium.Core.Localization
@@ -24,7 +24,7 @@ namespace Aquality.Selenium.Core.Localization
         private static ISettingsFile GetLocalizationFile(string language, Assembly assembly)
         {
             var embeddedResourceName = string.Format(LangResource, language.ToLower());
-            var assemblyToUse = assembly.GetManifestResourceNames().Any(name => name.Contains(embeddedResourceName))
+            var assemblyToUse = Array.Exists(assembly.GetManifestResourceNames(), name => name.Contains(embeddedResourceName))
                 ? assembly 
                 : Assembly.GetExecutingAssembly();
             return new JsonSettingsFile(embeddedResourceName, assemblyToUse);
