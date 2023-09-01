@@ -19,7 +19,7 @@ namespace Aquality.Selenium.Core.Logging
         {
             try
             {
-                LogManager.Setup().LoadConfigurationFromFile("NLog.config");
+                LogManager.Setup().LoadConfigurationFromFile("NLog.config", optional: false);
             }
             catch (FileNotFoundException)
             {
