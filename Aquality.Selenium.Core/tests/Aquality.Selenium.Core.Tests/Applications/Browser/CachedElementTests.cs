@@ -10,9 +10,9 @@ using System;
 
 namespace Aquality.Selenium.Core.Tests.Applications.Browser
 {
+    [Parallelizable(ParallelScope.Children)]
     public class CachedElementTests : TestWithBrowser
     {
-        private static readonly By RemoveButtonLoc = By.XPath("//button[.='Remove']");
         private static readonly By ContentLoc = By.Id("checkbox");
         private static readonly By StartLoc = By.XPath("//*[@id='start']//button");
         private static readonly By LoadingLoc = By.Id("loading");
@@ -49,7 +49,7 @@ namespace Aquality.Selenium.Core.Tests.Applications.Browser
                 state => !state.WaitForNotEnabled(TimeSpan.Zero),
             };
 
-        private IConditionalWait ConditionalWait => AqualityServices.ServiceProvider.GetRequiredService<IConditionalWait>();
+        private static IConditionalWait ConditionalWait => AqualityServices.ServiceProvider.GetRequiredService<IConditionalWait>();
 
         [SetUp]
         public new void SetUp()
@@ -57,18 +57,18 @@ namespace Aquality.Selenium.Core.Tests.Applications.Browser
             Environment.SetEnvironmentVariable(ElementCacheVariableName, true.ToString());
         }
 
-        private void StartLoading()
+        private static void StartLoading()
         {
-            AqualityServices.Application.Driver.Navigate().GoToUrl(DynamicLoadingUrl);
+            GoToUrl(DynamicLoadingUrl);
             new Label(StartLoc, "start", ElementState.Displayed).Click();
         }
 
-        private void OpenDynamicContent()
+        private static void OpenDynamicContent()
         {
-            AqualityServices.Application.Driver.Navigate().GoToUrl(DynamicContentUrl);
+            GoToUrl(DynamicContentUrl);
         }
 
-        private void WaitForLoading(Label loader)
+        private static void WaitForLoading(Label loader)
         {
             Assume.That(loader.State.WaitForDisplayed(), "Loader should be displayed in the beginning");
             Assume.That(loader.State.WaitForNotDisplayed(), "Loader should not be displayed in the end");
@@ -137,7 +137,7 @@ namespace Aquality.Selenium.Core.Tests.Applications.Browser
             AssertStateConditionAfterReopen(stateCondition, expectedValue: true);
         }
 
-        private void AssertStateConditionAfterReopen(Func<IElementStateProvider, bool> stateCondition, bool expectedValue)
+        private static void AssertStateConditionAfterReopen(Func<IElementStateProvider, bool> stateCondition, bool expectedValue)
         {
             Label testElement = null;
             AqualityServices.ServiceProvider.GetRequiredService<IActionRetrier>().DoWithRetry(() =>

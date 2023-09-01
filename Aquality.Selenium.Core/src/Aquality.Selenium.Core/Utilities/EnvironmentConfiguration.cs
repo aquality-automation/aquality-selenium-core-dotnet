@@ -24,7 +24,7 @@ namespace Aquality.Selenium.Core.Utilities
                 //necessary for Azure
                 Environment.GetEnvironmentVariable(key.ToUpper().Replace('.', '_'))
             };
-            return variables.FirstOrDefault(variable => variable != null);
+            return variables.Find(variable => variable != null);
         }
     }
 }

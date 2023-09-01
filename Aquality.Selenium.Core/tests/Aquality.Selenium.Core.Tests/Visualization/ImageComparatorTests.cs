@@ -21,7 +21,7 @@ namespace Aquality.Selenium.Core.Tests.Visualization
         [SetUp]
         public new void SetUp()
         {
-            AqualityServices.Application.Driver.Navigate().GoToUrl(DynamicLoadingUrl);
+            GoToUrl(DynamicLoadingUrl);
         }
 
         private void StartLoading()

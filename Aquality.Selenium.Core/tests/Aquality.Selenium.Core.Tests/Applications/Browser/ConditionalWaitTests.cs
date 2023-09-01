@@ -39,7 +39,7 @@ namespace Aquality.Selenium.Core.Tests.Applications.Browser
         {
             Assert.DoesNotThrow(() => ConditionalWait.WaitFor(driver =>
             {
-                driver.Navigate().GoToUrl(WikiURL);
+                GoToUrl(WikiURL, driver);
                 return driver.FindElements(By.XPath("//*")).Count > 0;
             }));
         }
@@ -100,7 +100,7 @@ namespace Aquality.Selenium.Core.Tests.Applications.Browser
             Assert.IsFalse(elementFinderCondition());
             Assert.DoesNotThrow(() => ConditionalWait.WaitFor(driver =>
             {
-                driver.Navigate().GoToUrl(WikiURL);
+                GoToUrl(WikiURL, driver);
                 return elementFinderCondition();
             }));
         }

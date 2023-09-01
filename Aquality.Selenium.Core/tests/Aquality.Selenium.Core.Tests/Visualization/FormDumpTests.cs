@@ -29,7 +29,7 @@ namespace Aquality.Selenium.Core.Tests.Visualization
         public new void SetUp()
         {
             var form = new WebForm();
-            AqualityServices.Application.Driver.Navigate().GoToUrl(HoversURL);
+            GoToUrl(HoversURL);
             form.ClickOnContent();
             form.WaitUntilPresent();
         }

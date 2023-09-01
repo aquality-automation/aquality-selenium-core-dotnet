@@ -75,7 +75,7 @@ namespace Aquality.Selenium.Core.Elements
             {
                 var elementIndex = index + 1;
                 var elementName = $"{name ?? "element"} {elementIndex}";
-                return elementSupplier(GenerateXpathLocator(locator, webElement, elementIndex), elementName, state);
+                return elementSupplier(GenerateLocator(locator, webElement, elementIndex), elementName, state);
             });
             return elements.ToList();
         }
@@ -83,6 +83,18 @@ namespace Aquality.Selenium.Core.Elements
         public virtual T GetCustomElement<T>(ElementSupplier<T> elementSupplier, By locator, string name, ElementState state = ElementState.Displayed) where T : IElement
         {
             return elementSupplier(locator, name, state);
+        }
+
+        /// <summary>
+        /// Generates locator for target element
+        /// </summary>
+        /// <param name="baseLocator">locator of parent element</param>
+        /// <param name="webElement">target element</param>
+        /// <param name="elementIndex">index of target element</param>
+        /// <returns>target element's locator</returns>
+        protected virtual By GenerateLocator(By baseLocator, IWebElement webElement, int elementIndex)
+        {
+            return GenerateXpathLocator(baseLocator, webElement, elementIndex);
         }
 
         /// <summary>

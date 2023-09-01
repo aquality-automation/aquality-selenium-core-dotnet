@@ -32,7 +32,7 @@ namespace Aquality.Selenium.Core.Tests.Applications.Browser
         public new void SetUp()
         {
             ElementFactory = ServiceProvider.GetRequiredService<IElementFactory>();
-            AqualityServices.Application.Driver.Navigate().GoToUrl(HoversURL);
+            GoToUrl(HoversURL);
             ParentElement = new Label(ContentLoc, "Example", ElementState.Displayed);
             ParentElement.Click();
         }
