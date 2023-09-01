@@ -59,13 +59,13 @@ namespace Aquality.Selenium.Core.Tests.Applications.Browser
 
         private static void StartLoading()
         {
-            AqualityServices.Application.Driver.Navigate().GoToUrl(DynamicLoadingUrl);
+            GoToUrl(DynamicLoadingUrl);
             new Label(StartLoc, "start", ElementState.Displayed).Click();
         }
 
         private static void OpenDynamicContent()
         {
-            AqualityServices.Application.Driver.Navigate().GoToUrl(DynamicContentUrl);
+            GoToUrl(DynamicContentUrl);
         }
 
         private static void WaitForLoading(Label loader)
