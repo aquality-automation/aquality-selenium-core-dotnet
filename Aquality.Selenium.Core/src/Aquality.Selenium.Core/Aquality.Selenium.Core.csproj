@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
@@ -53,6 +53,6 @@
     <PackageReference Include="NLog" Version="5.2.3" />
     <PackageReference Include="Selenium.Support" Version="4.12.2" />
     <PackageReference Include="Selenium.WebDriver" Version="4.12.2" />
-    <PackageReference Include="SkiaSharp" Version="2.88.5" />    
+    <PackageReference Include="SkiaSharp" Version="2.88.6" />    
   </ItemGroup>
 </Project>
