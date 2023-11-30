@@ -15,9 +15,6 @@
   "driverSettings": {
     "chrome": {
       "webDriverVersion": "Latest",
-      "capabilities": {
-        "enableVNC": true
-      },
       "options": {
         "intl.accept_languages": "en",
         "profile.default_content_settings.popups": "0",
