@@ -14,7 +14,7 @@
   <RepositoryType>git</RepositoryType>
   <PackageTags>selenium webdriver automation</PackageTags>
   <PackageLicenseFile>LICENSE</PackageLicenseFile>
-  <Copyright>Copyright 2023 Aquality Automation</Copyright>
+  <Copyright>Copyright 2024 Aquality Automation</Copyright>
   <IsPackable>true</IsPackable>
   </PropertyGroup>
 
@@ -51,8 +51,8 @@
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.0" />
     <PackageReference Include="NLog" Version="5.2.8" />
-    <PackageReference Include="Selenium.Support" Version="4.16.2" />
-    <PackageReference Include="Selenium.WebDriver" Version="4.16.2" />
+    <PackageReference Include="Selenium.Support" Version="4.17.0" />
+    <PackageReference Include="Selenium.WebDriver" Version="4.17.0" />
     <PackageReference Include="SkiaSharp" Version="2.88.7" />    
   </ItemGroup>
 </Project>
