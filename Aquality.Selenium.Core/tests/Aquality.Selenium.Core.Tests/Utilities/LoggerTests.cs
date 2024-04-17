@@ -81,7 +81,7 @@ namespace Aquality.Selenium.Core.Tests.Utilities
                 $"Target wasn't removed. File '{RemoveTargetLogFile}' exists.");
         }
 
-        private static Target GetTarget(string filePath)
+        private static FileTarget GetTarget(string filePath)
         {
             return new FileTarget
             {

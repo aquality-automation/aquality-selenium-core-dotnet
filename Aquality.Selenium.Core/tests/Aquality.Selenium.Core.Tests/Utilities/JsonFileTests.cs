@@ -9,8 +9,8 @@ namespace Aquality.Selenium.Core.Tests.Utilities
     [Parallelizable]
     public class JsonFileTests
     {
-        private static ISettingsFile CustomSettings => new JsonSettingsFile("settings.custom.json");
-        private static ISettingsFile AddedParamsSettings => new JsonSettingsFile("settings.addedparams.json");
+        private static JsonSettingsFile CustomSettings => new("settings.custom.json");
+        private static JsonSettingsFile AddedParamsSettings => new("settings.addedparams.json");
 
         [Test]
         [NonParallelizable]
