@@ -8,13 +8,13 @@ namespace Aquality.Selenium.Core.Tests.Utilities
 {
     public class ElementActionRetrierTests : RetrierTests
     {
-        private IElementActionRetrier ElementActionRetrier => new ElementActionRetrier(RetryConfiguration);
+        private static ElementActionRetrier ElementActionRetrier => new(RetryConfiguration);
 
-        private static readonly Exception[] handledExceptions = new List<Exception>
-        {
+        private static readonly Exception[] handledExceptions =
+        [
             new StaleElementReferenceException(""),
             new InvalidElementStateException("")
-        }.ToArray();
+        ];
 
         [Test]
         public void Retrier_ShouldWork_OnceIfMethodSucceeded()
@@ -105,7 +105,7 @@ namespace Aquality.Selenium.Core.Tests.Utilities
         public void Retrier_Should_ReturnValue()
         {
             var returnValue = string.Empty;
-            Assert.AreEqual(returnValue, ElementActionRetrier.DoWithRetry(() => returnValue), "Retrier should return value");
+            Assert.That(ElementActionRetrier.DoWithRetry(() => returnValue), Is.EqualTo(returnValue), "Retrier should return value");
         }
     }
 }

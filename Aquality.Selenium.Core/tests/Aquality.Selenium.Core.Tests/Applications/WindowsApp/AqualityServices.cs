@@ -23,9 +23,9 @@ namespace Aquality.Selenium.Core.Tests.Applications.WindowsApp
         private static WindowsApplication StartApplication(IServiceProvider services)
         {
             var isRemoteFromEnv = EnvironmentConfiguration.GetVariable("isRemote");
-            bool.TryParse(isRemoteFromEnv, out var isRemote);
+            var isRemote = bool.Parse(isRemoteFromEnv);
             Uri driverServer;
-            AppiumOptions options = new AppiumOptions();
+            AppiumOptions options = new();
             if (!isRemote)
             {
                 var driverService = AppiumLocalService.BuildDefaultService();

@@ -12,14 +12,14 @@ namespace Aquality.Selenium.Core.Tests.Applications.WindowsApp
 {
     public class RelativeElementFinderTests : TestWithApplication
     {
-        private IConditionalWait ConditionalWait => AqualityServices.ServiceProvider.GetRequiredService<IConditionalWait>();
+        private static IConditionalWait ConditionalWait => AqualityServices.ServiceProvider.GetRequiredService<IConditionalWait>();
 
-        private IElementFinder ElementFinder => new RelativeElementFinder(
+        private static RelativeElementFinder ElementFinder => new(
             AqualityServices.ServiceProvider.GetRequiredService<ILocalizedLogger>(),
             ConditionalWait,
             () => AqualityServices.Application.Driver.FindElement(CalculatorWindow.WindowLocator));
 
-        private IElementStateProvider GetElementStateProvider(By locator) => new ElementStateProvider(
+        private static ElementStateProvider GetElementStateProvider(By locator) => new(
             locator,
             ConditionalWait,
             ElementFinder,
@@ -28,7 +28,7 @@ namespace Aquality.Selenium.Core.Tests.Applications.WindowsApp
         [Test]
         public void Should_FindChildElements_ViaRelativeElementFinder()
         {
-            Assert.IsNotNull(ElementFinder.FindElement(CalculatorWindow.OneButton));
+            Assert.That(ElementFinder.FindElement(CalculatorWindow.OneButton), Is.Not.Null);
         }
 
         [Test]

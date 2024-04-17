@@ -9,18 +9,18 @@ namespace Aquality.Selenium.Core.Tests.Applications.Browser
 {
     public class FindChildElementsTests : FindElementsTests
     {
-        private readonly Label customParent = new Label(By.XPath("//div[contains(@class,'figure')]"), 
+        private readonly Label customParent = new(By.XPath("//div[contains(@class,'figure')]"), 
             "custom parent", ElementState.ExistsInAnyState);
         protected override By HiddenElementsLoc => By.XPath(".//h5");
         protected override By DisplayedElementsLoc => By.XPath(".//img[@alt='User Avatar']");
         protected override By NotExistElementLoc => By.XPath(".//div[@class='testtest']");
 
-        private static readonly By[] SupportedLocators = new By[]
-        {
+        private static readonly By[] SupportedLocators =
+        [
             By.XPath("//img"),
             By.XPath(".//img"),
             By.TagName("img")
-        };
+        ];
 
         protected override IList<T> FindElements<T>(By locator, string name = null, ElementSupplier<T> supplier = null, 
             ElementsCount expectedCount = ElementsCount.Any, ElementState state = ElementState.Displayed)
@@ -34,7 +34,7 @@ namespace Aquality.Selenium.Core.Tests.Applications.Browser
         {
             var expectedCount = 3;
             var elementsCount = ElementFactory.FindChildElements<Label>(customParent, childRelativeLocator).Count;
-            Assert.AreEqual(expectedCount, elementsCount, 
+            Assert.That(elementsCount, Is.EqualTo(expectedCount),
                 $"Elements count for relative locator [{childRelativeLocator}] should be {expectedCount}");
         }
 
@@ -68,9 +68,9 @@ namespace Aquality.Selenium.Core.Tests.Applications.Browser
 
         private void CheckChildLocatorIsXpathAndStartsFromParent(string childLocatorString)
         {
-            StringAssert.StartsWith("By.XPath", childLocatorString);
+            Assert.That(childLocatorString, Does.StartWith("By.XPath"));
             var parentLocatorString = customParent.Locator.ToString();
-            StringAssert.Contains(parentLocatorString.Substring(parentLocatorString.IndexOf(':') + 1).Trim(), childLocatorString);
+            Assert.That(childLocatorString, Contains.Substring(parentLocatorString[(parentLocatorString.IndexOf(':') + 1)..].Trim()));
         }
     }
 }

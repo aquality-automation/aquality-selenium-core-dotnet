@@ -13,9 +13,9 @@ namespace Aquality.Selenium.Core.Tests.Visualization
 {
     public sealed class VisualStateProviderTests : TestWithBrowser
     {
-        private static readonly Uri DynamicLoadingUrl = new Uri($"{TestSite}/dynamic_loading/1");
-        private static readonly Label StartLabel = new Label(By.XPath("//*[@id='start']//button"), "start", ElementState.Displayed);
-        private static readonly Label LoadingLabel = new Label(By.Id("loading"), "loading", ElementState.Displayed);
+        private static readonly Uri DynamicLoadingUrl = new($"{TestSite}/dynamic_loading/1");
+        private static readonly Label StartLabel = new(By.XPath("//*[@id='start']//button"), "start", ElementState.Displayed);
+        private static readonly Label LoadingLabel = new(By.Id("loading"), "loading", ElementState.Displayed);
 
         [SetUp]
         public new void SetUp()
@@ -23,7 +23,7 @@ namespace Aquality.Selenium.Core.Tests.Visualization
             GoToUrl(DynamicLoadingUrl);
         }
 
-        private void StartLoading()
+        private static void StartLoading()
         {
             StartLabel.Click();
         }
@@ -33,7 +33,7 @@ namespace Aquality.Selenium.Core.Tests.Visualization
         {
             Size size = Size.Empty;
             Assert.DoesNotThrow(() => size = StartLabel.Visual.Size);
-            Assert.False(size.IsEmpty);
+            Assert.That(size.IsEmpty, Is.False);
         }
 
         [Test]
@@ -41,7 +41,7 @@ namespace Aquality.Selenium.Core.Tests.Visualization
         {
             Point location = Point.Empty;
             Assert.DoesNotThrow(() => location = StartLabel.Visual.Location);
-            Assert.False(location.IsEmpty);
+            Assert.That(location.IsEmpty, Is.False);
         }
 
         [Test]
@@ -49,7 +49,7 @@ namespace Aquality.Selenium.Core.Tests.Visualization
         {
             SKImage image = null;
             Assert.DoesNotThrow(() => image = StartLabel.Visual.Image);
-            Assert.IsNotNull(image);
+            Assert.That(image, Is.Not.Null);
         }
 
         [Test]

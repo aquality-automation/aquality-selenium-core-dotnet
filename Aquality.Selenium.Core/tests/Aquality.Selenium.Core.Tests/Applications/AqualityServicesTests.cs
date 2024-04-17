@@ -19,14 +19,14 @@ namespace Aquality.Selenium.Core.Tests.Applications
         [Test]
         public void Should_BePossibleTo_RegisterCustomServices()
         {
-            Assert.IsInstanceOf<TestTimeoutConfiguration>(TestAqualityServices.ServiceProvider.GetService<ITimeoutConfiguration>());
+            Assert.That(TestAqualityServices.ServiceProvider.GetService<ITimeoutConfiguration>(), Is.InstanceOf<TestTimeoutConfiguration>());
         }
 
         [Test]
         public void Should_BePossibleTo_GetCustomValues()
         {
             var timeoutConfiguration = TestAqualityServices.ServiceProvider.GetService<ITimeoutConfiguration>() as TestTimeoutConfiguration;
-            Assert.AreEqual(SpecialTimeoutValue,  timeoutConfiguration.CustomTimeout);
+            Assert.That(timeoutConfiguration.CustomTimeout, Is.EqualTo(SpecialTimeoutValue));
         }
 
         [Test]
@@ -34,18 +34,18 @@ namespace Aquality.Selenium.Core.Tests.Applications
         {
             TestAqualityServices.SetStartup(new CustomStartup());
             var timeoutConfiguration = TestAqualityServices.ServiceProvider.GetService<ILoggerConfiguration>() as CustomLoggerConfiguration;
-            Assert.AreEqual(SpecialLogger, timeoutConfiguration.CustomLogger);
+            Assert.That(timeoutConfiguration.CustomLogger, Is.EqualTo(SpecialLogger));
         }
 
         [Test]
         public void Should_BePossibleTo_RegisterCustomServices_WithCustomSettingsFile()
         {
-            Assert.AreEqual(SpecialLanguageValue, TestAqualityServices.ServiceProvider.GetService<ILoggerConfiguration>().Language);
+            Assert.That(TestAqualityServices.ServiceProvider.GetService<ILoggerConfiguration>().Language, Is.EqualTo(SpecialLanguageValue));
         }
 
         private class TestAqualityServices : AqualityServices<IApplication>
         {
-            private static ThreadLocal<TestStartup> startup = new ThreadLocal<TestStartup>();
+            private static readonly ThreadLocal<TestStartup> startup = new();
 
             private static IApplication Application => GetApplication(StartApplicationFunction, () => startup.Value.ConfigureServices(new ServiceCollection(), services => Application));
 
@@ -85,24 +85,14 @@ namespace Aquality.Selenium.Core.Tests.Applications
             }
         }
 
-        private class TestTimeoutConfiguration : TimeoutConfiguration
+        private class TestTimeoutConfiguration(ISettingsFile settingsFile) : TimeoutConfiguration(settingsFile)
         {
-            public TestTimeoutConfiguration(ISettingsFile settingsFile) : base(settingsFile)
-            {
-                CustomTimeout = SpecialTimeoutValue;
-            }
-
-            public TimeSpan CustomTimeout { get; }
+            public TimeSpan CustomTimeout { get; } = SpecialTimeoutValue;
         }
 
-        private class CustomLoggerConfiguration : LoggerConfiguration
+        private class CustomLoggerConfiguration(ISettingsFile settingsFile) : LoggerConfiguration(settingsFile)
         {
-            public CustomLoggerConfiguration(ISettingsFile settingsFile) : base(settingsFile)
-            {
-                CustomLogger = SpecialLogger;
-            }
-
-            public string CustomLogger { get; }
+            public string CustomLogger { get; } = SpecialLogger;
         }
     }
 }

@@ -12,9 +12,9 @@ namespace Aquality.Selenium.Core.Tests.Visualization
 {
     public sealed class ImageComparatorTests : TestWithBrowser
     {
-        private static readonly Uri DynamicLoadingUrl = new Uri($"{TestSite}/dynamic_loading/1");
-        private static readonly Label StartLabel = new Label(By.XPath("//*[@id='start']//button"), "start", ElementState.Displayed);
-        private static readonly Label LoadingLabel = new Label(By.Id("loading"), "loading", ElementState.Displayed);
+        private static readonly Uri DynamicLoadingUrl = new($"{TestSite}/dynamic_loading/1");
+        private static readonly Label StartLabel = new(By.XPath("//*[@id='start']//button"), "start", ElementState.Displayed);
+        private static readonly Label LoadingLabel = new(By.Id("loading"), "loading", ElementState.Displayed);
 
         private IImageComparator ImageComparator => AqualityServices.ServiceProvider.GetRequiredService<IImageComparator>();
 

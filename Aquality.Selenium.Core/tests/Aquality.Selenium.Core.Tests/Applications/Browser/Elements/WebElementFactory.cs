@@ -8,12 +8,8 @@ using OpenQA.Selenium.Support.Extensions;
 
 namespace Aquality.Selenium.Core.Tests.Applications.Browser.Elements
 {
-    internal class WebElementFactory : ElementFactory
+    internal class WebElementFactory(IConditionalWait conditionalWait, IElementFinder elementFinder, ILocalizationManager localizationManager) : ElementFactory(conditionalWait, elementFinder, localizationManager)
     {
-        public WebElementFactory(IConditionalWait conditionalWait, IElementFinder elementFinder, ILocalizationManager localizationManager) : base(conditionalWait, elementFinder, localizationManager)
-        {
-        }
-
         protected override By GenerateXpathLocator(By baseLocator, IWebElement webElement, int elementIndex)
         {
             return baseLocator.ToString().StartsWith("By.XPath")

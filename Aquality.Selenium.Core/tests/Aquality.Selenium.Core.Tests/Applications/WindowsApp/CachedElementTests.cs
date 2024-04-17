@@ -12,35 +12,35 @@ namespace Aquality.Selenium.Core.Tests.Applications.WindowsApp
     {
         private const string ElementCacheVariableName = "elementCache.isEnabled"; 
         
-        private IElementFactory Factory => AqualityServices.ServiceProvider.GetRequiredService<IElementFactory>();
+        private static IElementFactory Factory => AqualityServices.ServiceProvider.GetRequiredService<IElementFactory>();
 
         private static readonly Func<IElementStateProvider, bool>[] StateFunctionsFalseWhenElementStale
-            = new Func<IElementStateProvider, bool>[]
-            {
+            =
+            [
                 state => state.IsDisplayed,
                 state => state.IsExist,                
                 state => !state.WaitForNotDisplayed(TimeSpan.Zero),
                 state => !state.WaitForNotExist(TimeSpan.Zero),
-            };
+            ];
 
         private static readonly Func<IElementStateProvider, bool>[] StateFunctionsTrueWhenElementStaleWhichRetriveSession
-            = new Func<IElementStateProvider, bool>[]
-            {
+            =
+            [
                 state => state.IsEnabled,
                 state => state.IsClickable,
                 state => state.WaitForDisplayed(TimeSpan.Zero),
                 state => state.WaitForExist(TimeSpan.Zero),
                 state => state.WaitForEnabled(TimeSpan.Zero),
                 state => !state.WaitForNotEnabled(TimeSpan.Zero),
-            };
+            ];
 
         private static readonly Func<IElementStateProvider, bool>[] StateFunctionsThrowNoSuchElementException
-            = new Func<IElementStateProvider, bool>[]
-            {
+            =
+            [
                 state => state.IsEnabled,
                 state => state.WaitForEnabled(TimeSpan.Zero),
                 state => !state.WaitForNotEnabled(TimeSpan.Zero),
-            };
+            ];
 
         [SetUp]
         public void SetUp()
@@ -57,7 +57,7 @@ namespace Aquality.Selenium.Core.Tests.Applications.WindowsApp
             oneButton.Click();
             Factory.GetButton(CalculatorWindow.EqualsButton, "=").Click();
             var result = Factory.GetButton(CalculatorWindow.ResultsLabel, "Results bar").Text;
-            StringAssert.Contains("2", result);
+            Assert.That(result, Contains.Substring("2"));
         }
 
         [Test]
@@ -68,7 +68,7 @@ namespace Aquality.Selenium.Core.Tests.Applications.WindowsApp
             var initialElement = oneButton.GetElement();
             oneButton.Click();
             var resultElement = oneButton.GetElement();
-            Assert.AreEqual(initialElement, resultElement, errorMessage);
+            Assert.That(resultElement, Is.EqualTo(initialElement), errorMessage);
         }
 
         [Test]
@@ -79,7 +79,7 @@ namespace Aquality.Selenium.Core.Tests.Applications.WindowsApp
             var initialElement = oneButton.GetElement();
             oneButton.State.WaitForClickable();
             var resultElement = oneButton.GetElement();
-            Assert.AreEqual(initialElement, resultElement, errorMessage);
+            Assert.That(resultElement, Is.EqualTo(initialElement), errorMessage);
         }
 
         [Test]
@@ -91,7 +91,7 @@ namespace Aquality.Selenium.Core.Tests.Applications.WindowsApp
             AqualityServices.Application.Driver.Quit();
             oneButton.State.WaitForClickable();
             var resultElement = oneButton.GetElement().ToString();
-            Assert.AreNotEqual(initialElement, resultElement, errorMessage);
+            Assert.That(resultElement, Is.Not.EqualTo(initialElement), errorMessage);
         }
 
         [Test]
@@ -113,13 +113,13 @@ namespace Aquality.Selenium.Core.Tests.Applications.WindowsApp
             AssertStateConditionAfterQuit(stateCondition, expectedValue: true, shouldAppRestart: true);
         }
 
-        private void AssertStateConditionAfterQuit(Func<IElementStateProvider, bool> stateCondition, bool expectedValue, bool shouldAppRestart)
+        private static void AssertStateConditionAfterQuit(Func<IElementStateProvider, bool> stateCondition, bool expectedValue, bool shouldAppRestart)
         {
             var oneButton = Factory.GetButton(CalculatorWindow.OneButton, "1");
             oneButton.GetElement();
             AqualityServices.Application.Driver.Quit();
-            Assert.AreEqual(expectedValue, stateCondition(oneButton.State), "Element state condition is not expected after closing the window");
-            Assert.AreEqual(shouldAppRestart, AqualityServices.IsApplicationStarted, $"Window was {(shouldAppRestart ? "not " : string.Empty)}reopened when retrived the element state.");
+            Assert.That(stateCondition(oneButton.State), Is.EqualTo(expectedValue), "Element state condition is not expected after closing the window");
+            Assert.That(AqualityServices.IsApplicationStarted, Is.EqualTo(shouldAppRestart), $"Window was {(shouldAppRestart ? "not " : string.Empty)}reopened when retrived the element state.");
         }
 
         [TearDown]

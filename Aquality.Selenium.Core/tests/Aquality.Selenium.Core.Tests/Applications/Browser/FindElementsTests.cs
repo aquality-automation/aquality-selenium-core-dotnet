@@ -13,7 +13,7 @@ namespace Aquality.Selenium.Core.Tests.Applications.Browser
     public class FindElementsTests : TestWithBrowser
     {
         private static readonly By ContentLoc = By.XPath("//div[contains(@class,'example')]");
-        private static readonly Uri HoversURL = new Uri($"{TestSite}/hovers");
+        private static readonly Uri HoversURL = new($"{TestSite}/hovers");
 
         protected virtual By HiddenElementsLoc => By.XPath("//h5");
         protected virtual By DisplayedElementsLoc => By.XPath("//img[@alt='User Avatar']");
@@ -44,7 +44,7 @@ namespace Aquality.Selenium.Core.Tests.Applications.Browser
         public void Should_BePossibleTo_FindElements_ForDisplayedElements(ElementsCount count, ElementState state, int expectedCount)
         {
             var elementsCount = FindElements<Label>(DisplayedElementsLoc, expectedCount: count, state: state).Count;
-            Assert.AreEqual(expectedCount, elementsCount, $"Elements count for displayed elements should be {expectedCount}");
+            Assert.That(elementsCount, Is.EqualTo(expectedCount), $"Elements count for displayed elements should be {expectedCount}");
         }
 
         [TestCase(ElementsCount.Zero, ElementState.Displayed, 0)]
@@ -54,7 +54,7 @@ namespace Aquality.Selenium.Core.Tests.Applications.Browser
         public void Should_BePossibleTo_FindElements_ForHiddenElements(ElementsCount count, ElementState state, int expectedCount)
         {
             var elementsCount = FindElements<Label>(HiddenElementsLoc, expectedCount: count, state: state).Count;
-            Assert.AreEqual(expectedCount, elementsCount, $"Elements count for hidden elements should be {expectedCount}");
+            Assert.That(elementsCount, Is.EqualTo(expectedCount), $"Elements count for hidden elements should be {expectedCount}");
         }
 
         [TestCase(ElementsCount.Zero, ElementState.Displayed, 0)]
@@ -64,7 +64,7 @@ namespace Aquality.Selenium.Core.Tests.Applications.Browser
         public void Should_BePossibleTo_FindElements_ForNotExistsElements(ElementsCount count, ElementState state, int expectedCount)
         {
             var elementsCount = FindElements<Label>(NotExistElementLoc, expectedCount: count, state: state).Count;
-            Assert.AreEqual(expectedCount, elementsCount, $"Elements count for not existing elements should be {expectedCount}");
+            Assert.That(elementsCount, Is.EqualTo(expectedCount), $"Elements count for not existing elements should be {expectedCount}");
         }
 
         [TestCase(ElementsCount.Zero, ElementState.Displayed)]

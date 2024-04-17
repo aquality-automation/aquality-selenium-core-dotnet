@@ -13,7 +13,7 @@ namespace Aquality.Selenium.Core.Tests.Applications.WindowsApp
             AqualityServices.Application.Driver.FindElement(CalculatorWindow.TwoButton).Click();
             AqualityServices.Application.Driver.FindElement(CalculatorWindow.EqualsButton).Click();
             var result = AqualityServices.Application.Driver.FindElement(CalculatorWindow.ResultsLabel).Text;
-            StringAssert.Contains("3", result);
+            Assert.That(result, Contains.Substring("3"));
         }
     }
 }

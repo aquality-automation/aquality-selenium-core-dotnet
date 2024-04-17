@@ -13,7 +13,7 @@ namespace Aquality.Selenium.Core.Tests.Applications.Browser
     public class ApplicationNotStartedTests : TestWithBrowser
     {
         private static readonly Type[] TypesNotRequireApplication = 
-        { 
+        [ 
             typeof(IElementActionRetrier),
             typeof(IConditionalWait),
             typeof(Logger),
@@ -24,13 +24,13 @@ namespace Aquality.Selenium.Core.Tests.Applications.Browser
             typeof(ITimeoutConfiguration),
             typeof(ILoggerConfiguration),
             typeof(IRetryConfiguration)
-        };
+        ];
 
         [TestCaseSource(nameof(TypesNotRequireApplication))]
         public void Should_NotStartApplication_ForServiceResolving(Type type)
         {
-            Assert.IsNotNull(ServiceProvider.GetRequiredService(type));
-            Assert.IsFalse(AqualityServices.IsApplicationStarted);
+            Assert.That(ServiceProvider.GetRequiredService(type), Is.Not.Null);
+            Assert.That(AqualityServices.IsApplicationStarted, Is.False);
         }
     }
 }
