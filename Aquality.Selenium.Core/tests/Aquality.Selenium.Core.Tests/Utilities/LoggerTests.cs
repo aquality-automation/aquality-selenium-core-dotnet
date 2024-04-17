@@ -41,10 +41,10 @@ namespace Aquality.Selenium.Core.Tests.Utilities
             Assert.Throws(Is.AssignableFrom(typeof(NoSuchElementException)).And.Message.Contains(element.Name),
                 () => element.GetElement(TimeSpan.Zero), 
                 "Attempt to get absent element should throw an exception");
-            Assert.True(File.Exists(AddTargetLogFile),
+            Assert.That(File.Exists(AddTargetLogFile),
                 $"Target wasn't added. File '{AddTargetLogFile}' doesn't exist.");
             var log = File.ReadAllText(AddTargetLogFile).Trim();
-            StringAssert.Contains("Page source:", log, "Log file should contain logged page source");
+            Assert.That(log, Does.Contain("Page source:"), "Log file should contain logged page source");
         }
 
         [Test]
@@ -55,20 +55,20 @@ namespace Aquality.Selenium.Core.Tests.Utilities
             Logger.Instance.AddTarget(GetTarget(AddTargetLogFile));
             var element = new Label(By.Name("Absent element"), "Absent element", Elements.ElementState.ExistsInAnyState);
             Assert.Throws<NoSuchElementException>(() => element.GetElement(TimeSpan.Zero), "Attempt to get absent element should throw an exception");
-            Assert.True(File.Exists(AddTargetLogFile),
+            Assert.That(File.Exists(AddTargetLogFile),
                 $"Target wasn't added. File '{AddTargetLogFile}' doesn't exist.");
             var log = File.ReadAllText(AddTargetLogFile).Trim();
-            StringAssert.DoesNotContain("Page source:", log, "Log file should not contain logged page source");
+            Assert.That(log, Does.Not.Contain("Page source:"), "Log file should not contain logged page source");
         }
 
         [Test]
         public void Should_BePossibleTo_AddTarget()
         {
             Logger.Instance.AddTarget(GetTarget(AddTargetLogFile)).Info(TestMessage);
-            Assert.True(File.Exists(AddTargetLogFile),
+            Assert.That(File.Exists(AddTargetLogFile),
                 $"Target wasn't added. File '{AddTargetLogFile}' doesn't exist.");
             var log = File.ReadAllText(AddTargetLogFile).Trim();
-            Assert.True(log.Equals(TestMessage),
+            Assert.That(log.Equals(TestMessage),
                 $"Target wasn't added. File doesn't contain message: '{TestMessage}'.");
         }
 
@@ -77,7 +77,7 @@ namespace Aquality.Selenium.Core.Tests.Utilities
         {
             var target = GetTarget(RemoveTargetLogFile);
             Logger.Instance.AddTarget(target).RemoveTarget(target).Info(TestMessage);
-            Assert.False(File.Exists(RemoveTargetLogFile),
+            Assert.That(RemoveTargetLogFile, Does.Not.Exist,
                 $"Target wasn't removed. File '{RemoveTargetLogFile}' exists.");
         }
 

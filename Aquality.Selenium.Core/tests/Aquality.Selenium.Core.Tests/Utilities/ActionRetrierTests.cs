@@ -9,7 +9,7 @@ namespace Aquality.Selenium.Core.Tests.Utilities
 {
     public class ActionRetrierTests : RetrierTests
     {
-        private IEnumerable<Type> HandledExceptions => new List<Type> { typeof(InvalidOperationException) };
+        private static IEnumerable<Type> HandledExceptions => new List<Type> { typeof(InvalidOperationException) };
         
         private IActionRetrier ActionRetrier => new ActionRetrier(RetryConfiguration);
 
@@ -108,7 +108,7 @@ namespace Aquality.Selenium.Core.Tests.Utilities
         public void Retrier_Should_ReturnValue()
         {
             var returnValue = string.Empty;
-            Assert.AreEqual(returnValue, ActionRetrier.DoWithRetry(() => returnValue, new List<Type>()), "Retrier should return value");
+            Assert.That(ActionRetrier.DoWithRetry(() => returnValue, new List<Type>()), Is.EqualTo(returnValue), "Retrier should return value");
         }
     }
 }

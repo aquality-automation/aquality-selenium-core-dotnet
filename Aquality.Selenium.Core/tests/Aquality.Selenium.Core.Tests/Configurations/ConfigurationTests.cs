@@ -28,7 +28,7 @@ namespace Aquality.Selenium.Core.Tests.Configurations
         [Test]
         public void Should_GetConfiguration_FromCustomConfigurationProfile()
         {
-            Assert.AreEqual(LoggerLang, ServiceProvider.GetService<ILoggerConfiguration>().Language);
+            Assert.That(ServiceProvider.GetService<ILoggerConfiguration>().Language, Is.EqualTo(LoggerLang));
         }
     }
 }

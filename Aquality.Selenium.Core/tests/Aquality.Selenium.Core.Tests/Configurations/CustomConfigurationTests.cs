@@ -11,7 +11,7 @@ namespace Aquality.Selenium.Core.Tests.Configurations
     public class CustomConfigurationTests
     {
         private ServiceProvider ServiceProvider { get; set; }
-        private static FakeSettingFile SettingFile => new FakeSettingFile();
+        private static FakeSettingFile SettingFile => new();
 
         [SetUp]
         public void SetUp()
@@ -31,9 +31,9 @@ namespace Aquality.Selenium.Core.Tests.Configurations
             var loggerConfig = ServiceProvider.GetService<ILoggerConfiguration>();
             Assert.Multiple(() =>
             {
-                Assert.AreEqual(default(TimeSpan), retryConfig.PollingInterval, "Retry config should be received from custom setting file");
-                Assert.AreEqual(default(TimeSpan), timeoutConfig.PollingInterval, "Timeout config should be received from custom setting file");
-                Assert.AreEqual("en", loggerConfig.Language, "Logger config should be received from custom setting file");
+                Assert.That(retryConfig.PollingInterval, Is.EqualTo(default(TimeSpan)), "Retry config should be received from custom setting file");
+                Assert.That(timeoutConfig.PollingInterval, Is.EqualTo(default(TimeSpan)), "Timeout config should be received from custom setting file");
+                Assert.That(loggerConfig.Language, Is.EqualTo("en"), "Logger config should be received from custom setting file");
             });
         }
 
@@ -41,7 +41,7 @@ namespace Aquality.Selenium.Core.Tests.Configurations
         {
             public T GetValue<T>(string path)
             {
-                return default(T);
+                return default;
             }
 
             public IReadOnlyList<T> GetValueList<T>(string path)

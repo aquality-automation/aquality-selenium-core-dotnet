@@ -47,10 +47,10 @@ namespace Aquality.Selenium.Core.Tests.Configurations
             var config = ServiceProvider.GetService<ITimeoutConfiguration>();
             Assert.Multiple(() =>
             {
-                Assert.AreEqual(expectedValueSec, config.Command, string.Format(messageTmp, "Command"));
-                Assert.AreEqual(expectedValueSec, config.Condition, string.Format(messageTmp, "Condition"));
-                Assert.AreEqual(expectedValueSec, config.Implicit, string.Format(messageTmp, "Implicit"));
-                Assert.AreEqual(expectedValueMillis, config.PollingInterval, string.Format(messageTmp, "PollingInterval"));
+                Assert.That(config.Command, Is.EqualTo(expectedValueSec), string.Format(messageTmp, "Command"));
+                Assert.That(config.Condition, Is.EqualTo(expectedValueSec), string.Format(messageTmp, "Condition"));
+                Assert.That(config.Implicit, Is.EqualTo(expectedValueSec), string.Format(messageTmp, "Implicit"));
+                Assert.That(config.PollingInterval, Is.EqualTo(expectedValueMillis), string.Format(messageTmp, "PollingInterval"));
             });
         }
 
@@ -68,8 +68,8 @@ namespace Aquality.Selenium.Core.Tests.Configurations
             var config = ServiceProvider.GetService<IRetryConfiguration>();
             Assert.Multiple(() =>
             {
-                Assert.AreEqual(expectedInterval, config.PollingInterval, string.Format(messageTmp, "PollingInterval"));
-                Assert.AreEqual(expectedNumber, config.Number, string.Format(messageTmp, "Number"));
+                Assert.That(config.PollingInterval, Is.EqualTo(expectedInterval), string.Format(messageTmp, "PollingInterval"));
+                Assert.That(config.Number, Is.EqualTo(expectedNumber), string.Format(messageTmp, "Number"));
             });
         }
 
@@ -81,13 +81,13 @@ namespace Aquality.Selenium.Core.Tests.Configurations
             base.SetUp();
 
             var config = ServiceProvider.GetService<ILoggerConfiguration>();
-            Assert.AreEqual(testValue, config.Language, "Logger language value should be overridden with env variable");
+            Assert.That(config.Language, Is.EqualTo(testValue), "Logger language value should be overridden with env variable");
         }
 
         [Test]
         public void Should_ReturnFalse_InElementCacheEnable_WhenElementCacheIsAbsent()
         {
-            Assert.IsFalse(ServiceProvider.GetRequiredService<IElementCacheConfiguration>().IsEnabled,
+            Assert.That(ServiceProvider.GetRequiredService<IElementCacheConfiguration>().IsEnabled, Is.False,
                 nameof(Should_ReturnFalse_InElementCacheEnable_WhenElementCacheIsAbsent));
         }
 
@@ -95,7 +95,7 @@ namespace Aquality.Selenium.Core.Tests.Configurations
         public void Should_ReturnTrue_InElementCacheEnable_WhenElementCacheIsDisabled()
         {
             Environment.SetEnvironmentVariable("elementCache.isEnabled", "true");
-            Assert.IsTrue(ServiceProvider.GetRequiredService<IElementCacheConfiguration>().IsEnabled,
+            Assert.That(ServiceProvider.GetRequiredService<IElementCacheConfiguration>().IsEnabled,
                 nameof(Should_ReturnTrue_InElementCacheEnable_WhenElementCacheIsDisabled));
         }
 
@@ -103,7 +103,7 @@ namespace Aquality.Selenium.Core.Tests.Configurations
         public void Should_ReturnFalse_InElementCacheEnable_WhenElementCacheIsDisabled()
         {
             Environment.SetEnvironmentVariable("elementCache.isEnabled", "false");
-            Assert.IsFalse(ServiceProvider.GetRequiredService<IElementCacheConfiguration>().IsEnabled,
+            Assert.That(ServiceProvider.GetRequiredService<IElementCacheConfiguration>().IsEnabled, Is.False,
                 nameof(Should_ReturnFalse_InElementCacheEnable_WhenElementCacheIsDisabled));
         }
     }

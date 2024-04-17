@@ -10,9 +10,9 @@ namespace Aquality.Selenium.Core.Tests.Applications.WindowsApp
 {
     public class ElementFactoryTests : TestWithApplication
     {
-        private IElementFactory Factory => AqualityServices.ServiceProvider.GetRequiredService<IElementFactory>();
+        private static IElementFactory Factory => AqualityServices.ServiceProvider.GetRequiredService<IElementFactory>();
 
-        private IElement NumberPad => Factory.GetButton(CalculatorWindow.WindowLocator, "Number pad");
+        private static IElement NumberPad => Factory.GetButton(CalculatorWindow.WindowLocator, "Number pad");
 
         [Test]
         public void Should_WorkWithCalculator_ViaElementFactory()
@@ -22,19 +22,19 @@ namespace Aquality.Selenium.Core.Tests.Applications.WindowsApp
             Factory.GetButton(CalculatorWindow.TwoButton, "2").Click();
             Factory.GetButton(CalculatorWindow.EqualsButton, "=").Click();
             var result = Factory.GetButton(CalculatorWindow.ResultsLabel, "Results bar").Text;
-            StringAssert.Contains("3", result);
+            Assert.That(result, Contains.Substring("3"));
         }
 
         [Test]
         public void Should_FindChildElements_ViaElementFactory()
         {
-            Assert.IsNotNull(Factory.FindChildButton(NumberPad, CalculatorWindow.OneButton).GetElement(TimeSpan.Zero));
+            Assert.That(Factory.FindChildButton(NumberPad, CalculatorWindow.OneButton).GetElement(TimeSpan.Zero), Is.Not.Null);
         }
 
         [Test]
         public void Should_FindElements_ViaElementFactory()
         {
-            Assert.IsTrue(Factory.FindButtons(By.XPath("//*")).Count > 1);
+            Assert.That(Factory.FindButtons(By.XPath("//*")), Has.Count.GreaterThan(1));
         }
 
         [Test]
@@ -44,12 +44,12 @@ namespace Aquality.Selenium.Core.Tests.Applications.WindowsApp
             var buttons = Factory.FindButtons(By.XPath("//*"), name);
             Assert.Multiple(() =>
             {
-                Assert.IsTrue(buttons.Count > 1);
+                Assert.That(buttons.Count > 1);
                 for (var i = 0; i < buttons.Count; i++)
                 {
                     var button = buttons[i];
-                    StringAssert.StartsWith(name, button.Name);
-                    StringAssert.EndsWith((i + 1).ToString(), button.Name);
+                    Assert.That(button.Name, Does.StartWith(name));
+                    Assert.That(button.Name, Does.EndWith((i + 1).ToString()));
                 }
             });
         }
@@ -60,13 +60,13 @@ namespace Aquality.Selenium.Core.Tests.Applications.WindowsApp
             var buttons = Factory.FindButtons(By.XPath("//*"));
             Assert.Multiple(() =>
             {
-                Assert.IsTrue(buttons.Count > 1);
+                Assert.That(buttons.Count > 1);
                 for (var i = 0; i < buttons.Count; i++)
                 {
                     var button = buttons[i];
                     var endOfName = (i + 1).ToString();
-                    StringAssert.AreNotEqualIgnoringCase(endOfName, button.Name);
-                    StringAssert.EndsWith(endOfName, button.Name);
+                    Assert.That(button.Name, Is.Not.EqualTo(endOfName).IgnoreCase);
+                    Assert.That(button.Name, Does.EndWith(endOfName));
                 }
             });
         }

@@ -21,9 +21,9 @@ namespace Aquality.Selenium.Core.Tests.Visualization
 {
     public class FormDumpTests : TestWithBrowser
     {
-        private static readonly Uri HoversURL = new Uri($"{TestSite}/hovers");
+        private static readonly Uri HoversURL = new($"{TestSite}/hovers");
 
-        private string PathToDumps => AqualityServices.ServiceProvider.GetRequiredService<IVisualizationConfiguration>().PathToDumps;
+        private static string PathToDumps => AqualityServices.ServiceProvider.GetRequiredService<IVisualizationConfiguration>().PathToDumps;
 
         [SetUp]
         public new void SetUp()
@@ -42,8 +42,8 @@ namespace Aquality.Selenium.Core.Tests.Visualization
 
             Assert.DoesNotThrow(() => form.Dump.Save());
             pathToDump.Refresh();
-            DirectoryAssert.Exists(pathToDump);
-            Assert.Greater(pathToDump.GetFiles().Length, 0, "Dump should contain some files");
+            Assert.That(pathToDump, Does.Exist);
+            Assert.That(pathToDump.GetFiles().Length, Is.GreaterThan(0), "Dump should contain some files");
         }
 
         [Test]
@@ -55,8 +55,8 @@ namespace Aquality.Selenium.Core.Tests.Visualization
 
             Assert.DoesNotThrow(() => form.Dump.Save(dumpName));
             pathToDump.Refresh();
-            DirectoryAssert.Exists(pathToDump);
-            Assert.Greater(pathToDump.GetFiles().Length, 0, "Dump should contain some files");
+            Assert.That(pathToDump, Does.Exist);
+            Assert.That(pathToDump.GetFiles().Length, Is.GreaterThan(0), "Dump should contain some files");
         }
 
         [Test]
@@ -111,7 +111,7 @@ namespace Aquality.Selenium.Core.Tests.Visualization
             var customForm = new WebForm();
             customForm.SetElementsForDump(WebForm.ElementsFilter.AllElements);
 
-            var maxElementNameLength = (int)customForm.Dump.GetType().GetMethod("GetMaxNameLengthOfDumpElements", BindingFlags.Instance | BindingFlags.NonPublic).Invoke(customForm.Dump, new object[] { });
+            var maxElementNameLength = (int)customForm.Dump.GetType().GetMethod("GetMaxNameLengthOfDumpElements", BindingFlags.Instance | BindingFlags.NonPublic).Invoke(customForm.Dump, []);
             var imageExtensionLength = ((ImageFormat)customForm.Dump.GetType().GetProperty("ImageFormat", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(customForm.Dump)).Extension.Length;
             var maxLength = (int)customForm.Dump.GetType().GetProperty("MaxFullFileNameLength", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(customForm.Dump);
             var pathToDumpLength = PathToDumps.Length;
@@ -125,10 +125,10 @@ namespace Aquality.Selenium.Core.Tests.Visualization
             Assert.DoesNotThrow(() => customForm.Dump.Save(overlengthDumpName));
 
             overlengthPathToDump.Refresh();
-            DirectoryAssert.DoesNotExist(overlengthPathToDump);
+            Assert.That(overlengthPathToDump, Does.Not.Exist);
 
             pathToDump.Refresh();
-            DirectoryAssert.Exists(pathToDump);
+            Assert.That(pathToDump, Does.Exist);
 
             Assert.That(customForm.Dump.Compare(dumpName), Is.EqualTo(0), "Some elements should be failed to take image, but difference should be around zero");
         }
@@ -154,12 +154,12 @@ namespace Aquality.Selenium.Core.Tests.Visualization
 
             Assert.DoesNotThrow(() => form.Dump.Save(dumpName));
             pathToDump.Refresh();
-            DirectoryAssert.Exists(pathToDump);
-            Assert.Greater(pathToDump.GetFiles().Length, 0, "Dump should contain some files");
+            Assert.That(pathToDump, Does.Exist);
+            Assert.That(pathToDump.GetFiles().Length, Is.GreaterThan(0), "Dump should contain some files");
 
             foreach (var file in pathToDump.GetFiles())
             {
-                Assert.AreEqual(imageExtension, file.Extension, "Image extension not equal to expected");
+                Assert.That(file.Extension, Is.EqualTo(imageExtension), "Image extension not equal to expected");
                 Assert.That(file.Name.Contains(imageExtension), "Image name doesn't contain expected extension");
             }
         }
@@ -175,10 +175,10 @@ namespace Aquality.Selenium.Core.Tests.Visualization
             Assert.Throws<NotSupportedException>(() => form.Dump.Save(dumpName));
 
             pathToDump.Refresh();
-            DirectoryAssert.DoesNotExist(pathToDump);
+            Assert.That(pathToDump, Does.Not.Exist);
         }
 
-        private DirectoryInfo CleanUpAndGetPathToDump(string dumpName)
+        private static DirectoryInfo CleanUpAndGetPathToDump(string dumpName)
         {
             var pathToDump = new DirectoryInfo(Path.Combine(PathToDumps, dumpName));
             if (pathToDump.Exists)
@@ -186,10 +186,13 @@ namespace Aquality.Selenium.Core.Tests.Visualization
                 pathToDump.Delete(true);
                 pathToDump.Refresh();
             }
-            Assert.AreEqual(0, pathToDump.Exists ? pathToDump.GetFiles().Length : 0, "Dump directory should not contain any files before saving");
+            Assert.That(pathToDump.Exists ? pathToDump.GetFiles().Length : 0, Is.EqualTo(0), "Dump directory should not contain any files before saving");
             return pathToDump;
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("CodeQuality", "IDE0052:Remove unread private members", Justification = "Needed for proper dump collection")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Performance", "CA1822:Mark members as static", Justification = "Needed for proper dump collection")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("CodeQuality", "IDE0051:Remove unused private members", Justification = "Needed for proper dump collection")]
         private class WebForm : Form<WebElement>
         {
             private static readonly By ContentLoc = By.XPath("//div[contains(@class,'example')]");
@@ -200,16 +203,16 @@ namespace Aquality.Selenium.Core.Tests.Visualization
                 (loc, name, state) => new Label(loc, name, state),
                 DisplayedElementsLoc, "I'm displayed field");
             private readonly Label displayedButInitializedAsExist
-                = new Label(DisplayedElementsLoc, "I'm displayed but initialized as existing", ElementState.ExistsInAnyState);
+                = new(DisplayedElementsLoc, "I'm displayed but initialized as existing", ElementState.ExistsInAnyState);
             protected Label DisplayedLabel
-                => new Label(DisplayedElementsLoc, "I'm displayed property", ElementState.Displayed);
+                => new(DisplayedElementsLoc, "I'm displayed property", ElementState.Displayed);
             private Label HiddenLabel
-                => new Label(HiddenElementsLoc, "I'm hidden", ElementState.ExistsInAnyState);
+                => new(HiddenElementsLoc, "I'm hidden", ElementState.ExistsInAnyState);
             private Label HiddenLabelInitializedAsDisplayed
-                => new Label(HiddenElementsLoc, "I'm hidden but mask as displayed", ElementState.Displayed);
+                => new(HiddenElementsLoc, "I'm hidden but mask as displayed", ElementState.Displayed);
 
-            protected Label ContentLabel => new Label(ContentLoc, "Content", ElementState.Displayed);
-            private Label ContentDuplicateLabel => new Label(ContentLoc, "Content", ElementState.Displayed);
+            protected Label ContentLabel => new(ContentLoc, "Content", ElementState.Displayed);
+            private Label ContentDuplicateLabel => new(ContentLoc, "Content", ElementState.Displayed);
 
 
             private IDictionary<string, WebElement> elementsToCheck = null;
@@ -259,10 +262,7 @@ namespace Aquality.Selenium.Core.Tests.Visualization
             {
                 get
                 {
-                    if (elementsToCheck == null)
-                    {
-                        elementsToCheck = base.ElementsForVisualization;
-                    }
+                    elementsToCheck ??= base.ElementsForVisualization;
                     return elementsToCheck;
                 }
             }
@@ -280,26 +280,16 @@ namespace Aquality.Selenium.Core.Tests.Visualization
             }
         }
 
-        private class LiteWebForm : WebForm
+        private class LiteWebForm(string imageExtension) : WebForm
         {
-            private readonly string ImageExtension;
+            private readonly string ImageExtension = imageExtension;
 
             protected override IVisualizationConfiguration VisualizationConfiguration => new CustomVisualizationConfiguration(ImageExtension);
 
-            public LiteWebForm(string imageExtension)
+            private class CustomVisualizationConfiguration(string format) : VisualizationConfiguration(AqualityServices.ServiceProvider.GetRequiredService<ISettingsFile>())
             {
-                ImageExtension = imageExtension;
-            }
-
-            private class CustomVisualizationConfiguration : VisualizationConfiguration
-            {
-                private readonly string imageFormat;
+                private readonly string imageFormat = format;
                 public override ImageFormat ImageFormat => ImageFormat.Parse(imageFormat);
-
-                public CustomVisualizationConfiguration(string format) : base(AqualityServices.ServiceProvider.GetRequiredService<ISettingsFile>())
-                {
-                    imageFormat = format;
-                }
             }
         }
     }

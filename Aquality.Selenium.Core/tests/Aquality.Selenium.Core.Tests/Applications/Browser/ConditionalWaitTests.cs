@@ -13,24 +13,24 @@ namespace Aquality.Selenium.Core.Tests.Applications.Browser
 {
     public class ConditionalWaitTests : TestWithBrowser
     {
-        private static readonly Uri WikiURL = new Uri("https://wikipedia.org");
+        private static readonly Uri WikiURL = new("https://wikipedia.org");
         private static readonly TimeSpan LittleTimeout = TimeSpan.FromSeconds(1);
         private static readonly TimeSpan PollingInterval = AqualityServices.ServiceProvider.GetRequiredService<ITimeoutConfiguration>().PollingInterval;
 
         private static readonly Action<Func<bool>, IList<Type>>[] WaitWithHandledException
-            = new Action<Func<bool>, IList<Type>>[]
-            {
+            =
+            [
                 (condition, handledExceptions) => ConditionalWait.WaitFor(condition, timeout: LittleTimeout, exceptionsToIgnore: handledExceptions),
                 (condition, handledExceptions) => ConditionalWait.WaitFor(driver => condition(), timeout: LittleTimeout, exceptionsToIgnore: handledExceptions),
                 (condition, handledExceptions) => ConditionalWait.WaitForTrue(condition, timeout: LittleTimeout, exceptionsToIgnore: handledExceptions)
-            };
+            ];
 
         private static readonly Func<Func<bool>, IList<Type>, Task>[] WaitWithHandledExceptionAsync
-            = new Func<Func<bool>, IList<Type>, Task>[]
-            {
+            =
+            [
                 (condition, handledExceptions) => ConditionalWait.WaitForAsync(condition, timeout: LittleTimeout, exceptionsToIgnore: handledExceptions),
                 (condition, handledExceptions) => ConditionalWait.WaitForTrueAsync(condition, timeout: LittleTimeout, exceptionsToIgnore: handledExceptions)
-            };
+            ];
 
         private static IConditionalWait ConditionalWait => AqualityServices.ServiceProvider.GetRequiredService<IConditionalWait>();
 
@@ -97,7 +97,7 @@ namespace Aquality.Selenium.Core.Tests.Applications.Browser
         {
             bool elementFinderCondition() => ServiceProvider.GetRequiredService<IElementFinder>()
                 .FindElements(By.XPath("//*[contains(., 'wikipedia')]"), timeout: LittleTimeout).Count > 0;
-            Assert.IsFalse(elementFinderCondition());
+            Assert.That(elementFinderCondition(), Is.False);
             Assert.DoesNotThrow(() => ConditionalWait.WaitFor(driver =>
             {
                 GoToUrl(WikiURL, driver);
@@ -113,9 +113,9 @@ namespace Aquality.Selenium.Core.Tests.Applications.Browser
             stopWatch.Start();
             Assert.DoesNotThrow(() => returnedResult = ConditionalWait.WaitForAsync(() => result = false, LittleTimeout).Result);
             stopWatch.Stop();
-            Assert.IsFalse(result, $"{nameof(ConditionalWait.WaitForAsync)} should work at least once");
-            Assert.IsFalse(returnedResult, $"{nameof(ConditionalWait.WaitForAsync)} should return valid result");
-            Assert.AreEqual(LittleTimeout.TotalSeconds, stopWatch.Elapsed.TotalSeconds, PollingInterval.TotalSeconds * 2, 
+            Assert.That(result, Is.False, $"{nameof(ConditionalWait.WaitForAsync)} should work at least once");
+            Assert.That(returnedResult, Is.False, $"{nameof(ConditionalWait.WaitForAsync)} should return valid result");
+            Assert.That(stopWatch.Elapsed.TotalSeconds, Is.EqualTo(LittleTimeout.TotalSeconds).Within(PollingInterval.TotalSeconds * 2), 
                 $"{nameof(ConditionalWait.WaitForAsync)} should wait correct time");
         }
 
@@ -131,9 +131,9 @@ namespace Aquality.Selenium.Core.Tests.Applications.Browser
                         $"{nameof(ConditionalWait.WaitForTrueAsync)} should not fail after the calling");
             Assume.That(awaitableResult, Is.Not.Null);
             Assert.ThrowsAsync<TimeoutException>(async () => await awaitableResult, $"{nameof(ConditionalWait.WaitForTrueAsync)} should throw when awaited");
-            Assert.IsFalse(result, $"{nameof(ConditionalWait.WaitForTrueAsync)} should work");
+            Assert.That(result, Is.False, $"{nameof(ConditionalWait.WaitForTrueAsync)} should work");
             stopWatch.Stop();
-            Assert.AreEqual(LittleTimeout.TotalSeconds, stopWatch.Elapsed.TotalSeconds, PollingInterval.TotalSeconds * 2, 
+            Assert.That(stopWatch.Elapsed.TotalSeconds, Is.EqualTo(LittleTimeout.TotalSeconds).Within(PollingInterval.TotalSeconds * 2), 
                 $"{nameof(ConditionalWait.WaitForTrueAsync)} should wait correct time");
         }
     }

@@ -12,9 +12,9 @@ namespace Aquality.Selenium.Core.Tests.Localization
         private const string ClickingKey = "loc.clicking";
         private const string ClickingValueBe = "Націскаем";
         private const string ClickingValueEn = "Clicking";
-        private static readonly string[] SupportedLanguages = { "be", "en", "ru" };
+        private static readonly string[] SupportedLanguages = ["be", "en", "ru"];
         private static readonly string[] KeysWithoutParams = 
-        { 
+        [ 
             ClickingKey, 
             "loc.get.text",
             "loc.el.state.displayed",
@@ -27,9 +27,9 @@ namespace Aquality.Selenium.Core.Tests.Localization
             "loc.el.visual.getimage",
             "loc.el.visual.getlocation",
             "loc.el.visual.getsize"
-        };
+        ];
         private static readonly string[] KeysWithParams =
-        {
+        [
             "loc.el.getattr",
             "loc.el.attr.value",
             "loc.text.value",
@@ -55,7 +55,7 @@ namespace Aquality.Selenium.Core.Tests.Localization
             "loc.form.dump.elementsmissedonform",
             "loc.form.dump.unprocessedelements",
             "loc.form.dump.compare.result"
-        };
+        ];
 
         [Test]
         public void Should_BePossibleTo_UseLocalizationManager_ForClicking_CustomConfig()
@@ -63,20 +63,20 @@ namespace Aquality.Selenium.Core.Tests.Localization
             Environment.SetEnvironmentVariable("profile", "custom");
             SetUp();
             Environment.SetEnvironmentVariable("profile", string.Empty);
-            Assert.AreEqual(ClickingValueBe, ServiceProvider.GetService<ILocalizationManager>().GetLocalizedMessage(ClickingKey));
+            Assert.That(ServiceProvider.GetService<ILocalizationManager>().GetLocalizedMessage(ClickingKey), Is.EqualTo(ClickingValueBe));
         }
 
         [Test]
         public void Should_BePossibleTo_UseLocalizationManager_ForClicking()
         {
-            Assert.AreEqual(ClickingValueEn, ServiceProvider.GetService<ILocalizationManager>().GetLocalizedMessage(ClickingKey));
+            Assert.That(ServiceProvider.GetService<ILocalizationManager>().GetLocalizedMessage(ClickingKey), Is.EqualTo(ClickingValueEn));
         }
 
         [Test]
         public void Should_BePossibleTo_UseLocalizationManager_ForUnknownKey()
         {
             var unknownKey = "loc.unknown.fake.key";
-            Assert.AreEqual(unknownKey, ServiceProvider.GetService<ILocalizationManager>().GetLocalizedMessage(unknownKey));
+            Assert.That(ServiceProvider.GetService<ILocalizationManager>().GetLocalizedMessage(unknownKey), Is.EqualTo(unknownKey));
         }
 
         [Test]
@@ -87,8 +87,8 @@ namespace Aquality.Selenium.Core.Tests.Localization
                 Language = language
             };
             var localizedValue = new LocalizationManager(configuration, Logger.Instance).GetLocalizedMessage(key);
-            Assert.AreNotEqual(key, localizedValue, "Value should be defined in resource files");
-            Assert.IsNotEmpty(localizedValue, "Value should not be empty");
+            Assert.That(localizedValue, Is.Not.EqualTo(key), "Value should be defined in resource files");
+            Assert.That(localizedValue, Is.Not.Empty, "Value should not be empty");
         }
 
         [Test]
@@ -100,7 +100,7 @@ namespace Aquality.Selenium.Core.Tests.Localization
             };
             var localizedValue = new LocalizationManager(configuration, Logger.Instance, GetType().Assembly).GetLocalizedMessage(ClickingKey);
 
-            Assert.AreEqual(ClickingValueEn, localizedValue, "Value should match to expected");
+            Assert.That(localizedValue, Is.EqualTo(ClickingValueEn), "Value should match to expected");
         }
 
         [Test]
@@ -113,7 +113,7 @@ namespace Aquality.Selenium.Core.Tests.Localization
             };
             var localizedValue = new LocalizationManager(configuration, Logger.Instance, GetType().Assembly).GetLocalizedMessage(ClickingKey);
 
-            Assert.AreEqual(ClickingValueBe, localizedValue, "Value should match to expected");
+            Assert.That(localizedValue, Is.EqualTo(ClickingValueBe), "Value should match to expected");
         }
 
         [Test]
@@ -125,9 +125,9 @@ namespace Aquality.Selenium.Core.Tests.Localization
             };
             var paramsArray = new[] { "a", "b", "c"};
             var localizedValue = new LocalizationManager(configuration, Logger.Instance).GetLocalizedMessage(key, paramsArray);
-            Assert.AreNotEqual(key, localizedValue, "Value should be defined in resource files");
-            Assert.IsNotEmpty(localizedValue, "Value should not be empty");
-            Assert.IsTrue(localizedValue.Contains(paramsArray[0]), "Value should contain at least first parameter");
+            Assert.That(localizedValue, Is.Not.EqualTo(key), "Value should be defined in resource files");
+            Assert.That(localizedValue, Is.Not.Empty, "Value should not be empty");
+            Assert.That(localizedValue.Contains(paramsArray[0]), "Value should contain at least first parameter");
         }
 
         [Test]

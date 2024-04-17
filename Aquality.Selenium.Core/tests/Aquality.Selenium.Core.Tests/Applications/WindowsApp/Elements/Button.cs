@@ -2,12 +2,8 @@
 
 namespace Aquality.Selenium.Core.Tests.Applications.WindowsApp.Elements
 {
-    public class Button : WindowElement
+    public class Button(By locator, string name) : WindowElement(locator, name)
     {
-        public Button(By locator, string name) : base(locator, name)
-        {
-        }
-
         protected override string ElementType => "Button";
     }
 }

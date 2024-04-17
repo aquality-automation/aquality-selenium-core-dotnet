@@ -11,7 +11,7 @@ namespace Aquality.Selenium.Core.Tests.Applications.WindowsApp
     public class ConditionalWaitTests : TestWithApplication
     {
         private static readonly TimeSpan LittleTimeout = TimeSpan.FromSeconds(1);
-        private IConditionalWait ConditionalWait => AqualityServices.ServiceProvider.GetRequiredService<IConditionalWait>();
+        private static IConditionalWait ConditionalWait => AqualityServices.ServiceProvider.GetRequiredService<IConditionalWait>();
 
         [Test]
         public void Should_BePossibleTo_UseConditionalWait_WithDriver()
@@ -25,9 +25,9 @@ namespace Aquality.Selenium.Core.Tests.Applications.WindowsApp
         [Test]
         public void Should_BePossibleTo_UseConditionalWait_WithElementFinder()
         {
-            bool elementFinderCondition() => AqualityServices.ServiceProvider.GetRequiredService<IElementFinder>()
-                .FindElement(CalculatorWindow.ResultsLabel, timeout: LittleTimeout).Text.Contains("3");
-            Assert.IsFalse(elementFinderCondition());
+            static bool elementFinderCondition() => AqualityServices.ServiceProvider.GetRequiredService<IElementFinder>()
+                .FindElement(CalculatorWindow.ResultsLabel, timeout: LittleTimeout).Text.Contains('3');
+            Assert.That(elementFinderCondition(), Is.False);
             Assert.DoesNotThrow(() => ConditionalWait.WaitFor(driver =>
             {
                 driver.FindElement(CalculatorWindow.TwoButton).Click();

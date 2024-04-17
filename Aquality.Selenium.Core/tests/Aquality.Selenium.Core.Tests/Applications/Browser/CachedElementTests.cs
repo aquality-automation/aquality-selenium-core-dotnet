@@ -16,38 +16,38 @@ namespace Aquality.Selenium.Core.Tests.Applications.Browser
         private static readonly By ContentLoc = By.Id("checkbox");
         private static readonly By StartLoc = By.XPath("//*[@id='start']//button");
         private static readonly By LoadingLoc = By.Id("loading");
-        private static readonly Uri DynamicContentUrl = new Uri($"{TestSite}/dynamic_controls");
-        private static readonly Uri DynamicLoadingUrl = new Uri($"{TestSite}/dynamic_loading/1");
+        private static readonly Uri DynamicContentUrl = new($"{TestSite}/dynamic_controls");
+        private static readonly Uri DynamicLoadingUrl = new($"{TestSite}/dynamic_loading/1");
         
         private const string ElementCacheVariableName = "elementCache.isEnabled"; 
         
         private static readonly Func<IElementStateProvider, bool>[] StateFunctionsFalseWhenElementStale
-            = new Func<IElementStateProvider, bool>[]
-            {
+            =
+            [
                 state => state.IsDisplayed,
                 state => state.IsExist,            
                 state => !state.WaitForNotDisplayed(TimeSpan.Zero),
                 state => !state.WaitForNotExist(TimeSpan.Zero),
-            };
+            ];
 
         private static readonly Func<IElementStateProvider, bool>[] StateFunctionsTrueWhenElementStaleWhichRetriveElement
-            = new Func<IElementStateProvider, bool>[]
-            {
+            =
+            [
                 state => state.IsEnabled,
                 state => state.IsClickable,
                 state => state.WaitForDisplayed(TimeSpan.Zero),
                 state => state.WaitForExist(TimeSpan.Zero),
                 state => state.WaitForEnabled(TimeSpan.Zero),
                 state => !state.WaitForNotEnabled(TimeSpan.Zero),
-            };
+            ];
 
         private static readonly Func<IElementStateProvider, bool>[] StateFunctionsThrowNoSuchElementException
-            = new Func<IElementStateProvider, bool>[]
-            {
+            =
+            [
                 state => state.IsEnabled,
                 state => state.WaitForEnabled(TimeSpan.Zero),
                 state => !state.WaitForNotEnabled(TimeSpan.Zero),
-            };
+            ];
 
         private static IConditionalWait ConditionalWait => AqualityServices.ServiceProvider.GetRequiredService<IConditionalWait>();
 
@@ -80,7 +80,7 @@ namespace Aquality.Selenium.Core.Tests.Applications.Browser
             var loader = new Label(LoadingLoc, "loader", ElementState.Displayed);
             StartLoading();
             WaitForLoading(loader);
-            Assert.IsFalse(loader.State.WaitForDisplayed(TimeSpan.Zero), nameof(Should_ReturnFalse_AtWaitForDisplayed_WhenElementIsNotDisplayed));
+            Assert.That(loader.State.WaitForDisplayed(TimeSpan.Zero), Is.False, nameof(Should_ReturnFalse_AtWaitForDisplayed_WhenElementIsNotDisplayed));
         }
 
         [Test]
@@ -89,7 +89,7 @@ namespace Aquality.Selenium.Core.Tests.Applications.Browser
             var loader = new Label(LoadingLoc, "loader", ElementState.Displayed);
             StartLoading();
             WaitForLoading(loader);
-            Assert.IsTrue(loader.State.WaitForExist(TimeSpan.Zero), nameof(Should_ReturnTrue_AtWaitForExist_WhenElementIsNotDisplayed));
+            Assert.That(loader.State.WaitForExist(TimeSpan.Zero), nameof(Should_ReturnTrue_AtWaitForExist_WhenElementIsNotDisplayed));
         }
 
         [Test]
@@ -98,10 +98,10 @@ namespace Aquality.Selenium.Core.Tests.Applications.Browser
             StartLoading();
             var loader = new Label(LoadingLoc, "loader", ElementState.Displayed);
             Assume.That(loader.State.WaitForDisplayed(), "Loader should be displayed in the beginning");
-            Assert.IsTrue(ConditionalWait.WaitFor(() => loader.Cache.IsStale), "Loader should become invisible and be treated as stale");
-            Assert.IsFalse(loader.State.IsDisplayed, "Invisible loader should be not displayed");
-            Assert.IsFalse(loader.State.IsExist, "Loader that was displayed previously and become invisible should be treated as disappeared");
-            Assert.IsTrue(loader.State.WaitForExist(TimeSpan.Zero), "When waiting for existance, we should get an actual element's state");
+            Assert.That(ConditionalWait.WaitFor(() => loader.Cache.IsStale), "Loader should become invisible and be treated as stale");
+            Assert.That(loader.State.IsDisplayed, Is.False, "Invisible loader should be not displayed");
+            Assert.That(loader.State.IsExist, Is.False, "Loader that was displayed previously and become invisible should be treated as disappeared");
+            Assert.That(loader.State.WaitForExist(TimeSpan.Zero), "When waiting for existance, we should get an actual element's state");
         }
 
         [Test]
@@ -113,7 +113,7 @@ namespace Aquality.Selenium.Core.Tests.Applications.Browser
             var exToString = example.GetElement().ToString();
             AqualityServices.Application.Driver.Navigate().Refresh();
             var newToString = example.GetElement().ToString();
-            Assert.AreNotEqual(exToString, newToString);
+            Assert.That(newToString, Is.Not.EqualTo(exToString));
         }
         
         [Test]
@@ -159,7 +159,7 @@ namespace Aquality.Selenium.Core.Tests.Applications.Browser
             
             Assume.That(testElement, Is.Not.Null);
             OpenDynamicContent();
-            Assert.AreEqual(expectedValue, stateCondition(testElement.State), 
+            Assert.That(stateCondition(testElement.State), Is.EqualTo(expectedValue),
                 "Element state condition is not expected after reopening the window");            
         }
 
