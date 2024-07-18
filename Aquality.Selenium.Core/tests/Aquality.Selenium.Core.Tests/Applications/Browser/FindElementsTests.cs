@@ -97,7 +97,7 @@ namespace Aquality.Selenium.Core.Tests.Applications.Browser
         }
 
         [Test]
-        public async Task Should_BePossibleTo_WorkWithElements_FoundByDottedLocator()
+        public void Should_BePossibleTo_WorkWithElements_FoundByDottedLocator()
         {
             var foundElements = FindElements<Label>(DottedLoc, expectedCount: ElementsCount.MoreThenZero);
             Assert.DoesNotThrow(
