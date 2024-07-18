@@ -6,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using OpenQA.Selenium;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Aquality.Selenium.Core.Tests.Applications.Browser.Elements;
 
 namespace Aquality.Selenium.Core.Tests.Applications.Browser
@@ -98,6 +99,16 @@ namespace Aquality.Selenium.Core.Tests.Applications.Browser
         [Test]
         public void Should_BePossibleTo_WorkWithElements_FoundByDottedLocator()
         {
+            var foundElements = FindElements<Label>(DottedLoc, expectedCount: ElementsCount.MoreThenZero);
+            Assert.DoesNotThrow(
+                () => foundElements.Select(element => element.GetElement()).ToList(),
+                $"Failed to find elements using dotted locator [{DottedLoc}]");
+        }
+        
+        [Test]
+        public async Task Should_BePossibleTo_To_Have_Async_Tests()
+        {
+            await Task.Delay(2000);
             var foundElements = FindElements<Label>(DottedLoc, expectedCount: ElementsCount.MoreThenZero);
             Assert.DoesNotThrow(
                 () => foundElements.Select(element => element.GetElement()).ToList(),
