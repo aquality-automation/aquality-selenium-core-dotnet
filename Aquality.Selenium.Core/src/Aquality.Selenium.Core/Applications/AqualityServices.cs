@@ -7,8 +7,8 @@ namespace Aquality.Selenium.Core.Applications
     public abstract class AqualityServices<TApplication>
         where TApplication : class, IApplication
     {
-        private static readonly AsyncLocal<TApplication> AppContainer = new AsyncLocal<TApplication>();
-        private static readonly AsyncLocal<IServiceProvider> ServiceProviderContainer = new AsyncLocal<IServiceProvider>();
+        private static readonly ThreadLocal<TApplication> AppContainer = new ThreadLocal<TApplication>();
+        private static readonly ThreadLocal<IServiceProvider> ServiceProviderContainer = new ThreadLocal<IServiceProvider>();
 
         protected AqualityServices()
         {
@@ -16,7 +16,7 @@ namespace Aquality.Selenium.Core.Applications
 
         protected static bool IsApplicationStarted()
         {
-            return AppContainer.Value != null && AppContainer.Value.IsStarted;
+            return AppContainer.IsValueCreated && AppContainer.Value.IsStarted;
         }
         
         protected static TApplication GetApplication(Func<IServiceProvider, TApplication> startApplicationFunction, Func<IServiceCollection> serviceCollectionProvider = null)
@@ -36,7 +36,7 @@ namespace Aquality.Selenium.Core.Applications
 
         protected static IServiceProvider GetServiceProvider(Func<IServiceProvider, TApplication> applicationSupplier, Func<IServiceCollection> serviceCollectionProvider = null)
         {
-            if (ServiceProviderContainer.Value == null)
+            if (!ServiceProviderContainer.IsValueCreated)
             {
                 IServiceCollection services;
                 if (serviceCollectionProvider == null)
