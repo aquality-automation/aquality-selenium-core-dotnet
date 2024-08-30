@@ -27,12 +27,12 @@
   <ItemGroup>
     <PackageReference Include="Appium.WebDriver" Version="5.1.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
-    <PackageReference Include="nunit" Version="4.1.0" />
+    <PackageReference Include="nunit" Version="4.2.1" />
     <PackageReference Include="NUnit3TestAdapter" Version="4.6.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.10.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.11.0" />
   </ItemGroup>
 
   <ItemGroup>
