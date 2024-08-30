@@ -69,15 +69,22 @@ namespace Aquality.Selenium.Core.Elements
                 default:
                     throw new ArgumentOutOfRangeException($"No such expected value: {expectedCount}");
             }
-
-            var webElements = ElementFinder.FindElements(locator, state, TimeSpan.Zero, name);
-            IEnumerable<T> elements = webElements.Select((webElement, index) =>
+            
+            var elements = new List<T>();
+            ConditionalWait.WaitFor(() =>
             {
-                var elementIndex = index + 1;
-                var elementName = $"{name ?? "element"} {elementIndex}";
-                return elementSupplier(GenerateLocator(locator, webElement, elementIndex), elementName, state);
-            });
-            return elements.ToList();
+                var webElements = ElementFinder.FindElements(locator, state, TimeSpan.Zero, name);
+                elements = webElements.Select((webElement, index) =>
+                {
+                    var elementIndex = index + 1;
+                    var elementName = $"{name ?? "element"} {elementIndex}";
+                    return elementSupplier(GenerateLocator(locator, webElement, elementIndex), elementName, state);
+                }).ToList();
+                var anyElementsFound = elements.Any();
+                return expectedCount == ElementsCount.Any || (expectedCount == ElementsCount.Zero && !anyElementsFound) || (expectedCount == ElementsCount.MoreThenZero && anyElementsFound);
+            }, exceptionsToIgnore: new List<Type> { typeof(StaleElementReferenceException), typeof(JavaScriptException) , typeof(WebDriverTimeoutException)});
+
+            return elements;
         }
 
         public virtual T GetCustomElement<T>(ElementSupplier<T> elementSupplier, By locator, string name, ElementState state = ElementState.Displayed) where T : IElement
