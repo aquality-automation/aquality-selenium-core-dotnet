@@ -7,6 +7,9 @@ using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
 using OpenQA.Selenium;
 using System;
+using Aquality.Selenium.Core.Utilities;
+using SkiaSharp;
+using System.Collections.Generic;
 
 namespace Aquality.Selenium.Core.Tests.Visualization
 {
@@ -66,10 +69,16 @@ namespace Aquality.Selenium.Core.Tests.Visualization
         [Test]
         public void Should_BePossibleTo_GetPercentageDifference_ForSimilarElements()
         {
-            StartLoading();
-            var firstImage = LoadingLabel.GetElement().GetScreenshot().AsImage();
-            AqualityServices.ServiceProvider.GetRequiredService<IConditionalWait>().WaitFor(() => firstImage.Height < LoadingLabel.Visual.Size.Height);
-            var secondImage = LoadingLabel.GetElement().GetScreenshot().AsImage();
+            SKImage firstImage = null, secondImage = null;
+            AqualityServices.ServiceProvider.GetRequiredService<IActionRetrier>().DoWithRetry(() =>
+            {
+                AqualityServices.Application.Driver.Navigate().Refresh();
+                StartLoading();
+                firstImage = LoadingLabel.GetElement().GetScreenshot().AsImage();
+                AqualityServices.ServiceProvider.GetRequiredService<IConditionalWait>().WaitFor(() => firstImage.Height < LoadingLabel.Visual.Size.Height);
+                secondImage = LoadingLabel.GetElement().GetScreenshot().AsImage();
+            }, new List<Type> { typeof(WebDriverException)});
+
             Assert.Multiple(() =>
             {
                 Assert.That(ImageComparator.PercentageDifference(firstImage, secondImage, threshold: 0), Is.Not.EqualTo(0));
