@@ -5,7 +5,7 @@ using System.Collections.Generic;
 namespace Aquality.Selenium.Core.Utilities
 {
     /// <summary>
-    /// Retries an action or function when one of <see cref="HandledExceptions"/> occures.
+    /// Retries an action or function when one of <see cref="HandledExceptions"/> occurs.
     /// </summary>
     public interface IElementActionRetrier : IActionRetrier
     {
