@@ -20,7 +20,7 @@ namespace Aquality.Selenium.Core.Utilities
         }
 
         /// <summary>
-        /// Retries the action when one of the handledExceptions occures.
+        /// Retries the action when one of the handledExceptions occurs.
         /// </summary>
         /// <param name="action">Action to be applied.</param>
         /// <param name="handledExceptions">Exceptions to be handled.</param>
@@ -34,7 +34,7 @@ namespace Aquality.Selenium.Core.Utilities
         }
 
         /// <summary>
-        /// Retries the action when one of the handledExceptions occures.
+        /// Retries the action when one of the handledExceptions occurs.
         /// </summary>
         /// <typeparam name="T">Return type of function.</typeparam>
         /// <param name="function">Function to be applied.</param>
@@ -71,7 +71,7 @@ namespace Aquality.Selenium.Core.Utilities
         }
 
         /// <summary>
-        /// Decides should the occured exception be handled (ignored during the retry) or not.
+        /// Decides should the occurred exception be handled (ignored during the retry) or not.
         /// </summary>
         /// <param name="handledExceptions">Exceptions to be handled.</param>
         /// <param name="exception">Exception to proceed.</param>
