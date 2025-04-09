@@ -49,7 +49,7 @@ namespace Aquality.Selenium.Core.Visualization
             }
             else
             {
-                logVisualState("loc.el.visual.getdifference.withthreshold", theOtherOne.Size().ToString(), threshold?.ToString("P", CultureInfo.InvariantCulture));
+                logVisualState("loc.el.visual.getdifference.withthreshold", theOtherOne.Size().ToString(), threshold.Value.ToString("P", CultureInfo.InvariantCulture));
             }
 
             if (currentImage != default)
