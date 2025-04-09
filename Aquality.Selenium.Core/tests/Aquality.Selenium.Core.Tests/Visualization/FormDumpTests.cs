@@ -71,10 +71,10 @@ namespace Aquality.Selenium.Core.Tests.Visualization
         public void Should_BePossibleTo_CompareWithDump_WithCustomName_WhenDifferenceIsNotZero()
         {
             var form = new WebForm();
-            form.HoverAvatar();
             form.Dump.Save("Non-zero diff");
             AqualityServices.Application.Driver.Navigate().Refresh();
             form.WaitUntilPresent();
+            form.HoverAvatar();
             Assert.That(form.Dump.Compare("Non-zero diff"), Is.GreaterThan(0), "Difference with current page should be greater than zero");
         }
 

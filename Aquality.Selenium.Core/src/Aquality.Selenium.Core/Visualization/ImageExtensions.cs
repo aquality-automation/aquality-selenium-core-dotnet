@@ -40,7 +40,7 @@ namespace Aquality.Selenium.Core.Visualization
             using (var srcBitmap = SKBitmap.FromImage(originalImage))
             {
                 var resizeInfo = new SKImageInfo(newWidth, newHeight);
-                using (var smallVersion = srcBitmap.Resize(resizeInfo, SKFilterQuality.High))
+                using (var smallVersion = srcBitmap.Resize(resizeInfo, new SKSamplingOptions(SKCubicResampler.Mitchell)))
                 {
                     return SKImage.FromBitmap(smallVersion);
                 }

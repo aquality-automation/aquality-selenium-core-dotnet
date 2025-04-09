@@ -118,7 +118,7 @@ namespace Aquality.Selenium.Core.Visualization
 
         protected virtual List<KeyValuePair<string, T>> FilterElementsForVisualization()
         {
-            return ElementsForVisualization.Where(element => element.Value.State.IsDisplayed).ToList();
+            return ElementsForVisualization.Where(element => element.Value.State.IsDisplayed && element.Value.Visual.Size.Width > 0).ToList();
         }
 
         protected virtual DirectoryInfo CleanUpAndGetDumpDirectory(string dumpName = null)
