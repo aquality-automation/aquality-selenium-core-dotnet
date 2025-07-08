@@ -78,23 +78,7 @@ namespace Aquality.Selenium.Core.Utilities
             }
 
             var element = GetJsonElement(path);
-          
-            if (typeof(T) == typeof(object))
-            {
-                    var deserializedItem = element.ValueKind switch
-                    {
-                        JsonValueKind.String => element.GetString(),
-                        JsonValueKind.Number => element.TryGetInt32(out var intValue) ? intValue : element.GetDouble(),
-                        JsonValueKind.True => true,
-                        JsonValueKind.False => false,
-                        JsonValueKind.Null => null,
-                        _ => JsonSerializer.Deserialize<object>(element.GetRawText())
-                    };
-                    
-                return (T)deserializedItem;
-            }
-
-            return JsonSerializer.Deserialize<T>(element.GetRawText());
+            return DeserializeJsonElement<T>(element);
         }
 
         /// <summary>
@@ -120,31 +104,7 @@ namespace Aquality.Selenium.Core.Utilities
             }
 
             var element = GetJsonElement(path);
-            
-            // Special handling for object type to properly deserialize mixed arrays
-            if (typeof(T) == typeof(object))
-            {
-                var jsonArray = element.EnumerateArray();
-                var result = new List<object>();
-        
-                foreach (var item in jsonArray)
-                {
-                    var deserializedItem = item.ValueKind switch
-                    {
-                        JsonValueKind.String => item.GetString(),
-                        JsonValueKind.Number => item.TryGetInt32(out var intValue) ? intValue : item.GetDouble(),
-                        JsonValueKind.True => true,
-                        JsonValueKind.False => false,
-                        JsonValueKind.Null => null,
-                        _ => JsonSerializer.Deserialize<object>(item.GetRawText())
-                    };
-                    result.Add(deserializedItem);
-                }
-        
-                return (IReadOnlyList<T>)result;
-            }
-
-            return JsonSerializer.Deserialize<IReadOnlyList<T>>(element.GetRawText());
+            return DeserializeJsonElementList<T>(element);
         }
 
         /// <summary>
@@ -187,6 +147,20 @@ namespace Aquality.Selenium.Core.Utilities
             var key = jsonPath.Replace("['", ".").Replace("']", string.Empty).Substring(1);
             return EnvironmentConfiguration.GetVariable(key);
         }
+        
+        private static T ConvertEnvVar<T>(Func<T> convertMethod, string envValue, string jsonPath)
+        {
+            Logger.Instance.Debug($"***** Using variable passed from environment {jsonPath.Substring(1)}={envValue}");
+            try
+            {
+                return convertMethod();
+            }
+            catch (ArgumentException ex)
+            {
+                var message = $"Value of '{jsonPath}' environment variable has incorrect format: {ex.Message}";
+                throw new ArgumentException(message);
+            }
+        }
 
         private JsonElement GetJsonElement(string jsonPath)
         {
@@ -198,79 +172,7 @@ namespace Aquality.Selenium.Core.Utilities
 
             return element;
         }
-
-        private string[] SplitPath(string jsonPath)
-        {
-            var path = NormalizePath(jsonPath);
-            
-            var pathSegments = new List<string>();
-            var currentSegment = string.Empty;
-            var isInBracket = false;
-            
-            for (var i = 0; i < path.Length; i++)
-            {
-                var currentChar = path[i];
-                
-                switch (currentChar)
-                {
-                    case '.' when !isInBracket:
-                        if (!string.IsNullOrEmpty(currentSegment))
-                        {
-                            pathSegments.Add(currentSegment);
-                            currentSegment = string.Empty;
-                        }
-                        break;
-                    
-                    case '[':
-                        if (!string.IsNullOrEmpty(currentSegment))
-                        {
-                            pathSegments.Add(currentSegment);
-                            currentSegment = string.Empty;
-                        }
-                        isInBracket = true;
-                        break;
-                    
-                    case ']':
-                        if (isInBracket && currentSegment.StartsWith("'") && currentSegment.EndsWith("'"))
-                        {
-                            pathSegments.Add(currentSegment.Substring(1, currentSegment.Length - 2));
-                        }
-                        else if (isInBracket)
-                        {
-                            pathSegments.Add(currentSegment);
-                        }
-                        currentSegment = string.Empty;
-                        isInBracket = false;
-                        break;
-                    
-                    default:
-                        currentSegment += currentChar;
-                        break;
-                }
-            }
-            
-            if (!string.IsNullOrEmpty(currentSegment))
-            {
-                pathSegments.Add(currentSegment);
-            }
-            
-            return pathSegments.ToArray();
-        }
-
         
-        private static string NormalizePath(string jsonPath)
-        {
-            var path = jsonPath;
-            
-            if (path.StartsWith("."))
-                path = path.Substring(1);
-            
-            if (path.StartsWith("$")) 
-                path = path.StartsWith("$.") ? path.Substring(2) : path.Substring(1);
-                
-            return path;
-        }
-
         private bool TryGetJsonElement(string jsonPath, out JsonElement targetElement)
         {
             targetElement = default;
@@ -286,7 +188,7 @@ namespace Aquality.Selenium.Core.Utilities
                     return true;
                 }
 
-                var pathParts = SplitPath(path);
+                var pathParts = ParsePath(path);
                 foreach (var part in pathParts)
                 {
                     if (element.ValueKind != JsonValueKind.Object)
@@ -309,18 +211,118 @@ namespace Aquality.Selenium.Core.Utilities
             }
         }
 
-        private static T ConvertEnvVar<T>(Func<T> convertMethod, string envValue, string jsonPath)
+        private string[] ParsePath(string jsonPath)
         {
-            Logger.Instance.Debug($"***** Using variable passed from environment {jsonPath.Substring(1)}={envValue}");
-            try
+            var pathSegments = new List<string>();
+            var currentSegment = string.Empty;
+            var isInBracket = false;
+            
+            for (var i = 0; i < jsonPath.Length; i++)
             {
-                return convertMethod();
+                var currentChar = jsonPath[i];
+
+                switch (currentChar)
+                {
+                    case '.' when !isInBracket:
+                        AddSegmentIfNotEmpty(pathSegments, ref currentSegment);
+                        break;
+
+                    case '[':
+                        AddSegmentIfNotEmpty(pathSegments, ref currentSegment);
+                        isInBracket = true;
+                        break;
+
+                    case ']':
+                        if (isInBracket)
+                        {
+                            AddBracketSegment(pathSegments, currentSegment);
+                            currentSegment = string.Empty;
+                            isInBracket = false;
+                        }
+                        break;
+
+                    default:
+                        currentSegment += currentChar;
+                        break;
+                }
             }
-            catch (ArgumentException ex)
+            
+            AddSegmentIfNotEmpty(pathSegments, ref currentSegment);
+            return pathSegments.ToArray();
+        }
+        
+        private static void AddSegmentIfNotEmpty(List<string> pathSegments, ref string currentSegment)
+        {
+            if (!string.IsNullOrEmpty(currentSegment))
             {
-                var message = $"Value of '{jsonPath}' environment variable has incorrect format: {ex.Message}";
-                throw new ArgumentException(message);
+                pathSegments.Add(currentSegment);
+                currentSegment = string.Empty;
             }
+        }
+        
+        private static void AddBracketSegment(List<string> pathSegments, string currentSegment)
+        {
+            if (currentSegment.StartsWith("'") && currentSegment.EndsWith("'"))
+            {
+                pathSegments.Add(currentSegment.Substring(1, currentSegment.Length - 2));
+            }
+            else
+            {
+                pathSegments.Add(currentSegment);
+            }
+        }
+        
+        private static string NormalizePath(string jsonPath)
+        {
+            if (jsonPath.StartsWith("."))
+                jsonPath = jsonPath.Substring(1);
+            
+            if (jsonPath.StartsWith("$")) 
+                jsonPath = jsonPath.StartsWith("$.") ? jsonPath.Substring(2) : jsonPath.Substring(1);
+                
+            return jsonPath;
+        }
+        
+        private T DeserializeJsonElement<T>(JsonElement element)
+        {
+            if (typeof(T) == typeof(object))
+            {
+                return (T)DeserializeAsObject(element);
+            }
+
+            return JsonSerializer.Deserialize<T>(element.GetRawText());
+        }
+        
+        private IReadOnlyList<T> DeserializeJsonElementList<T>(JsonElement element)
+        {
+            if (typeof(T) == typeof(object))
+            {
+                var jsonArray = element.EnumerateArray();
+                var result = new List<object>();
+
+                foreach (var item in jsonArray)
+                {
+                    var deserializedItem = DeserializeAsObject(item);
+                    result.Add(deserializedItem);
+                }
+
+                return (IReadOnlyList<T>)result;
+            }
+
+            return JsonSerializer.Deserialize<IReadOnlyList<T>>(element.GetRawText());
+        }
+        
+        private object DeserializeAsObject(JsonElement element)
+        {
+            return element.ValueKind switch
+            {
+                JsonValueKind.String => element.GetString(),
+                JsonValueKind.Number => element.TryGetInt32(out var intValue) ? intValue : element.GetDouble(),
+                JsonValueKind.True => true,
+                JsonValueKind.False => false,
+                JsonValueKind.Null => null,
+                _ => JsonSerializer.Deserialize<object>(element.GetRawText())
+            };
         }
     }
 }
