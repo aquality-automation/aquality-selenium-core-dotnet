@@ -4,10 +4,9 @@ using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text.Json;
 using Aquality.Selenium.Core.Configurations;
 using Aquality.Selenium.Core.Logging;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 
 namespace Aquality.Selenium.Core.Utilities
 {
@@ -21,7 +20,7 @@ namespace Aquality.Selenium.Core.Utilities
         private readonly string fileContent;
         private readonly string resourceName;
 
-        private JObject JsonObject => JsonConvert.DeserializeObject<JObject>(fileContent);
+        private JsonDocument JsonDocument => JsonDocument.Parse(fileContent);
 
         /// <summary>
         /// Inistantiates class using desired JSON fileinfo.
@@ -69,17 +68,33 @@ namespace Aquality.Selenium.Core.Utilities
             if (envValue != null)
             {
                 return ConvertEnvVar(() =>
-                {
-                    var type = typeof(T);
-                    return type == typeof(object) 
-                    ? (T) Convert.ChangeType(envValue, type)
-                    : (T) TypeDescriptor.GetConverter(type).ConvertFrom(envValue);
-                },
+                    {
+                        var type = typeof(T);
+                        return type == typeof(object)
+                            ? (T)Convert.ChangeType(envValue, type)
+                            : (T)TypeDescriptor.GetConverter(type).ConvertFrom(envValue);
+                    },
                     envValue, path);
             }
 
-            var node = GetJsonNode(path);
-            return node.ToObject<T>();
+            var element = GetJsonElement(path);
+          
+            if (typeof(T) == typeof(object))
+            {
+                    var deserializedItem = element.ValueKind switch
+                    {
+                        JsonValueKind.String => element.GetString(),
+                        JsonValueKind.Number => element.TryGetInt32(out var intValue) ? intValue : element.GetDouble(),
+                        JsonValueKind.True => true,
+                        JsonValueKind.False => false,
+                        JsonValueKind.Null => null,
+                        _ => JsonSerializer.Deserialize<object>(element.GetRawText())
+                    };
+                    
+                return (T)deserializedItem;
+            }
+
+            return JsonSerializer.Deserialize<T>(element.GetRawText());
         }
 
         /// <summary>
@@ -96,14 +111,40 @@ namespace Aquality.Selenium.Core.Utilities
             var envValue = GetEnvironmentValue(path);
             if (envValue != null)
             {
-                return ConvertEnvVar(() =>
-                {
-                    return envValue.Split(',').Select(value => (T)TypeDescriptor.GetConverter(typeof(T)).ConvertFrom(value.Trim())).ToList();
-                }, envValue, path);
+                return ConvertEnvVar(
+                    () =>
+                    {
+                        return envValue.Split(',').Select(value =>
+                            (T)TypeDescriptor.GetConverter(typeof(T)).ConvertFrom(value.Trim())).ToList();
+                    }, envValue, path);
             }
 
-            var node = GetJsonNode(path);
-            return node.ToObject<IReadOnlyList<T>>();
+            var element = GetJsonElement(path);
+            
+            // Special handling for object type to properly deserialize mixed arrays
+            if (typeof(T) == typeof(object))
+            {
+                var jsonArray = element.EnumerateArray();
+                var result = new List<object>();
+        
+                foreach (var item in jsonArray)
+                {
+                    var deserializedItem = item.ValueKind switch
+                    {
+                        JsonValueKind.String => item.GetString(),
+                        JsonValueKind.Number => item.TryGetInt32(out var intValue) ? intValue : item.GetDouble(),
+                        JsonValueKind.True => true,
+                        JsonValueKind.False => false,
+                        JsonValueKind.Null => null,
+                        _ => JsonSerializer.Deserialize<object>(item.GetRawText())
+                    };
+                    result.Add(deserializedItem);
+                }
+        
+                return (IReadOnlyList<T>)result;
+            }
+
+            return JsonSerializer.Deserialize<IReadOnlyList<T>>(element.GetRawText());
         }
 
         /// <summary>
@@ -118,10 +159,14 @@ namespace Aquality.Selenium.Core.Utilities
         public IReadOnlyDictionary<string, T> GetValueDictionary<T>(string path)
         {
             var dict = new Dictionary<string, T>();
-            var node = GetJsonNode(path);
-            foreach (var child in node.Children<JProperty>())
+            var element = GetJsonElement(path);
+
+            if (element.ValueKind == JsonValueKind.Object)
             {
-                dict.Add(child.Name, GetValue<T>($".{child.Path}"));
+                foreach (var property in element.EnumerateObject())
+                {
+                    dict.Add(property.Name, GetValue<T>($"{path}['{property.Name}']"));
+                }
             }
 
             return dict;
@@ -134,7 +179,7 @@ namespace Aquality.Selenium.Core.Utilities
         /// <returns>True if present and false otherwise.</returns>
         public bool IsValuePresent(string path)
         {
-            return GetEnvironmentValue(path) != null || JsonObject.SelectToken(path) != null;
+            return GetEnvironmentValue(path) != null || TryGetJsonElement(path, out _);
         }
 
         private static string GetEnvironmentValue(string jsonPath)
@@ -143,14 +188,125 @@ namespace Aquality.Selenium.Core.Utilities
             return EnvironmentConfiguration.GetVariable(key);
         }
 
-        private JToken GetJsonNode(string jsonPath)
+        private JsonElement GetJsonElement(string jsonPath)
         {
-            var node = JsonObject.SelectToken(jsonPath);
-            if (node == null)
+            if (!TryGetJsonElement(jsonPath, out var element))
             {
-                throw new ArgumentException($"There are no values found by path '{jsonPath}' in JSON file '{resourceName}'");
+                throw new ArgumentException(
+                    $"There are no values found by path '{jsonPath}' in JSON file '{resourceName}'");
             }
-            return node;
+
+            return element;
+        }
+
+        private string[] SplitPath(string jsonPath)
+        {
+            var path = NormalizePath(jsonPath);
+            
+            var pathSegments = new List<string>();
+            var currentSegment = string.Empty;
+            var isInBracket = false;
+            
+            for (var i = 0; i < path.Length; i++)
+            {
+                var currentChar = path[i];
+                
+                switch (currentChar)
+                {
+                    case '.' when !isInBracket:
+                        if (!string.IsNullOrEmpty(currentSegment))
+                        {
+                            pathSegments.Add(currentSegment);
+                            currentSegment = string.Empty;
+                        }
+                        break;
+                    
+                    case '[':
+                        if (!string.IsNullOrEmpty(currentSegment))
+                        {
+                            pathSegments.Add(currentSegment);
+                            currentSegment = string.Empty;
+                        }
+                        isInBracket = true;
+                        break;
+                    
+                    case ']':
+                        if (isInBracket && currentSegment.StartsWith("'") && currentSegment.EndsWith("'"))
+                        {
+                            pathSegments.Add(currentSegment.Substring(1, currentSegment.Length - 2));
+                        }
+                        else if (isInBracket)
+                        {
+                            pathSegments.Add(currentSegment);
+                        }
+                        currentSegment = string.Empty;
+                        isInBracket = false;
+                        break;
+                    
+                    default:
+                        currentSegment += currentChar;
+                        break;
+                }
+            }
+            
+            if (!string.IsNullOrEmpty(currentSegment))
+            {
+                pathSegments.Add(currentSegment);
+            }
+            
+            return pathSegments.ToArray();
+        }
+
+        
+        private static string NormalizePath(string jsonPath)
+        {
+            var path = jsonPath;
+            
+            if (path.StartsWith("."))
+                path = path.Substring(1);
+            
+            if (path.StartsWith("$")) 
+                path = path.StartsWith("$.") ? path.Substring(2) : path.Substring(1);
+                
+            return path;
+        }
+
+        private bool TryGetJsonElement(string jsonPath, out JsonElement targetElement)
+        {
+            targetElement = default;
+
+            try
+            {
+                var element = JsonDocument.RootElement;
+                var path = NormalizePath(jsonPath);
+
+                if (string.IsNullOrEmpty(path))
+                {
+                    targetElement = element;
+                    return true;
+                }
+
+                var pathParts = SplitPath(path);
+                foreach (var part in pathParts)
+                {
+                    if (element.ValueKind != JsonValueKind.Object)
+                    {
+                        return false;
+                    }
+
+                    if (!element.TryGetProperty(part, out element))
+                    {
+                        return false;
+                    }
+                }
+
+                targetElement = element;
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
         }
 
         private static T ConvertEnvVar<T>(Func<T> convertMethod, string envValue, string jsonPath)

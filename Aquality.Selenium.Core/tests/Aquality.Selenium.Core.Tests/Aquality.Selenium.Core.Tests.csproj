@@ -22,6 +22,9 @@
     <EmbeddedResource Include="Resources\settings.special.json">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </EmbeddedResource>
+    <EmbeddedResource Include="Resources\settings.extended.json">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </EmbeddedResource>
   </ItemGroup>
 
   <ItemGroup>
