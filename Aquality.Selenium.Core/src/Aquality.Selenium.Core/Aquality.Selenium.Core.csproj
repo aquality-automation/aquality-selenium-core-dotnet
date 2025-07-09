@@ -16,7 +16,7 @@
   <PackageLicenseFile>LICENSE</PackageLicenseFile>
   <Copyright>Copyright 2025 Aquality Automation</Copyright>
   <IsPackable>true</IsPackable>
-  <LangVersion>13</LangVersion>
+  <Version>3.4.0</Version>
   </PropertyGroup>
 
   <PropertyGroup>

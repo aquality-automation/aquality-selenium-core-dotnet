@@ -242,6 +242,20 @@ namespace Aquality.Selenium.Core.Tests.Utilities
                 Is.EquivalentTo(expectedDict),
                 "Dictionary with different data types should be accessible");
         }
+        
+        [Test]
+        public void GetValue_WithValidEnumStringValue_ReturnsCorrectEnum()
+        {
+            var result = ExtendedSettings.GetValue<TestEnum>(".enumValues.stringValue");
+            Assert.That(result, Is.EqualTo(TestEnum.Value1), "Enum value should be correct");;
+        }
+        
+        private enum TestEnum
+        {
+            Value1,
+            Value2,
+            Value3
+        }
 
         #endregion
     }

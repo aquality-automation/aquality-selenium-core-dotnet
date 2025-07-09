@@ -36,5 +36,8 @@
     "doubleValue": 3.14,
     "boolValue": true,
     "nullValue": null
+  },
+  "enumValues": {
+    "stringValue": "Value1"
   }
 }

@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using Aquality.Selenium.Core.Configurations;
 using Aquality.Selenium.Core.Logging;
 
@@ -19,6 +20,11 @@ namespace Aquality.Selenium.Core.Utilities
     {
         private readonly string fileContent;
         private readonly string resourceName;
+
+        private static readonly JsonSerializerOptions DefaultSerializerOptions = new JsonSerializerOptions
+        {
+            Converters = { new JsonStringEnumConverter() }
+        };
 
         private JsonDocument JsonDocument => JsonDocument.Parse(fileContent);
 
@@ -290,7 +296,7 @@ namespace Aquality.Selenium.Core.Utilities
                 return (T)DeserializeAsObject(element);
             }
 
-            return JsonSerializer.Deserialize<T>(element.GetRawText());
+            return JsonSerializer.Deserialize<T>(element.GetRawText(), DefaultSerializerOptions);
         }
         
         private IReadOnlyList<T> DeserializeJsonElementList<T>(JsonElement element)
@@ -309,20 +315,26 @@ namespace Aquality.Selenium.Core.Utilities
                 return (IReadOnlyList<T>)result;
             }
 
-            return JsonSerializer.Deserialize<IReadOnlyList<T>>(element.GetRawText());
+            return JsonSerializer.Deserialize<IReadOnlyList<T>>(element.GetRawText(), DefaultSerializerOptions);
         }
         
         private object DeserializeAsObject(JsonElement element)
         {
-            return element.ValueKind switch
+            switch (element.ValueKind)
             {
-                JsonValueKind.String => element.GetString(),
-                JsonValueKind.Number => element.TryGetInt32(out var intValue) ? intValue : element.GetDouble(),
-                JsonValueKind.True => true,
-                JsonValueKind.False => false,
-                JsonValueKind.Null => null,
-                _ => JsonSerializer.Deserialize<object>(element.GetRawText())
-            };
+                case JsonValueKind.String:
+                    return element.GetString();
+                case JsonValueKind.Number:
+                    return element.TryGetInt32(out var intValue) ? intValue : element.GetDouble();
+                case JsonValueKind.True:
+                    return true;
+                case JsonValueKind.False:
+                    return false;
+                case JsonValueKind.Null:
+                    return null;
+                default:
+                    return JsonSerializer.Deserialize<object>(element.GetRawText(), DefaultSerializerOptions);
+            }
         }
     }
 }
