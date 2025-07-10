@@ -1081,7 +1081,7 @@
         <member name="M:Aquality.Selenium.Core.Utilities.JsonSettingsFile.GetValueList``1(System.String)">
             <summary>
             Gets list of values from JSON.
-            Note that the value can be overriden via Environment variable with the same name; values must be separated by ','
+            Note that the value can be overriden via Environment variable with the same name; values must be separated by ',' (comma); values that contains commas are not supported
             (e.g. for json path ".driverSettings.chrome.startArguments" you can set environment variable "driverSettings.chrome.startArguments")
             </summary>
             <param name="path">Relative JsonPath to the values.</param>

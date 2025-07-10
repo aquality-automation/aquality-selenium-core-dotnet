@@ -170,6 +170,8 @@ namespace Aquality.Selenium.Core.Tests.Utilities
                 "Key with spaces should be accessible");
             Assert.That(ExtendedSettings.GetValue<string>(".specialChars.key'with'quotes"), Is.EqualTo("quote-value"),
                 "Key with quotes should be accessible");
+            Assert.That(ExtendedSettings.GetValue<string>(".specialChars.key'with single quote"), Is.EqualTo("single quote-value"),
+                "Key with quotes should be accessible");
         }
 
         [Test]

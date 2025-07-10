@@ -23,7 +23,8 @@
     "key-with-dashes": "dash-value",
     "key.with.dots": "dot-value",
     "key with spaces": "space-value",
-    "key'with'quotes": "quote-value"
+    "key'with'quotes": "quote-value",
+    "key'with single quote": "single quote-value"
   },
   "arrays": {
     "simpleArray": ["a", "b", "c"],

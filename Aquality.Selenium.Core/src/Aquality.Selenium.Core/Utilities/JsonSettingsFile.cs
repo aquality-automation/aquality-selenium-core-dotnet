@@ -18,15 +18,15 @@ namespace Aquality.Selenium.Core.Utilities
     /// </summary>
     public class JsonSettingsFile : ISettingsFile
     {
-        private readonly string fileContent;
         private readonly string resourceName;
+        private readonly Lazy<JsonDocument> _jsonDocument;
 
         private static readonly JsonSerializerOptions DefaultSerializerOptions = new JsonSerializerOptions
         {
             Converters = { new JsonStringEnumConverter() }
         };
 
-        private JsonDocument JsonDocument => JsonDocument.Parse(fileContent);
+        private JsonDocument JsonDocument => _jsonDocument.Value;
 
         /// <summary>
         /// Inistantiates class using desired JSON fileinfo.
@@ -35,7 +35,8 @@ namespace Aquality.Selenium.Core.Utilities
         public JsonSettingsFile(FileInfo fileInfo)
         {
             resourceName = fileInfo.Name;
-            fileContent = FileReader.GetTextFromFile(fileInfo);
+            var fileContent = FileReader.GetTextFromFile(fileInfo);
+            _jsonDocument = new Lazy<JsonDocument>(() => JsonDocument.Parse(fileContent));
         }
 
         /// <summary>
@@ -45,7 +46,8 @@ namespace Aquality.Selenium.Core.Utilities
         public JsonSettingsFile(string resourceFileName)
         {
             resourceName = resourceFileName;
-            fileContent = FileReader.GetTextFromResource(resourceFileName);
+            var fileContent = FileReader.GetTextFromResource(resourceFileName);
+            _jsonDocument = new Lazy<JsonDocument>(() => JsonDocument.Parse(fileContent));
         }
 
         /// <summary>
@@ -56,7 +58,8 @@ namespace Aquality.Selenium.Core.Utilities
         public JsonSettingsFile(string embededResourceName, Assembly assembly)
         {
             resourceName = embededResourceName;
-            fileContent = FileReader.GetTextFromEmbeddedResource(embededResourceName, assembly);
+            var fileContent = FileReader.GetTextFromEmbeddedResource(embededResourceName, assembly);
+            _jsonDocument = new Lazy<JsonDocument>(() => JsonDocument.Parse(fileContent));
         }
 
         /// <summary>
@@ -89,7 +92,7 @@ namespace Aquality.Selenium.Core.Utilities
 
         /// <summary>
         /// Gets list of values from JSON.
-        /// Note that the value can be overriden via Environment variable with the same name; values must be separated by ','
+        /// Note that the value can be overriden via Environment variable with the same name; values must be separated by ',' (comma); values that contains commas are not supported
         /// (e.g. for json path ".driverSettings.chrome.startArguments" you can set environment variable "driverSettings.chrome.startArguments")
         /// </summary>
         /// <param name="path">Relative JsonPath to the values.</param>
@@ -217,7 +220,7 @@ namespace Aquality.Selenium.Core.Utilities
                 targetElement = element;
                 return true;
             }
-            catch
+            catch (JsonException)
             {
                 return false;
             }
