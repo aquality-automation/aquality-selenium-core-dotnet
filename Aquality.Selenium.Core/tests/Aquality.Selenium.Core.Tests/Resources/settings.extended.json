@@ -1,0 +1,44 @@
+{
+  "level1": {
+    "level2": {
+      "level3": {
+        "level4": {
+          "deepValue": "found",
+          "arrayValue": [
+            {
+              "index0": "first",
+              "nested": {
+                "value": "nestedInArray"
+              }
+            },
+            {
+              "index1": "second"
+            }
+          ]
+        }
+      }
+    }
+  },
+  "specialChars": {
+    "key-with-dashes": "dash-value",
+    "key.with.dots": "dot-value",
+    "key with spaces": "space-value",
+    "key'with'quotes": "quote-value",
+    "key'with single quote": "single quote-value"
+  },
+  "arrays": {
+    "simpleArray": ["a", "b", "c"],
+    "mixedArray": [1, "string", true, null],
+    "nestedArrays": [[1, 2], [3, 4]]
+  },
+  "dataTypes": {
+    "stringValue": "text",
+    "intValue": 42,
+    "doubleValue": 3.14,
+    "boolValue": true,
+    "nullValue": null
+  },
+  "enumValues": {
+    "stringValue": "Value1"
+  }
+}
