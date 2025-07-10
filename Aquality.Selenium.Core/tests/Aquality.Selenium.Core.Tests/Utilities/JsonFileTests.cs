@@ -144,8 +144,6 @@ namespace Aquality.Selenium.Core.Tests.Utilities
                 $"{key} should have exist status '{shouldExist}' in settings");
         }
         
-        #region ExtendedSettings Tests
-
         [Test]
         public void ExtendedSettings_Should_GetDeepNestedValue()
         {
@@ -251,11 +249,7 @@ namespace Aquality.Selenium.Core.Tests.Utilities
         
         private enum TestEnum
         {
-            Value1,
-            Value2,
-            Value3
+            Value1
         }
-
-        #endregion
     }
 }
