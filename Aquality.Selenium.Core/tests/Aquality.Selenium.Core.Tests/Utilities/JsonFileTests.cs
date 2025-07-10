@@ -219,7 +219,8 @@ namespace Aquality.Selenium.Core.Tests.Utilities
                 {"key-with-dashes", "dash-value"},
                 {"key.with.dots", "dot-value"},
                 {"key with spaces", "space-value"},
-                {"key'with'quotes", "quote-value"}
+                {"key'with'quotes", "quote-value"},
+                {"key'with single quote", "single quote-value"}
             };
             Assert.That(ExtendedSettings.GetValueDictionary<string>(".specialChars"),
                 Is.EquivalentTo(expectedDict),
