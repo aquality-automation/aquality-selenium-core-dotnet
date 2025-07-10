@@ -124,15 +124,21 @@ namespace Aquality.Selenium.Core.Utilities
         /// <exception cref="ArgumentException">Throws when there are no values found by jsonPath in desired JSON file.</exception>
         public IReadOnlyDictionary<string, T> GetValueDictionary<T>(string path)
         {
-            var dict = new Dictionary<string, T>();
             var element = GetJsonElement(path);
+            var dict = new Dictionary<string, T>();
 
-            if (element.ValueKind == JsonValueKind.Object)
+            switch (element.ValueKind)
             {
-                foreach (var property in element.EnumerateObject())
+                case JsonValueKind.Object:
                 {
-                    dict.Add(property.Name, GetValue<T>($"{path}['{property.Name}']"));
+                    foreach (var property in element.EnumerateObject())
+                    {
+                        dict.Add(property.Name, GetValue<T>($"{path}['{property.Name}']"));
+                    }
+
+                    break;
                 }
+                default: throw new ArgumentException($"JSON element at path is not an object but {element.ValueKind}");
             }
 
             return dict;
@@ -153,7 +159,7 @@ namespace Aquality.Selenium.Core.Utilities
             var key = jsonPath.Replace("['", ".").Replace("']", string.Empty).Substring(1);
             return EnvironmentConfiguration.GetVariable(key);
         }
-        
+
         private static T ConvertEnvVar<T>(Func<T> convertMethod, string envValue, string jsonPath)
         {
             Logger.Instance.Debug($"***** Using variable passed from environment {jsonPath.Substring(1)}={envValue}");
@@ -178,7 +184,7 @@ namespace Aquality.Selenium.Core.Utilities
 
             return element;
         }
-        
+
         private bool TryGetJsonElement(string jsonPath, out JsonElement targetElement)
         {
             targetElement = default;
@@ -222,7 +228,7 @@ namespace Aquality.Selenium.Core.Utilities
             var pathSegments = new List<string>();
             var currentSegment = string.Empty;
             var isInBracket = false;
-            
+
             for (var i = 0; i < jsonPath.Length; i++)
             {
                 var currentChar = jsonPath[i];
@@ -245,6 +251,7 @@ namespace Aquality.Selenium.Core.Utilities
                             currentSegment = string.Empty;
                             isInBracket = false;
                         }
+
                         break;
 
                     default:
@@ -252,11 +259,11 @@ namespace Aquality.Selenium.Core.Utilities
                         break;
                 }
             }
-            
+
             AddSegmentIfNotEmpty(pathSegments, ref currentSegment);
             return pathSegments.ToArray();
         }
-        
+
         private static void AddSegmentIfNotEmpty(List<string> pathSegments, ref string currentSegment)
         {
             if (!string.IsNullOrEmpty(currentSegment))
@@ -265,7 +272,7 @@ namespace Aquality.Selenium.Core.Utilities
                 currentSegment = string.Empty;
             }
         }
-        
+
         private static void AddBracketSegment(List<string> pathSegments, string currentSegment)
         {
             if (currentSegment.StartsWith("'") && currentSegment.EndsWith("'"))
@@ -277,18 +284,18 @@ namespace Aquality.Selenium.Core.Utilities
                 pathSegments.Add(currentSegment);
             }
         }
-        
+
         private static string NormalizePath(string jsonPath)
         {
             if (jsonPath.StartsWith("."))
                 jsonPath = jsonPath.Substring(1);
-            
-            if (jsonPath.StartsWith("$")) 
+
+            if (jsonPath.StartsWith("$"))
                 jsonPath = jsonPath.StartsWith("$.") ? jsonPath.Substring(2) : jsonPath.Substring(1);
-                
+
             return jsonPath;
         }
-        
+
         private T DeserializeJsonElement<T>(JsonElement element)
         {
             if (typeof(T) == typeof(object))
@@ -298,7 +305,7 @@ namespace Aquality.Selenium.Core.Utilities
 
             return JsonSerializer.Deserialize<T>(element.GetRawText(), DefaultSerializerOptions);
         }
-        
+
         private IReadOnlyList<T> DeserializeJsonElementList<T>(JsonElement element)
         {
             if (typeof(T) == typeof(object))
@@ -317,7 +324,7 @@ namespace Aquality.Selenium.Core.Utilities
 
             return JsonSerializer.Deserialize<IReadOnlyList<T>>(element.GetRawText(), DefaultSerializerOptions);
         }
-        
+
         private object DeserializeAsObject(JsonElement element)
         {
             switch (element.ValueKind)

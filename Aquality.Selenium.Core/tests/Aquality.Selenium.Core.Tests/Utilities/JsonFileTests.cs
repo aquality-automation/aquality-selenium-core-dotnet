@@ -75,8 +75,7 @@ namespace Aquality.Selenium.Core.Tests.Utilities
                 {"profile.default_content_settings.popups", "0"},
                 {"disable-popup-blocking", "true"}
             };
-            var act = AddedParamsSettings.GetValueDictionary<object>(".driverSettings.chrome.options");
-            Assert.That(AddedParamsSettings.GetValueDictionary<string>(".driverSettings.chrome.options"),
+            Assert.That(AddedParamsSettings.GetValueDictionary<object>(".driverSettings.chrome.options"),
                 Is.EquivalentTo(expectedDict),
                 "Dictionary of keys and values was received successively");
         }
@@ -90,7 +89,7 @@ namespace Aquality.Selenium.Core.Tests.Utilities
                 {"profile.default_content_settings.popups", "0"},
                 {"disable-popup-blocking", "true"}
             };
-            Assert.That(AddedParamsSettings.GetValueDictionaryOrEmpty<string>(".driverSettings.chrome.options"),
+            Assert.That(AddedParamsSettings.GetValueDictionaryOrEmpty<object>(".driverSettings.chrome.options"),
                 Is.EqualTo(expectedDict),
                 "Dictionary of keys and values was received successively");
         }
