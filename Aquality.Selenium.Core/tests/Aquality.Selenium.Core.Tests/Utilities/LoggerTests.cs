@@ -1,7 +1,6 @@
 ﻿using Aquality.Selenium.Core.Logging;
 using Aquality.Selenium.Core.Tests.Applications.Browser;
 using Aquality.Selenium.Core.Tests.Applications.Browser.Elements;
-using Aquality.Selenium.Core.Tests.Applications.WindowsApp.Elements;
 using NLog.Targets;
 using NUnit.Framework;
 using OpenQA.Selenium;
@@ -81,9 +80,9 @@ namespace Aquality.Selenium.Core.Tests.Utilities
                 $"Target wasn't removed. File '{RemoveTargetLogFile}' exists.");
         }
 
-        private static FileTarget GetTarget(string filePath)
+        private static ConcurrentFileTarget GetTarget(string filePath)
         {
-            return new FileTarget
+            return new ConcurrentFileTarget
             {
                 Name = Guid.NewGuid().ToString(),
                 FileName = filePath,
