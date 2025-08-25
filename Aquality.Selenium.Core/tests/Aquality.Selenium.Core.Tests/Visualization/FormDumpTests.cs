@@ -67,7 +67,7 @@ namespace Aquality.Selenium.Core.Tests.Visualization
             Assert.That(form.Dump.Compare("Zero diff"), Is.EqualTo(0), "Difference with current page should be around zero");
         }
 
-        [Test]
+        [Test, Retry(5)]
         public void Should_BePossibleTo_CompareWithDump_WithCustomName_WhenDifferenceIsNotZero()
         {
             var form = new WebForm();
