@@ -77,7 +77,7 @@ namespace Aquality.Selenium.Core.Tests.Applications.Browser
             {
                 return ++i == 2 ? true : throw exception;
             }, [typeof(InvalidOperationException)]
-            ), nameof(Should_Throw_OnWait_WithUnhandledException));
+            ), nameof(Should_ThrowAsync_OnWait_WithUnhandledException));
         }
 
         [Test]

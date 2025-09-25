@@ -77,7 +77,7 @@ namespace Aquality.Selenium.Core.Tests.Visualization
                 firstImage = LoadingLabel.GetElement().GetScreenshot().AsImage();
                 AqualityServices.ServiceProvider.GetRequiredService<IConditionalWait>().WaitFor(() => firstImage.Height < LoadingLabel.Visual.Size.Height);
                 secondImage = LoadingLabel.GetElement().GetScreenshot().AsImage();
-            }, [typeof(WebDriverException)]);
+            }, [typeof(WebDriverException), typeof(WebDriverTimeoutException)]);
 
             Assert.Multiple(() =>
             {
