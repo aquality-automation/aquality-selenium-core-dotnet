@@ -35,7 +35,7 @@ namespace Aquality.Selenium.Core.Logging
             {
                 Layout = layout
             });
-            config.AddRule(LogLevel.Debug, LogLevel.Fatal, new FileTarget("logfile")
+            config.AddRule(LogLevel.Debug, LogLevel.Fatal, new ConcurrentFileTarget("logfile")
             {
                 FileName = "../../../Log/log.log",
                 Layout = layout,
@@ -65,7 +65,7 @@ namespace Aquality.Selenium.Core.Logging
         /// <summary>
         /// Removes configuration (target).
         /// </summary>
-        /// <param name="target">Target configuratio to remove.</param>
+        /// <param name="target">Target configuration to remove.</param>
         /// <returns>Logger instance.</returns>
         public Logger RemoveTarget(Target target)
         {

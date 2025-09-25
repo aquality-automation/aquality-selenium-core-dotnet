@@ -837,7 +837,7 @@
             <summary>
             Removes configuration (target).
             </summary>
-            <param name="target">Target configuratio to remove.</param>
+            <param name="target">Target configuration to remove.</param>
             <returns>Logger instance.</returns>
         </member>
         <member name="M:Aquality.Selenium.Core.Logging.Logger.Debug(System.String,System.Exception)">

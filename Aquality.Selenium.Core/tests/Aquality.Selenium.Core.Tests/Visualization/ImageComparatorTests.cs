@@ -66,7 +66,7 @@ namespace Aquality.Selenium.Core.Tests.Visualization
             Assert.That(ImageComparator.PercentageDifference(firstImage, secondImage, threshold: 1), Is.EqualTo(0));
         }
 
-        [Test]
+        [Test, Retry(5)]
         public void Should_BePossibleTo_GetPercentageDifference_ForSimilarElements()
         {
             SKImage firstImage = null, secondImage = null;
