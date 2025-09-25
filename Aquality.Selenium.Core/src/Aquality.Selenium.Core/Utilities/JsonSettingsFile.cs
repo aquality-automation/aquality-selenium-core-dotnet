@@ -1,13 +1,14 @@
-﻿using System;
+﻿using Aquality.Selenium.Core.Configurations;
+using Aquality.Selenium.Core.Logging;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using Aquality.Selenium.Core.Configurations;
-using Aquality.Selenium.Core.Logging;
 
 namespace Aquality.Selenium.Core.Utilities
 {
@@ -29,7 +30,7 @@ namespace Aquality.Selenium.Core.Utilities
         private JsonDocument JsonDocument => _jsonDocument.Value;
 
         /// <summary>
-        /// Inistantiates class using desired JSON fileinfo.
+        /// Instantiates class using desired JSON fileinfo.
         /// </summary>
         /// <param name="fileInfo">JSON fileinfo.</param>
         public JsonSettingsFile(FileInfo fileInfo)
@@ -40,7 +41,7 @@ namespace Aquality.Selenium.Core.Utilities
         }
 
         /// <summary>
-        /// Inistantiates class using desired resource file info.
+        /// Instantiates class using desired resource file info.
         /// </summary>
         /// <param name="resourceFileName"></param>
         public JsonSettingsFile(string resourceFileName)
@@ -51,20 +52,20 @@ namespace Aquality.Selenium.Core.Utilities
         }
 
         /// <summary>
-        /// Inistantiates class using desired embeded resource.
+        /// Instantiates class using desired embedded resource.
         /// </summary>
-        /// <param name="embededResourceName">Embeded resource name</param>
+        /// <param name="embeddedResourceName">Embedded resource name</param>
         /// <param name="assembly">Assembly which resource belongs to</param>
-        public JsonSettingsFile(string embededResourceName, Assembly assembly)
+        public JsonSettingsFile(string embeddedResourceName, Assembly assembly)
         {
-            resourceName = embededResourceName;
-            var fileContent = FileReader.GetTextFromEmbeddedResource(embededResourceName, assembly);
+            resourceName = embeddedResourceName;
+            var fileContent = FileReader.GetTextFromEmbeddedResource(embeddedResourceName, assembly);
             _jsonDocument = new Lazy<JsonDocument>(() => JsonDocument.Parse(fileContent));
         }
 
         /// <summary>
         /// Gets value from JSON.
-        /// Note that the value can be overriden via Environment variable with the same name
+        /// Note that the value can be overridden via Environment variable with the same name
         /// (e.g. for json path ".timeouts.timeoutScript" you can set environment variable "timeouts.timeoutScript")
         /// </summary>
         /// <param name="path">Relative JsonPath to the value.</param>
@@ -128,23 +129,14 @@ namespace Aquality.Selenium.Core.Utilities
         public IReadOnlyDictionary<string, T> GetValueDictionary<T>(string path)
         {
             var element = GetJsonElement(path);
-            var dict = new Dictionary<string, T>();
-
-            switch (element.ValueKind)
+            if (element.ValueKind != JsonValueKind.Object)
             {
-                case JsonValueKind.Object:
-                {
-                    foreach (var property in element.EnumerateObject())
-                    {
-                        dict.Add(property.Name, GetValue<T>($"{path}['{property.Name}']"));
-                    }
-
-                    break;
-                }
-                default: throw new ArgumentException($"JSON element at path is not an object but {element.ValueKind}");
+                throw new ArgumentException($"JSON element at path is not an object but {element.ValueKind}");
             }
 
-            return dict;
+            return element.EnumerateObject()
+                            .Select(property => property.Name)
+                            .ToDictionary(name => name, name => GetValue<T>($"{path}['{name}']"));
         }
 
         /// <summary>
@@ -226,10 +218,10 @@ namespace Aquality.Selenium.Core.Utilities
             }
         }
 
-        private string[] ParsePath(string jsonPath)
+        private static string[] ParsePath(string jsonPath)
         {
             var pathSegments = new List<string>();
-            var currentSegment = string.Empty;
+            var currentSegment = new StringBuilder();
             var isInBracket = false;
 
             for (var i = 0; i < jsonPath.Length; i++)
@@ -251,14 +243,14 @@ namespace Aquality.Selenium.Core.Utilities
                         if (isInBracket)
                         {
                             AddBracketSegment(pathSegments, currentSegment);
-                            currentSegment = string.Empty;
+                            currentSegment = new StringBuilder();
                             isInBracket = false;
                         }
 
                         break;
 
                     default:
-                        currentSegment += currentChar;
+                        currentSegment.Append(currentChar);
                         break;
                 }
             }
@@ -267,17 +259,19 @@ namespace Aquality.Selenium.Core.Utilities
             return pathSegments.ToArray();
         }
 
-        private static void AddSegmentIfNotEmpty(List<string> pathSegments, ref string currentSegment)
+        private static void AddSegmentIfNotEmpty(List<string> pathSegments, ref StringBuilder currentBuilder)
         {
+            var currentSegment = currentBuilder.ToString();
             if (!string.IsNullOrEmpty(currentSegment))
             {
                 pathSegments.Add(currentSegment);
-                currentSegment = string.Empty;
+                currentBuilder = new StringBuilder();
             }
         }
 
-        private static void AddBracketSegment(List<string> pathSegments, string currentSegment)
+        private static void AddBracketSegment(List<string> pathSegments, StringBuilder currentBuilder)
         {
+            var currentSegment = currentBuilder.ToString();
             if (currentSegment.StartsWith("'") && currentSegment.EndsWith("'"))
             {
                 pathSegments.Add(currentSegment.Substring(1, currentSegment.Length - 2));
@@ -299,7 +293,7 @@ namespace Aquality.Selenium.Core.Utilities
             return jsonPath;
         }
 
-        private T DeserializeJsonElement<T>(JsonElement element)
+        private static T DeserializeJsonElement<T>(JsonElement element)
         {
             if (typeof(T) == typeof(object))
             {
@@ -309,7 +303,7 @@ namespace Aquality.Selenium.Core.Utilities
             return JsonSerializer.Deserialize<T>(element.GetRawText(), DefaultSerializerOptions);
         }
 
-        private IReadOnlyList<T> DeserializeJsonElementList<T>(JsonElement element)
+        private static IReadOnlyList<T> DeserializeJsonElementList<T>(JsonElement element)
         {
             if (typeof(T) == typeof(object))
             {
@@ -328,7 +322,7 @@ namespace Aquality.Selenium.Core.Utilities
             return JsonSerializer.Deserialize<IReadOnlyList<T>>(element.GetRawText(), DefaultSerializerOptions);
         }
 
-        private object DeserializeAsObject(JsonElement element)
+        private static object DeserializeAsObject(JsonElement element)
         {
             switch (element.ValueKind)
             {

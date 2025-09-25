@@ -155,7 +155,7 @@ namespace Aquality.Selenium.Core.Tests.Applications.Browser
                     return testElement.Cache.IsStale;
                 }, message: "Element should be stale after page is closed.");
             },
-            new[] { typeof(TimeoutException) });
+            [typeof(TimeoutException)]);
             
             Assume.That(testElement, Is.Not.Null);
             OpenDynamicContent();

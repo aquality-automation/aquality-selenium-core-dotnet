@@ -46,7 +46,7 @@ namespace Aquality.Selenium.Core.Tests.Configurations
 
             public IReadOnlyList<T> GetValueList<T>(string path)
             {
-                return new List<T>();
+                return [];
             }
 
             public IReadOnlyDictionary<string, T> GetValueDictionary<T>(string path)

@@ -190,7 +190,6 @@ namespace Aquality.Selenium.Core.Tests.Utilities
         [Test]
         public void ExtendedSettings_Should_GetMixedArrayValues()
         {
-            var expectedMixedArray = new object[] { 1, "string", true, null };
             var actualArray = ExtendedSettings.GetValueList<object>(".arrays.mixedArray");
     
             Assert.That(actualArray, Has.Count.EqualTo(4), "Array should have 4 elements");

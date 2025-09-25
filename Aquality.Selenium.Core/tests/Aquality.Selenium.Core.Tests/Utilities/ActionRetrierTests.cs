@@ -9,7 +9,7 @@ namespace Aquality.Selenium.Core.Tests.Utilities
 {
     public class ActionRetrierTests : RetrierTests
     {
-        private static IEnumerable<Type> HandledExceptions => new List<Type> { typeof(InvalidOperationException) };
+        private static IEnumerable<Type> HandledExceptions => [typeof(InvalidOperationException)];
         
         private static ActionRetrier ActionRetrier => new(RetryConfiguration);
 
@@ -22,13 +22,13 @@ namespace Aquality.Selenium.Core.Tests.Utilities
         [Test]
         public void Retrier_ShouldWork_OnceIfMethodSucceeded()
         {
-            Retrier_ShouldWork_OnceIfMethodSucceeded(() => ActionRetrier.DoWithRetry(() => Console.WriteLine(1), new List<Type>()));
+            Retrier_ShouldWork_OnceIfMethodSucceeded(() => ActionRetrier.DoWithRetry(() => Console.WriteLine(1), []));
         }
 
         [Test]
         public void Retrier_ShouldWork_OnceIfMethodSucceeded_WithReturnValue()
         {
-            Retrier_ShouldWork_OnceIfMethodSucceeded(() => ActionRetrier.DoWithRetry(() => string.Empty, new List<Type>()));
+            Retrier_ShouldWork_OnceIfMethodSucceeded(() => ActionRetrier.DoWithRetry(() => string.Empty, []));
         }
 
         [Test]
@@ -65,7 +65,7 @@ namespace Aquality.Selenium.Core.Tests.Utilities
         {
             Assert.Throws<InvalidOperationException>(() => ActionRetrier.DoWithRetry(() => {
                 throw new InvalidOperationException();
-            }, new List<Type>()));
+            }, []));
         }
 
         [Test]
@@ -76,7 +76,7 @@ namespace Aquality.Selenium.Core.Tests.Utilities
 #pragma warning disable CS0162 // Unreachable code detected
                 return string.Empty;
 #pragma warning restore CS0162 // Unreachable code detected
-            }, new List<Type>()));
+            }, []));
         }
 
         [Test]
@@ -108,7 +108,7 @@ namespace Aquality.Selenium.Core.Tests.Utilities
         public void Retrier_Should_ReturnValue()
         {
             var returnValue = string.Empty;
-            Assert.That(ActionRetrier.DoWithRetry(() => returnValue, new List<Type>()), Is.EqualTo(returnValue), "Retrier should return value");
+            Assert.That(ActionRetrier.DoWithRetry(() => returnValue, []), Is.EqualTo(returnValue), "Retrier should return value");
         }
     }
 }

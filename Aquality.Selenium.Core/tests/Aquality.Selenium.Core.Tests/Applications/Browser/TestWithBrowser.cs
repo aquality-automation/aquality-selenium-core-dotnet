@@ -14,6 +14,7 @@ namespace Aquality.Selenium.Core.Tests.Applications.Browser
     [Parallelizable(ParallelScope.All)]
     public abstract class TestWithBrowser
     {
+        protected const int RetriesNumber = 10;
         protected static string TestSite => "http://the-internet.herokuapp.com";
 
         protected ServiceProvider ServiceProvider { get; private set; }
