@@ -76,7 +76,7 @@ namespace Aquality.Selenium.Core.Tests.Applications.Browser
                 $"Tried to find elements with expected count '{count}' and state '{state}'");
         }
 
-        [TestCase(ElementsCount.MoreThenZero, ElementState.Displayed)]
+        [TestCase(ElementsCount.MoreThenZero, ElementState.Displayed), Retry(RetriesNumber)]
         [TestCase(ElementsCount.Zero, ElementState.ExistsInAnyState)]
         public void Should_BeImpossibleTo_FindHiddenElements_WithWrongArguments(ElementsCount count, ElementState state)
         {

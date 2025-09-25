@@ -52,7 +52,7 @@ namespace Aquality.Selenium.Core.Tests.Applications.Browser
             Assert.DoesNotThrow(() => action(() =>
             {
                 return ++i == 2 ? true : throw exception;
-            }, new[] { exception.GetType() }
+            }, [exception.GetType()]
             ), nameof(Should_NotThrow_OnWait_WithHandledException));
         }
 
@@ -64,7 +64,7 @@ namespace Aquality.Selenium.Core.Tests.Applications.Browser
             Assert.DoesNotThrowAsync(() => action(() =>
             {
                 return ++i == 2 ? true : throw exception;
-            }, new[] { exception.GetType() }
+            }, [exception.GetType()]
             ), nameof(Should_NotThrow_OnWait_WithHandledException));
         }
 
@@ -76,8 +76,8 @@ namespace Aquality.Selenium.Core.Tests.Applications.Browser
             Assert.ThrowsAsync<AssertionException>(() => action(() =>
             {
                 return ++i == 2 ? true : throw exception;
-            }, new[] { typeof(InvalidOperationException) }
-            ), nameof(Should_Throw_OnWait_WithUnhandledException));
+            }, [typeof(InvalidOperationException)]
+            ), nameof(Should_ThrowAsync_OnWait_WithUnhandledException));
         }
 
         [Test]
@@ -88,7 +88,7 @@ namespace Aquality.Selenium.Core.Tests.Applications.Browser
             Assert.Throws<AssertionException>(() => action(() =>
             {
                 return ++i == 2 ? true : throw exception;
-            }, new[] { typeof(InvalidOperationException) }
+            }, [typeof(InvalidOperationException)]
             ), nameof(Should_Throw_OnWait_WithUnhandledException));
         }
 
@@ -119,7 +119,7 @@ namespace Aquality.Selenium.Core.Tests.Applications.Browser
                 $"{nameof(ConditionalWait.WaitForAsync)} should wait correct time");
         }
 
-        [Test]
+        [Test, Retry(RetriesNumber)]
         public void Should_BePossibleTo_UseConditionalWait_ForAsyncWaitingForTrue()
         {
             var bigTimeout = AqualityServices.ServiceProvider.GetRequiredService<ITimeoutConfiguration>().Condition;

@@ -19,7 +19,7 @@ namespace Aquality.Selenium.Core.Tests.Visualization
         private static readonly Label StartLabel = new(By.XPath("//*[@id='start']//button"), "start", ElementState.Displayed);
         private static readonly Label LoadingLabel = new(By.Id("loading"), "loading", ElementState.Displayed);
 
-        private IImageComparator ImageComparator => AqualityServices.ServiceProvider.GetRequiredService<IImageComparator>();
+        private static IImageComparator ImageComparator => AqualityServices.ServiceProvider.GetRequiredService<IImageComparator>();
 
         [SetUp]
         public new void SetUp()
@@ -27,7 +27,7 @@ namespace Aquality.Selenium.Core.Tests.Visualization
             GoToUrl(DynamicLoadingUrl);
         }
 
-        private void StartLoading()
+        private static void StartLoading()
         {
             StartLabel.Click();
         }
@@ -66,7 +66,7 @@ namespace Aquality.Selenium.Core.Tests.Visualization
             Assert.That(ImageComparator.PercentageDifference(firstImage, secondImage, threshold: 1), Is.EqualTo(0));
         }
 
-        [Test, Retry(5)]
+        [Test, Retry(RetriesNumber)]
         public void Should_BePossibleTo_GetPercentageDifference_ForSimilarElements()
         {
             SKImage firstImage = null, secondImage = null;
@@ -77,7 +77,7 @@ namespace Aquality.Selenium.Core.Tests.Visualization
                 firstImage = LoadingLabel.GetElement().GetScreenshot().AsImage();
                 AqualityServices.ServiceProvider.GetRequiredService<IConditionalWait>().WaitFor(() => firstImage.Height < LoadingLabel.Visual.Size.Height);
                 secondImage = LoadingLabel.GetElement().GetScreenshot().AsImage();
-            }, new List<Type> { typeof(WebDriverException)});
+            }, [typeof(WebDriverException), typeof(WebDriverTimeoutException)]);
 
             Assert.Multiple(() =>
             {

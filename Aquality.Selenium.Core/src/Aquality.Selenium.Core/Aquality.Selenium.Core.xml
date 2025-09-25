@@ -1050,27 +1050,27 @@
         </member>
         <member name="M:Aquality.Selenium.Core.Utilities.JsonSettingsFile.#ctor(System.IO.FileInfo)">
             <summary>
-            Inistantiates class using desired JSON fileinfo.
+            Instantiates class using desired JSON fileinfo.
             </summary>
             <param name="fileInfo">JSON fileinfo.</param>
         </member>
         <member name="M:Aquality.Selenium.Core.Utilities.JsonSettingsFile.#ctor(System.String)">
             <summary>
-            Inistantiates class using desired resource file info.
+            Instantiates class using desired resource file info.
             </summary>
             <param name="resourceFileName"></param>
         </member>
         <member name="M:Aquality.Selenium.Core.Utilities.JsonSettingsFile.#ctor(System.String,System.Reflection.Assembly)">
             <summary>
-            Inistantiates class using desired embeded resource.
+            Instantiates class using desired embedded resource.
             </summary>
-            <param name="embededResourceName">Embeded resource name</param>
+            <param name="embeddedResourceName">Embedded resource name</param>
             <param name="assembly">Assembly which resource belongs to</param>
         </member>
         <member name="M:Aquality.Selenium.Core.Utilities.JsonSettingsFile.GetValue``1(System.String)">
             <summary>
             Gets value from JSON.
-            Note that the value can be overriden via Environment variable with the same name
+            Note that the value can be overridden via Environment variable with the same name
             (e.g. for json path ".timeouts.timeoutScript" you can set environment variable "timeouts.timeoutScript")
             </summary>
             <param name="path">Relative JsonPath to the value.</param>
@@ -1081,7 +1081,7 @@
         <member name="M:Aquality.Selenium.Core.Utilities.JsonSettingsFile.GetValueList``1(System.String)">
             <summary>
             Gets list of values from JSON.
-            Note that the value can be overriden via Environment variable with the same name; values must be separated by ','
+            Note that the value can be overriden via Environment variable with the same name; values must be separated by ',' (comma); values that contains commas are not supported
             (e.g. for json path ".driverSettings.chrome.startArguments" you can set environment variable "driverSettings.chrome.startArguments")
             </summary>
             <param name="path">Relative JsonPath to the values.</param>
