@@ -52,7 +52,7 @@ stages:
     - task: NodeTool@0
       displayName: 'Install Node.js'
       inputs:
-        versionSpec: '16.x'
+        versionSpec: '22.x'
 
     - task: CmdLine@2
       displayName: 'Install Appium'
