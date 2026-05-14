@@ -246,6 +246,45 @@
             <param name="path">Path to the values. Depending on file format, it can be jsonPath, xpath etc.</param>
             <returns>True if exists, false otherwise.</returns>
         </member>
+        <member name="T:Aquality.Selenium.Core.Elements.ByChained">
+            <summary>
+            Mechanism used to locate elements within a document using a series of other look ups. This class
+            will find all DOM elements that matches each of the locators in sequence
+            </summary>
+            <example>
+            The following code will find all elements that match by2 and appear under an element that matches
+            by1.
+            <code>
+            driver.FindElements(new ByChained(by1, by2))
+            </code>
+            </example>
+        </member>
+        <member name="M:Aquality.Selenium.Core.Elements.ByChained.#ctor(OpenQA.Selenium.By[])">
+            <summary>
+            Initializes a new instance of the <see cref="T:Aquality.Selenium.Core.Elements.ByChained"/> class with one or more <see cref="T:OpenQA.Selenium.By"/> objects.
+            </summary>
+            <param name="bys">One or more <see cref="T:OpenQA.Selenium.By"/> references</param>
+        </member>
+        <member name="M:Aquality.Selenium.Core.Elements.ByChained.FindElement(OpenQA.Selenium.ISearchContext)">
+            <summary>
+            Find a single element.
+            </summary>
+            <param name="context">Context used to find the element.</param>
+            <returns>The element that matches</returns>
+        </member>
+        <member name="M:Aquality.Selenium.Core.Elements.ByChained.FindElements(OpenQA.Selenium.ISearchContext)">
+            <summary>
+            Finds many elements
+            </summary>
+            <param name="context">Context used to find the element.</param>
+            <returns>A readonly collection of elements that match.</returns>
+        </member>
+        <member name="M:Aquality.Selenium.Core.Elements.ByChained.ToString">
+            <summary>
+            Writes out a comma separated list of the <see cref="T:OpenQA.Selenium.By"/> objects used in the chain.
+            </summary>
+            <returns>Converts the value of this instance to a <see cref="T:System.String"/></returns>
+        </member>
         <member name="T:Aquality.Selenium.Core.Elements.DesiredState">
             <summary>
             Defines desired state for element with ability to handle exceptions
