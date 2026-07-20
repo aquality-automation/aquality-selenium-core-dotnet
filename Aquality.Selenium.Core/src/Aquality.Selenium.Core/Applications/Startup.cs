@@ -63,16 +63,24 @@ namespace Aquality.Selenium.Core.Applications
             if (settingsFile == null)
             {
                 var profileNameFromEnvironment = EnvironmentConfiguration.GetVariable("profile");
-                var settingsProfile = profileNameFromEnvironment == null ? "settings.json" : $"settings.{profileNameFromEnvironment}.json";
+                var settingsProfile = string.IsNullOrEmpty(profileNameFromEnvironment) ? "settings.json" : $"settings.{profileNameFromEnvironment}.json";
                 Logger.Instance.Debug($"Get settings from: {settingsProfile}");
+                var embeddedResourceName = $"Resources.{settingsProfile}";
 
                 var jsonFile = FileReader.IsResourceFileExist(settingsProfile)
                     ? new JsonSettingsFile(settingsProfile)
-                    : new JsonSettingsFile($"Resources.{settingsProfile}", Assembly.GetCallingAssembly());
+                    : new JsonSettingsFile(embeddedResourceName, ResolveAssembly(Assembly.GetCallingAssembly(), embeddedResourceName));
                 return jsonFile;
             }
 
             return settingsFile;
+        }
+
+        private static Assembly ResolveAssembly(Assembly assembly, string embeddedResourceName)
+        {
+            return Array.Exists(assembly.GetManifestResourceNames(), name => name.Contains(embeddedResourceName))
+                ? assembly
+                : Assembly.GetExecutingAssembly();
         }
     }
 }
