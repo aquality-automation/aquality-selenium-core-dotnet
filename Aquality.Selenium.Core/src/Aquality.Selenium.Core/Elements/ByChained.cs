@@ -1,4 +1,5 @@
 ﻿using OpenQA.Selenium;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
@@ -27,7 +28,7 @@ namespace Aquality.Selenium.Core.Elements
         /// <param name="bys">One or more <see cref="By"/> references</param>
         public ByChained(params By[] bys)
         {
-            this.bys = bys;
+            this.bys = bys ?? throw new ArgumentNullException(nameof(bys), "ByChained must have at least one By object");
         }
 
         /// <summary>

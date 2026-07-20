@@ -63,7 +63,7 @@ namespace Aquality.Selenium.Core.Applications
             if (settingsFile == null)
             {
                 var profileNameFromEnvironment = EnvironmentConfiguration.GetVariable("profile");
-                var settingsProfile = profileNameFromEnvironment == null ? "settings.json" : $"settings.{profileNameFromEnvironment}.json";
+                var settingsProfile = string.IsNullOrEmpty(profileNameFromEnvironment) ? "settings.json" : $"settings.{profileNameFromEnvironment}.json";
                 Logger.Instance.Debug($"Get settings from: {settingsProfile}");
 
                 var jsonFile = FileReader.IsResourceFileExist(settingsProfile)
