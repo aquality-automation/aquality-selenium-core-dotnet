@@ -18,6 +18,8 @@ namespace Aquality.Selenium.Core.Visualization
             0,     0,     0,      1, 0
         });
 
+        private static readonly SKSamplingOptions SamplingOptions = new SKSamplingOptions(SKCubicResampler.Mitchell);
+
         /// <summary>
         /// Reads image from file.
         /// </summary>
@@ -40,7 +42,7 @@ namespace Aquality.Selenium.Core.Visualization
             using (var srcBitmap = SKBitmap.FromImage(originalImage))
             {
                 var resizeInfo = new SKImageInfo(newWidth, newHeight);
-                using (var smallVersion = srcBitmap.Resize(resizeInfo, new SKSamplingOptions(SKCubicResampler.Mitchell)))
+                using (var smallVersion = srcBitmap.Resize(resizeInfo, SamplingOptions))
                 {
                     return SKImage.FromBitmap(smallVersion);
                 }
@@ -70,7 +72,7 @@ namespace Aquality.Selenium.Core.Visualization
 
                 //draw the original image on the new image
                 //using the gray-scale color matrix
-                graphics.DrawImage(original, 0, 0, paint);
+                graphics.DrawImage(original, 0, 0, SamplingOptions, paint);
             }
 
             return SKImage.FromBitmap(newBitmap);
