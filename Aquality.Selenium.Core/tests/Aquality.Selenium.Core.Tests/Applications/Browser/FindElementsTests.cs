@@ -81,7 +81,7 @@ namespace Aquality.Selenium.Core.Tests.Applications.Browser
         public void Should_BeImpossibleTo_FindHiddenElements_WithWrongArguments(ElementsCount count, ElementState state)
         {
             const string name = "custom name";
-            Assert.Throws(Is.AssignableFrom(typeof(TimeoutException)).And.Message.Contains(name),
+            Assert.Throws(Is.AssignableFrom<TimeoutException>().And.Message.Contains(name),
                 () => FindElements<Label>(HiddenElementsLoc, name, expectedCount: count, state: state),
                 $"Tried to find elements with expected count '{count}' and state '{state}'");
         }

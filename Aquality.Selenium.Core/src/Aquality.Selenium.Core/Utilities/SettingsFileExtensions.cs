@@ -34,7 +34,7 @@ namespace Aquality.Selenium.Core.Utilities
         /// <summary>
         /// Gets dictionary of values from environment\setting file or empty Dictionary if path doesn't exist in file and environment variables.
         /// Exception will not be thrown.
-        /// Note that each value of dictionary that is present in settings file can be overriden via Environment variable with the same name;
+        /// Note that each value of dictionary that is present in settings file can be overridden via Environment variable with the same name;
         /// (e.g. for capability "safebrowsing.enabled" at dictionary path ".driverSettings.chrome.options" you can set environment variable "driverSettings.chrome.options.safebrowsing.enabled")
         /// </summary>
         /// <typeparam name="T">Type of a value.</typeparam>
