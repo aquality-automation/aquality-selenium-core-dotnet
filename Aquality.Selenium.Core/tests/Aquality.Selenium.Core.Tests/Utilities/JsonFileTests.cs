@@ -132,7 +132,7 @@ namespace Aquality.Selenium.Core.Tests.Utilities
 
             Assert.That(AddedParamsSettings.GetValueDictionary<T>(".driverSettings.chrome.options"),
                 Is.EquivalentTo(expectedDict),
-                "Dictionary of keys and values was overriden successively");
+                "Dictionary of keys and values was overridden successively");
         }
 
         [TestCase(".timeouts.timeoutImplicit", true)]

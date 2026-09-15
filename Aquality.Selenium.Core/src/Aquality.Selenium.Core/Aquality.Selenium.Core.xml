@@ -1083,7 +1083,7 @@
         <member name="T:Aquality.Selenium.Core.Utilities.JsonSettingsFile">
             <summary>
             Provides methods to get info from JSON files.
-            Note that the value can be overriden via Environment variable with the same name
+            Note that the value can be overridden via Environment variable with the same name
             (e.g. for json path ".timeouts.timeoutScript" you can set environment variable "timeouts.timeoutScript"
             </summary>
         </member>
@@ -1120,7 +1120,7 @@
         <member name="M:Aquality.Selenium.Core.Utilities.JsonSettingsFile.GetValueList``1(System.String)">
             <summary>
             Gets list of values from JSON.
-            Note that the value can be overriden via Environment variable with the same name; values must be separated by ',' (comma); values that contains commas are not supported
+            Note that the value can be overridden via Environment variable with the same name; values must be separated by ',' (comma); values that contains commas are not supported
             (e.g. for json path ".driverSettings.chrome.startArguments" you can set environment variable "driverSettings.chrome.startArguments")
             </summary>
             <param name="path">Relative JsonPath to the values.</param>
@@ -1131,7 +1131,7 @@
         <member name="M:Aquality.Selenium.Core.Utilities.JsonSettingsFile.GetValueDictionary``1(System.String)">
             <summary>
             Gets dictionary of values from JSON.
-            Note that the value can be overriden via Environment variable with the same name;
+            Note that the value can be overridden via Environment variable with the same name;
             (e.g. for json path ".timeouts.timeoutImplicit" you can set environment variable ".timeouts.timeoutImplicit")
             </summary>
             <param name="path">Relative JsonPath to the values.</param>
@@ -1170,7 +1170,7 @@
             <summary>
             Gets dictionary of values from environment\setting file or empty Dictionary if path doesn't exist in file and environment variables.
             Exception will not be thrown.
-            Note that each value of dictionary that is present in settings file can be overriden via Environment variable with the same name;
+            Note that each value of dictionary that is present in settings file can be overridden via Environment variable with the same name;
             (e.g. for capability "safebrowsing.enabled" at dictionary path ".driverSettings.chrome.options" you can set environment variable "driverSettings.chrome.options.safebrowsing.enabled")
             </summary>
             <typeparam name="T">Type of a value.</typeparam>
