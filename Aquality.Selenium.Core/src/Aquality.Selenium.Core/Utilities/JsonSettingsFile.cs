@@ -14,7 +14,7 @@ namespace Aquality.Selenium.Core.Utilities
 {
     /// <summary>
     /// Provides methods to get info from JSON files.
-    /// Note that the value can be overriden via Environment variable with the same name
+    /// Note that the value can be overridden via Environment variable with the same name
     /// (e.g. for json path ".timeouts.timeoutScript" you can set environment variable "timeouts.timeoutScript"
     /// </summary>
     public class JsonSettingsFile : ISettingsFile
@@ -93,7 +93,7 @@ namespace Aquality.Selenium.Core.Utilities
 
         /// <summary>
         /// Gets list of values from JSON.
-        /// Note that the value can be overriden via Environment variable with the same name; values must be separated by ',' (comma); values that contains commas are not supported
+        /// Note that the value can be overridden via Environment variable with the same name; values must be separated by ',' (comma); values that contains commas are not supported
         /// (e.g. for json path ".driverSettings.chrome.startArguments" you can set environment variable "driverSettings.chrome.startArguments")
         /// </summary>
         /// <param name="path">Relative JsonPath to the values.</param>
@@ -119,7 +119,7 @@ namespace Aquality.Selenium.Core.Utilities
 
         /// <summary>
         /// Gets dictionary of values from JSON.
-        /// Note that the value can be overriden via Environment variable with the same name;
+        /// Note that the value can be overridden via Environment variable with the same name;
         /// (e.g. for json path ".timeouts.timeoutImplicit" you can set environment variable ".timeouts.timeoutImplicit")
         /// </summary>
         /// <param name="path">Relative JsonPath to the values.</param>
