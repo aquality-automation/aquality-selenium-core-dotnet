@@ -37,7 +37,7 @@ namespace Aquality.Selenium.Core.Tests.Utilities
             Environment.SetEnvironmentVariable(LogPageSourceEnvironmentVariable, true.ToString());
             Logger.Instance.AddTarget(GetTarget(AddTargetLogFile));
             var element = new Label(By.Name("Absent element"), "Absent element", Elements.ElementState.ExistsInAnyState);            
-            Assert.Throws(Is.AssignableFrom(typeof(NoSuchElementException)).And.Message.Contains(element.Name),
+            Assert.Throws<NoSuchElementException>(Has.Message.Contains(element.Name),
                 () => element.GetElement(TimeSpan.Zero), 
                 "Attempt to get absent element should throw an exception");
             Assert.That(File.Exists(AddTargetLogFile),
