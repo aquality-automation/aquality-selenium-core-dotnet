@@ -106,12 +106,12 @@ namespace Aquality.Selenium.Core.Tests.Applications.Browser
         }
 
         [Test]
-        public void Should_BePossibleTo_UseConditionalWait_ForAsyncWaiting()
+        public async Task Should_BePossibleTo_UseConditionalWait_ForAsyncWaiting()
         {
             bool result = true, returnedResult = true;
             var stopWatch = new Stopwatch();
             stopWatch.Start();
-            Assert.DoesNotThrow(() => returnedResult = ConditionalWait.WaitForAsync(() => result = false, LittleTimeout).Result);
+            await Assert.DoesNotThrowAsync(async () => returnedResult = await ConditionalWait.WaitForAsync(() => result = false, LittleTimeout));
             stopWatch.Stop();
             Assert.That(result, Is.False, $"{nameof(ConditionalWait.WaitForAsync)} should work at least once");
             Assert.That(returnedResult, Is.False, $"{nameof(ConditionalWait.WaitForAsync)} should return valid result");
@@ -120,7 +120,7 @@ namespace Aquality.Selenium.Core.Tests.Applications.Browser
         }
 
         [Test, Retry(RetriesNumber)]
-        public void Should_BePossibleTo_UseConditionalWait_ForAsyncWaitingForTrue()
+        public async Task Should_BePossibleTo_UseConditionalWait_ForAsyncWaitingForTrue()
         {
             var bigTimeout = AqualityServices.ServiceProvider.GetRequiredService<ITimeoutConfiguration>().Condition;
             bool result = true;
@@ -130,7 +130,7 @@ namespace Aquality.Selenium.Core.Tests.Applications.Browser
             Assert.DoesNotThrow(() => awaitableResult = ConditionalWait.WaitForTrueAsync(() => result = false, LittleTimeout),
                         $"{nameof(ConditionalWait.WaitForTrueAsync)} should not fail after the calling");
             Assume.That(awaitableResult, Is.Not.Null);
-            Assert.ThrowsAsync<TimeoutException>(async () => await awaitableResult, $"{nameof(ConditionalWait.WaitForTrueAsync)} should throw when awaited");
+            await Assert.ThrowsAsync<TimeoutException>(async () => await awaitableResult, $"{nameof(ConditionalWait.WaitForTrueAsync)} should throw when awaited");
             Assert.That(result, Is.False, $"{nameof(ConditionalWait.WaitForTrueAsync)} should work");
             stopWatch.Stop();
             Assert.That(stopWatch.Elapsed.TotalSeconds, Is.EqualTo(LittleTimeout.TotalSeconds).Within(PollingInterval.TotalSeconds * 2), 
