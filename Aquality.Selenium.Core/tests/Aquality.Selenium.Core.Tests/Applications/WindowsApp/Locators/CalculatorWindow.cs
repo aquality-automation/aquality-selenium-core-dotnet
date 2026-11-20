@@ -5,7 +5,7 @@ namespace Aquality.Selenium.Core.Tests.Applications.WindowsApp.Locators
 {
     public static class CalculatorWindow
     { 
-        public static By WindowLocator => MobileBy.ClassName("ThunderRT6FormDC");
+        public static By WindowLocator => By.XPath("//Window");
 
         public static By OneButton => MobileBy.Name("1");
 

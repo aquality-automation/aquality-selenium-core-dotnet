@@ -56,7 +56,7 @@ namespace Aquality.Selenium.Core.Tests.Applications.WindowsApp
             Factory.GetButton(CalculatorWindow.PlusButton, "+").Click();
             oneButton.Click();
             Factory.GetButton(CalculatorWindow.EqualsButton, "=").Click();
-            var result = Factory.GetButton(CalculatorWindow.ResultsLabel, "Results bar").Text;
+            var result = Factory.GetButton(CalculatorWindow.ResultsLabel, "Results bar").GetAttribute("Value");
             Assert.That(result, Contains.Substring("2"));
         }
 
