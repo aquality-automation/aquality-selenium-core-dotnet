@@ -52,23 +52,23 @@ stages:
     - task: NodeTool@0
       displayName: 'Install Node.js'
       inputs:
-        versionSpec: '22.x'
+        versionSpec: '26.x'
 
     - task: CmdLine@2
-      displayName: 'Install Appium'
+      displayName: 'Install Appium v4 (beta)'
       inputs:
         script: |
             echo "Installing Appium"
-            npm install -g appium@latest
+            npm install -g appium@beta
             appium --version
             echo "Appium installed"
 
     - task: CmdLine@2
-      displayName: 'Install Appium Windows Driver'
+      displayName: 'Install Appium Windows Driver (wincore)'
       inputs:
         script: |
           echo "Installing Appium Windows Driver"
-          appium driver install windows
+          appium driver install --source=npm appium-wincore-driver
           appium driver list
           echo "Appium Windows Driver installed"
 
@@ -76,10 +76,8 @@ stages:
       displayName: 'Install and Run Appium doctor'
       inputs:
         script: |
-          echo "Installing and Running Appium doctor"
-          npm install -g request@2.34.0
-          npm install -g appium-doctor@1.15.1
-          appium driver doctor windows
+          echo "Running Appium doctor"
+          appium driver doctor wincore
           echo "Appium doctor installed and executed"
 
     - task: CmdLine@2

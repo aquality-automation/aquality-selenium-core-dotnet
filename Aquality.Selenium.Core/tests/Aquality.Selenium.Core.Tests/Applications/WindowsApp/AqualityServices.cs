@@ -22,7 +22,7 @@ namespace Aquality.Selenium.Core.Tests.Applications.WindowsApp
 
         private static WindowsApplication StartApplication(IServiceProvider services)
         {
-            var isRemoteFromEnv = EnvironmentConfiguration.GetVariable("isRemote");
+            var isRemoteFromEnv = EnvironmentConfiguration.GetVariable("isRemote") ?? "false";
             var isRemote = bool.Parse(isRemoteFromEnv);
             Uri driverServer;
             AppiumOptions options = new();
@@ -31,8 +31,8 @@ namespace Aquality.Selenium.Core.Tests.Applications.WindowsApp
                 var driverService = AppiumLocalService.BuildDefaultService();
                 driverService.Start();
                 driverServer = driverService.ServiceUrl;
-                options.PlatformVersion = "10";
-                options.PlatformName = "Windows";
+                options.PlatformVersion = "11";
+                options.PlatformName = "Wincore";
                 options.DeviceName = "WindowsPC";
             }
             else

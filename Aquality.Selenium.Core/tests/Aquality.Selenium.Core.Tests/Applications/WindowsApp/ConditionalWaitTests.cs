@@ -26,7 +26,7 @@ namespace Aquality.Selenium.Core.Tests.Applications.WindowsApp
         public void Should_BePossibleTo_UseConditionalWait_WithElementFinder()
         {
             static bool elementFinderCondition() => AqualityServices.ServiceProvider.GetRequiredService<IElementFinder>()
-                .FindElement(CalculatorWindow.ResultsLabel, timeout: LittleTimeout).Text.Contains('3');
+                .FindElement(CalculatorWindow.ResultsLabel, timeout: LittleTimeout).GetAttribute("Value").Contains('3');
             Assert.That(elementFinderCondition(), Is.False);
             Assert.DoesNotThrow(() => ConditionalWait.WaitFor(driver =>
             {
